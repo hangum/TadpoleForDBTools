@@ -189,7 +189,7 @@ public class ChangeUsePersonalToGrouprDialog extends Dialog {
 	private boolean validation(String strEmail, String strPass, String rePasswd, String name, String ip) {
 
 		if("".equals(strEmail)) { //$NON-NLS-1$
-			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, Messages.get().ChangeUsePersonalToGrouprDialog_11);
+			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, CommonMessages.get().EnterYourEmailAddress);
 			textEMail.setFocus();
 			return false;
 		} else if("".equals(strPass)) { //$NON-NLS-1$

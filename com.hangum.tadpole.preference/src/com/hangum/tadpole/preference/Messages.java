@@ -27,8 +27,6 @@ public class Messages {
 
 	public String ChangeUsePersonalToGrouprDialog_1;
 
-	public String ChangeUsePersonalToGrouprDialog_11;
-
 	public String ChangeUsePersonalToGrouprDialog_13;
 
 	public String ChangeUsePersonalToGrouprDialog_15;
@@ -55,12 +53,12 @@ public class Messages {
 
 	public String ChangeUsePersonalToGrouprDialog_9;
 
-	public String DefaultPreferencePage_0;
-	public String DefaultPreferencePage_2;
+	public String MaxNumOfRowsBySelect;
+	public String SessionTimeout_mins;
 
 	public String UserInfoPerference_10;
 
-	public String UserInfoPerference_11;
+	public String OnlyUsedForPasswordRecovery;
 
 	public String UserInfoPerference_14;
 
@@ -81,22 +79,19 @@ public class Messages {
 
 	public String UserInfoPerference_7;
 
-	public String UserInfoPerference_9;
+	public String infoCloseYourAccount;
 	
-	public String DefaultPreferencePage_other_labelText;
-	public String DefaultPreferencePage_other_labelText_1;
-
-	public String GeneralPreferencePage_0;
+	public String OraclePlanTable;
+	public String RowsPerPage;
 
 	public String GeneralPreferencePage_2;
-	public String RDBPreferencePage_0;
 
 	public String RDBPreferencePage_3;
 
 	public String RDBPreferencePage_5;
-	public String RDBPreferencePage_resultType;
-
-	public String RDBPreferencePage_btnCreatePlanTable_text;
+	public String ResultFormat;
+	public String Table;
+	public String CreatePlanTable;
 	public String GeneralPreferencePage_lblExportDilimit_text;
 	public String GeneralPreferencePage_text_text;
 	public String GeneralPreferencePage_lblHomePage_text;
@@ -120,33 +115,28 @@ public class Messages {
 
 	public String MongoDBPreferencePage_6;
 
-	public String SecurityCredentialPreference_0;
-
 	public String SecurityCredentialPreference_1;
 
 	public String SecurityCredentialPreference_2;
 
-	public String SecurityCredentialPreference_3;
+	public String InfoCreateANewAPIKey;
+	
+	public String CreateAPIKey;
 
-	public String SecurityCredentialPreference_4;
+	public String TabWidth;
 
-	public String SecurityCredentialPreference_5;
+	public String SQLFormat_AddNewLineBeforeDECODE;
 
-	public String SQLFormatterPreferencePage_0;
+	public String SQLFormat_AddNewLineBeforeIN;
 
-	public String SQLFormatterPreferencePage_3;
-
-	public String SQLFormatterPreferencePage_4;
-
-	public String SQLFormatterPreferencePage_8;
-	public String RDBPreferencePage_lblNumberColumnAdd_text;
-	public String SQLFormatterPreferencePage_btnCheckButton_text;
-	public String SQLFormatterPreferencePage_btnNewLineBefore_text;
-	public String SQLFormatterPreferencePage_btnRemoveEmptyLine_text;
-	public String SQLFormatterPreferencePage_btnWordBreak_text;
-	public String RDBPreferencePage_lblResultViewFont_text;
-	public String RDBPreferencePage_btnNewButton_text;
-	public String RDBPreferencePage_lblQueryTimeout_text;
+	public String MaximumNumberOfCharacters;
+	public String SQLFormat_AddNewLineBeforeANDOR;
+	public String SQLFormat_AddCommaBeforeNewLine;
+	public String SQLFormat_AddCommaBeforeNewLine_ToolTip;
+	public String SQLFormat_RemoveEmptyLines;
+	public String FontForResultPages;
+	public String Font;
+	public String QueryTimeout;
 	public String GeneralPreferencePage_grpEmailAccount_text;
 	public String GeneralPreferencePage_lblSmtpServer_text;
 	public String GeneralPreferencePage_lblPort_text;
@@ -161,18 +151,14 @@ public class Messages {
 
 	public String PerspectivePreferencePage_6;
 
-	public String UserInfoPerference_button_text;
-	public String UserInfoPerference_grpGoogleAuth_text;
-	public String UserInfoPerference_btnGoogleOtp_text_1;
-	public String UserInfoPerference_lblSecretKey_text_1;
-	public String UserInfoPerference_lblQrcodeUrl_text;
-	public String RDBPreferencePage_lblCommitCount_text;
-	public String RDBPreferencePage_text_text;
-	public String RDBPreferencePage_lblCharacterShownIn_text;
+	public String CloseAccount;
+
+	public String BatchSize;
+	public String MaximumNumberOfCharactersPerColumn;
 	public String RDBPreferencePage_text_text_1;
 	public String EditorPreferencePage_0;
 
-	public String EditorPreferencePage_1;
+	public String MaximumNumberOfCharactersPerLine;
 
 	public String EditorPreferencePage_2;
 
@@ -189,14 +175,10 @@ public class Messages {
 	public String TimeZone;
 	
 	public String ShowNullCharacters;
-	
-	public String OTP;
 
-	public String QueryProfilling;
+	public String MySQLQueryProfiling;
 
 	public String DefaultPreferencePage_3;
-
-	public String PasswordChange;
 
 	public String EnterYourPasswd;
 
@@ -213,7 +195,14 @@ public class Messages {
 
 	public String EditorPreferen_AddComma;
 
-	public String ResultSetHeadCliking;
+	public String WhenClickingOnColumnName;
+	
+	public String warnSessionTimeoutValue;
+	
+	public String SortData;
+	public String CopyColumnNameToEditor;
+	
+	public String RDBPreferencePage_lblNumberColumnAdd_text;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

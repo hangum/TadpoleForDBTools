@@ -11,7 +11,9 @@
 package com.hangum.tadpole.engine.query.dao.system.accesscontrol;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
@@ -25,9 +27,14 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
  * @since 2015. 4. 26.
  *
  */
+/**
+ * @author hangum
+ *
+ */
 public class DBAccessControlDAO {
 	int seq;
 	int db_role_seq;
+	String schema_lock = PublicTadpoleDefine.YES_NO.YES.name();
 	String select_lock = PublicTadpoleDefine.YES_NO.YES.name();
 	String insert_lock = PublicTadpoleDefine.YES_NO.NO.name();
 	String update_lock = PublicTadpoleDefine.YES_NO.NO.name();
@@ -40,26 +47,23 @@ public class DBAccessControlDAO {
 	int intDetailCnt = -1;
 	
 	/** select access ctl */
-	Map<String, AccessCtlObjectDAO> mapSelectAccessCtl = new HashMap<String, AccessCtlObjectDAO>();
+	List<AccessCtlObjectDAO> allAccessCtl = new ArrayList<AccessCtlObjectDAO>();
+		/** 
+		 * table or view access ctl
+		 * 
+		 *  key pattern is schema.object name
+		 *  if doesnot schema than just object name.
+		 */
+		Map<String, AccessCtlObjectDAO> mapSelectTableAccessCtl = new HashMap<String, AccessCtlObjectDAO>();
+		/** function access control */
+		Map<String, AccessCtlObjectDAO> mapSelectFunctionAccessCtl = new HashMap<String, AccessCtlObjectDAO>();
+		/** procedure access control */
+		Map<String, AccessCtlObjectDAO> mapSelectProcedureAccessCtl = new HashMap<String, AccessCtlObjectDAO>();
 	
 	/**
 	 * 
 	 */
 	public DBAccessControlDAO() {
-	}
-	
-	/**
-	 * @return the mapSelectAccessCtl
-	 */
-	public Map<String, AccessCtlObjectDAO> getMapSelectAccessCtl() {
-		return mapSelectAccessCtl;
-	}
-
-	/**
-	 * @param mapSelectAccessCtl the mapSelectAccessCtl to set
-	 */
-	public void setMapSelectAccessCtl(Map<String, AccessCtlObjectDAO> mapSelectAccessCtl) {
-		this.mapSelectAccessCtl = mapSelectAccessCtl;
 	}
 
 	/**
@@ -88,6 +92,20 @@ public class DBAccessControlDAO {
 	 */
 	public void setDb_role_seq(int db_role_seq) {
 		this.db_role_seq = db_role_seq;
+	}
+
+	/**
+	 * @return the schema_lock
+	 */
+	public String getSchema_lock() {
+		return schema_lock;
+	}
+
+	/**
+	 * @param schema_lock the schema_lock to set
+	 */
+	public void setSchema_lock(String schema_lock) {
+		this.schema_lock = schema_lock;
 	}
 
 	/**
@@ -188,12 +206,75 @@ public class DBAccessControlDAO {
 		this.delyn = delyn;
 	}
 
+	/**
+	 * @return the intDetailCnt
+	 */
 	public int getIntDetailCnt() {
 		return intDetailCnt;
 	}
 
+	/**
+	 * @param intDetailCnt the intDetailCnt to set
+	 */
 	public void setIntDetailCnt(int intDetailCnt) {
 		this.intDetailCnt = intDetailCnt;
 	}
+
+	/**
+	 * @return the allAccessCtl
+	 */
+	public List<AccessCtlObjectDAO> getAllAccessCtl() {
+		return allAccessCtl;
+	}
+
+	/**
+	 * @param allAccessCtl the allAccessCtl to set
+	 */
+	public void setAllAccessCtl(List<AccessCtlObjectDAO> allAccessCtl) {
+		this.allAccessCtl = allAccessCtl;
+	}
+
+	/**
+	 * @return the mapSelectTableAccessCtl
+	 */
+	public Map<String, AccessCtlObjectDAO> getMapSelectTableAccessCtl() {
+		return mapSelectTableAccessCtl;
+	}
+
+	/**
+	 * @param mapSelectTableAccessCtl the mapSelectTableAccessCtl to set
+	 */
+	public void setMapSelectTableAccessCtl(Map<String, AccessCtlObjectDAO> mapSelectTableAccessCtl) {
+		this.mapSelectTableAccessCtl = mapSelectTableAccessCtl;
+	}
+
+	/**
+	 * @return the mapSelectFunctionAccessCtl
+	 */
+	public Map<String, AccessCtlObjectDAO> getMapSelectFunctionAccessCtl() {
+		return mapSelectFunctionAccessCtl;
+	}
+
+	/**
+	 * @param mapSelectFunctionAccessCtl the mapSelectFunctionAccessCtl to set
+	 */
+	public void setMapSelectFunctionAccessCtl(Map<String, AccessCtlObjectDAO> mapSelectFunctionAccessCtl) {
+		this.mapSelectFunctionAccessCtl = mapSelectFunctionAccessCtl;
+	}
+
+	/**
+	 * @return the mapSelectProcedureAccessCtl
+	 */
+	public Map<String, AccessCtlObjectDAO> getMapSelectProcedureAccessCtl() {
+		return mapSelectProcedureAccessCtl;
+	}
+
+	/**
+	 * @param mapSelectProcedureAccessCtl the mapSelectProcedureAccessCtl to set
+	 */
+	public void setMapSelectProcedureAccessCtl(Map<String, AccessCtlObjectDAO> mapSelectProcedureAccessCtl) {
+		this.mapSelectProcedureAccessCtl = mapSelectProcedureAccessCtl;
+	}
+	
 	
 }

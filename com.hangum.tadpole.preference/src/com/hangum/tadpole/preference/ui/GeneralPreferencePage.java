@@ -38,6 +38,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.commons.libs.core.message.WarningMessages;
 import com.hangum.tadpole.commons.util.CookieUtils;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
@@ -60,6 +61,10 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 	private Text textExportDelimit;
 	private Text textHomePage;
 	private Button btnCheckButtonHomepage;
+	
+	public static final int SESSION_TIMEOUT_MIN = 5;       /* minutes */
+	public static final int SESSION_TIMEOUT_MAX = 300;     /* minutes */
+	public static final int SESSION_TIMEOUT_DEFAULT = 180; /* minutes */
 
 	public GeneralPreferencePage() {
 	}
@@ -89,7 +94,7 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 		comboLanguage.setData(Locale.KOREAN.getDisplayLanguage(Locale.KOREAN), Locale.KOREAN);
 		
 		Label lblNewLabel = new Label(container, SWT.NONE);
-		lblNewLabel.setText(Messages.get().DefaultPreferencePage_2);
+		lblNewLabel.setText(Messages.get().SessionTimeout_mins);
 		
 		textSessionTime = new Text(container, SWT.BORDER);
 		textSessionTime.addModifyListener(new ModifyListener() {
@@ -136,13 +141,14 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 		if(!NumberUtils.isNumber(txtSessionTime)) {
 			textSessionTime.setFocus();
 			setValid(false);
-			setErrorMessage(Messages.get().DefaultPreferencePage_2 + Messages.get().GeneralPreferencePage_0);
+			setErrorMessage(Messages.get().SessionTimeout_mins + WarningMessages.get().EnterNumbersOnly);
 
 			return false;
-		} else if(!(NumberUtils.toInt(txtSessionTime) >= 5 && NumberUtils.toInt(txtSessionTime) <= 300)) {
+		} else if(!((NumberUtils.toInt(txtSessionTime) >= SESSION_TIMEOUT_MIN) 
+				&& (NumberUtils.toInt(txtSessionTime) <= SESSION_TIMEOUT_MAX))) {
 			textSessionTime.setFocus();
 			setValid(false);
-			setErrorMessage(String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().DefaultPreferencePage_2, "5 min", "300 min"));
+			setErrorMessage(String.format(Messages.get().warnSessionTimeoutValue,  SESSION_TIMEOUT_MIN, SESSION_TIMEOUT_MAX));
 			
 			return false;
 		}

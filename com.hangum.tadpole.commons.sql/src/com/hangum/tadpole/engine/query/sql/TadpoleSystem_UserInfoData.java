@@ -154,16 +154,13 @@ public class TadpoleSystem_UserInfoData {
 	 * @param txtFontInfo font information
 	 * @param txtCommitCount commit count
 	 * @param txtResultHeadClick
-	 * @param txtResultType 
 	 * @param txtNull 
 	 */
-	public static void updateRDBUserInfoData(boolean txtQueryProfilling, String limitSelect, String resultSelect, String queryTimeout, String oraclePlan, 
+	public static void updateRDBUserInfoData(String limitSelect, String resultSelect, String queryTimeout, String oraclePlan, 
 			String txtRDBNumberColumnIsComman, String txtFontInfo, String txtCommitCount, String txtShownInTheColumn, String txtResultHeadClick, 
-			String txtResultType,
 			String textNull
 	) throws TadpoleSQLManagerException, SQLException {
 		
-		updateUserInfoData(PreferenceDefine.RDB_QUERY_PROFILLING, ""+txtQueryProfilling);
 		updateUserInfoData(PreferenceDefine.SELECT_LIMIT_COUNT, limitSelect);
 		updateUserInfoData(PreferenceDefine.SELECT_RESULT_PAGE_PREFERENCE, resultSelect);
 		updateUserInfoData(PreferenceDefine.SELECT_QUERY_TIMEOUT, queryTimeout);
@@ -173,7 +170,6 @@ public class TadpoleSystem_UserInfoData {
 		updateUserInfoData(PreferenceDefine.RDB_COMMIT_COUNT, txtCommitCount);
 		updateUserInfoData(PreferenceDefine.RDB_CHARACTER_SHOW_IN_THE_COLUMN, txtShownInTheColumn);
 		updateUserInfoData(PreferenceDefine.RDB_RESULT_SET_HEAD_CLICK, txtResultHeadClick);
-		updateUserInfoData(PreferenceDefine.RDB_RESULT_TYPE, txtResultType);
 		updateUserInfoData(PreferenceDefine.RDB_RESULT_NULL, textNull);
 	}
 	
@@ -249,7 +245,7 @@ public class TadpoleSystem_UserInfoData {
 		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.SELECT_QUERY_TIMEOUT, 	""+PreferenceDefine.SELECT_QUERY_TIMEOUT_VALUE));
 		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.ORACLE_PLAN_TABLE, PreferenceDefine.ORACLE_PLAN_TABLE_VALUE));
 		
-		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.RDB_RESULT_TYPE, PreferenceDefine.RDB_RESULT_TYPE_VALUE));
+//		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.RDB_RESULT_TYPE, PreferenceDefine.RDB_RESULT_TYPE_VALUE));
 		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.RDB_RESULT_FONT, PreferenceDefine.RDB_RESULT_FONT_VALUE));
 		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA, PreferenceDefine.RDB_RESULT_NUMBER_IS_COMMA_VALUE));
 		sqlClient.insert("userInfoDataInsert", new UserInfoDataDAO(userdb.getSeq(), PreferenceDefine.RDB_COMMIT_COUNT, PreferenceDefine.RDB_COMMIT_COUNT_VALUE));

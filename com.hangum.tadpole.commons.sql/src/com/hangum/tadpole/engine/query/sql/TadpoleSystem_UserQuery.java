@@ -98,7 +98,7 @@ public class TadpoleSystem_UserQuery {
 	 */
 	public static UserDAO newLDAPUser(String userName, String email, String external_id, String useOPT) throws TadpoleSQLManagerException, SQLException, Exception {
 		return newUser(PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(), email, "LDAP", "YES", "TadpoleLDAPLogin", PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString(),
-				userName, "KO", "Asia/Seoul", "YES", useOPT, "", "*", external_id);
+				userName, "KO", "Asia/Seoul", "YES", useOPT, "", "*", external_id, new Timestamp(System.currentTimeMillis()));
 	}
 	
 	/**
@@ -123,12 +123,13 @@ public class TadpoleSystem_UserQuery {
 	 * @param serviceStart
 	 * @param serviceEnd
 	 * @param external_id
+	 * @param timeChangedPasswdTime
 	 * @return
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static UserDAO newUser(String inputType, String email, String email_key, String is_email_certification, String passwd, 
 								String roleType, String name, String language, String timezone, String approvalYn, String use_otp, String otp_secret,
-								String strAllowIP, String external_id
+								String strAllowIP, String external_id, Timestamp timeChangedPasswdTime
 	) throws TadpoleSQLManagerException, SQLException, Exception {
 		UserDAO loginDAO = new UserDAO();
 		loginDAO.setInput_type(inputType);
@@ -137,7 +138,7 @@ public class TadpoleSystem_UserQuery {
 		loginDAO.setIs_email_certification(is_email_certification);
 		
 		loginDAO.setPasswd(SHA256Utils.getSHA256(passwd));
-		loginDAO.setChanged_passwd_time(new Timestamp(System.currentTimeMillis()));
+		loginDAO.setChanged_passwd_time(timeChangedPasswdTime);//new Timestamp(System.currentTimeMillis()));
 		loginDAO.setRole_type(roleType);
 		
 		loginDAO.setName(name);
@@ -213,6 +214,40 @@ public class TadpoleSystem_UserQuery {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<UserDAO> listUser = sqlClient.queryForList("findEmailUser", email); //$NON-NLS-1$
 		return listUser;
+	}
+	
+	/**
+	 * 연속 몇번 로그인을 실패 했을 경우
+	 * 
+	 * @param intLastLoginCnt
+	 * @param intUserSeq
+	 * @param email 
+	 * @throws TadpoleSQLManagerException
+	 * @throws SQLException
+	 */
+	public static void failLoginCheck(int intLastLoginCnt, int intUserSeq, String email) throws TadpoleSQLManagerException, SQLException {
+		Map<String, Object> queryMap = new HashMap<String, Object>();
+		queryMap.put("intUserSeq",			intUserSeq);
+		queryMap.put("intLastLoginCnt", intLastLoginCnt);
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		List<UserLoginHistoryDAO> listUser = sqlClient.queryForList("lastLoginCntHistory", queryMap); //$NON-NLS-1$
+		
+		int intFailCnt = 0;
+		for (UserLoginHistoryDAO userLoginHistoryDAO : listUser) {
+			if(PublicTadpoleDefine.YES_NO.NO.name().equals(userLoginHistoryDAO.getSucces_yn())) {
+				intFailCnt++;
+			}
+		}
+		
+		// 연속 intLastLoingCnt 틀리면 계정을 잠근다.
+		if(intFailCnt == intLastLoginCnt) {
+			final UserDAO userDAO = new UserDAO();
+			userDAO.setSeq(intUserSeq);
+			
+			if(logger.isInfoEnabled()) logger.info(String.format("##### User account %s is lock", email));
+			updateUserApproval(userDAO, PublicTadpoleDefine.YES_NO.NO.name());
+		}
 	}
 	
 	/**
@@ -345,7 +380,7 @@ public class TadpoleSystem_UserQuery {
 		
 		Map<String, Object> queryMap = new HashMap<String, Object>();
 		queryMap.put("email",		strEmail);
-		queryMap.put("succes_yn", 	strYesNo);
+		if(!"All".equals(strYesNo)) queryMap.put("succes_yn", 	strYesNo);
 		
 		if(ApplicationArgumentUtils.isDBServer()) {
 			Date dateSt = new Date(startTime);

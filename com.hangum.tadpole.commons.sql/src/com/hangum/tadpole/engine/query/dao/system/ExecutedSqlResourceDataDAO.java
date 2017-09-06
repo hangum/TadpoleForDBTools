@@ -22,8 +22,9 @@ public class ExecutedSqlResourceDataDAO {
 	long seq;
 	Timestamp startDateExecute;
 	long executed_sql_resource_seq;
-    String datas;
-	
+    String sql_data;
+    Timestamp ctreate_time;
+    
 	public ExecutedSqlResourceDataDAO() {
 	}
 
@@ -64,17 +65,32 @@ public class ExecutedSqlResourceDataDAO {
 	}
 
 	/**
-	 * @return the datas
+	 * @return the sql_data
 	 */
-	public String getDatas() {
-		return datas;
+	public String getSql_data() {
+		return sql_data;
 	}
 
 	/**
-	 * @param datas the datas to set
+	 * @param sql_data the sql_data to set
 	 */
-	public void setDatas(String datas) {
-		this.datas = datas;
+	public void setSql_data(String sql_data) {
+		this.sql_data = sql_data;
 	}
+
+	/**
+	 * @return the ctreate_time
+	 */
+	public Timestamp getCtreate_time() {
+		return ctreate_time;
+	}
+
+	/**
+	 * @param ctreate_time the ctreate_time to set
+	 */
+	public void setCtreate_time(Timestamp ctreate_time) {
+		this.ctreate_time = ctreate_time;
+	}
+	
 	
 }

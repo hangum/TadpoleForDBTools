@@ -75,11 +75,6 @@ public class GetPreferenceGeneral extends AbstractPreference {
 		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_QUERY_PROFILLING, PreferenceDefine.RDB_QUERY_PROFILLING_VALUE);
 		return Boolean.parseBoolean(userInfo.getValue0());
 	}
-	/** rdb result type */
-	public static String getResultType() {
-		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_RESULT_TYPE, PreferenceDefine.RDB_RESULT_TYPE_VALUE);
-		return userInfo.getValue0();		
-	}
 	
 	/** rdb 쿼리 결과에 리미트 쿼리 한계를 가져오게 합니다. */ 
 	public static int getSelectLimitCount() {
@@ -143,7 +138,7 @@ public class GetPreferenceGeneral extends AbstractPreference {
 	 * @return
 	 */
 	public static String getRDBResultHeadClick() {
-		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_RESULT_SET_HEAD_CLICK, PreferenceDefine.RDB_RESULT_SET_HEAD_CLICK_VALUE);
+		UserInfoDataDAO userInfo = SessionManager.getUserInfo(PreferenceDefine.RDB_RESULT_SET_HEAD_CLICK, PreferenceDefine.RDB_RESULT_SET_HEAD_CLICK_SORTDATA_VALUE);
 		return userInfo.getValue0();
 	}
 	

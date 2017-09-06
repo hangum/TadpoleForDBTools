@@ -306,7 +306,7 @@ public class LoginDialog extends AbstractLoginDialog {
 			saveLoginHistory(userDao.getSeq(), ip_servletRequest, PublicTadpoleDefine.YES_NO.YES.name(), "");
 		} catch (TadpoleAuthorityException e) {
 			logger.error(String.format("Login exception. request email is %s, reason %s", strEmail, e.getMessage())); //$NON-NLS-1$
-			saveLoginHistory(strEmail, ip_servletRequest, PublicTadpoleDefine.YES_NO.NO.name(), "Password wrong.");
+			saveWrongLoginHistory(strEmail, ip_servletRequest, PublicTadpoleDefine.YES_NO.NO.name(), "Password wrong.");
 			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, e.getMessage());
 			
 			textPasswd.setText("");

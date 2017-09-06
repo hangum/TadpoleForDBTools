@@ -81,4 +81,6 @@
 	<!-- extension db -->
 	<sqlMap resource="com/hangum/tadpole/engine/query/internal/system/Tadpole-System-external.xml" />
 	<sqlMap resource="com/hangum/tadpole/engine/query/internal/system/Tadpole-System-Ledger.xml" />
+	
+	<sqlMap resource="com/hangum/tadpole/engine/query/internal/system/Tadpole-System-ExecuteSQL.xml" />
 </sqlMapConfig>

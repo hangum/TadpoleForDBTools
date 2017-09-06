@@ -46,7 +46,7 @@ import org.eclipse.swt.widgets.Text;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.commons.util.CSVFileUtils;
+import com.hangum.tadpole.commons.util.CSVUtils;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
@@ -238,7 +238,7 @@ public class PropertyComposite extends DBInfosComposite {
 		}
 		
 		try {
-			String strCVSContent = CSVFileUtils.makeData(listCsvData);
+			String strCVSContent = CSVUtils.makeData(listCsvData);
 			downloadExtFile(userDB.getDisplay_name() + "_Properties.csv", strCVSContent); //$NON-NLS-1$
 			
 			MessageDialog.openInformation(null, CommonMessages.get().Information, Messages.get().TablesComposite_5);

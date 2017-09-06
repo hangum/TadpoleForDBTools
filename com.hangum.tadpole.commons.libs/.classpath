@@ -5,7 +5,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/apache/commons/commons-validator-1.5.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/velocity/commons-collections-3.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/velocity/velocity-1.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/csv/opencsv-3.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/mail/mail.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/sql/formatter/kry.sql.format_1.0.0.v20101023.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/log4j/log4j-1.2.16.jar"/>

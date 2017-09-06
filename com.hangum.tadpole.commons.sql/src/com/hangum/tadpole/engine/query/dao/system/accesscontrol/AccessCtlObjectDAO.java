@@ -12,10 +12,13 @@ package com.hangum.tadpole.engine.query.dao.system.accesscontrol;
 
 import java.sql.Timestamp;
 
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.ACCEAS_CTL_DDL_TYPE;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.FILTER_TYPE;
 
 /**
- * access_ctl_object table dao
+ * 오브젝트 접근제어타입을 지정합니다. 
+ * 
+ * SELECT 접근을 막을 것이고 스키마는 뭐며, 오브젝트 타입은 뭐며, 오브젝트 이름은 뭐다는 식입니다.
  *
  * @author hangum
  * @version 1.6.1
@@ -24,17 +27,25 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
  */
 public class AccessCtlObjectDAO {
 	int seq;
-	int access_seq;
+	int db_role_seq;
 	
 	/**
-	 * SELECT, INSERT, UPDATE, DELETE, DDL
+	 * 접근제어 SELECT, INSERT, UPDATE, DELETE, DDL
 	 * 
 	 * This time only SELECT - hangum. 15.04.27
 	 */
 	String type; 
+	
+	String obj_schema = "";
+	
+	/** 
+	 * table, view, function, procedure
+	 * {@code PublicTadpoleDefine#ACCEAS_CTL_DDL_TYPE} 
+	 */
+	String obj_type	= ACCEAS_CTL_DDL_TYPE.TABLEoVIEW.name();
+	
 	String obj_name = "";
-	String dontuse_object = PublicTadpoleDefine.YES_NO.NO.name();
-	String detail_obj = "";
+	String filter_type = FILTER_TYPE.INCLUDE.name();
 	String description;
 	String delyn;
 	Timestamp create_date;
@@ -60,17 +71,17 @@ public class AccessCtlObjectDAO {
 	}
 
 	/**
-	 * @return the access_seq
+	 * @return the db_role_seq
 	 */
-	public int getAccess_seq() {
-		return access_seq;
+	public int getDb_role_seq() {
+		return db_role_seq;
 	}
 
 	/**
-	 * @param access_seq the access_seq to set
+	 * @param db_role_seq the db_role_seq to set
 	 */
-	public void setAccess_seq(int access_seq) {
-		this.access_seq = access_seq;
+	public void setDb_role_seq(int db_role_seq) {
+		this.db_role_seq = db_role_seq;
 	}
 
 	/**
@@ -88,6 +99,34 @@ public class AccessCtlObjectDAO {
 	}
 
 	/**
+	 * @return the obj_schema
+	 */
+	public String getObj_schema() {
+		return obj_schema;
+	}
+
+	/**
+	 * @param obj_schema the obj_schema to set
+	 */
+	public void setObj_schema(String obj_schema) {
+		this.obj_schema = obj_schema;
+	}
+
+	/**
+	 * @return the obj_type
+	 */
+	public String getObj_type() {
+		return obj_type;
+	}
+
+	/**
+	 * @param obj_type the obj_type to set
+	 */
+	public void setObj_type(String obj_type) {
+		this.obj_type = obj_type;
+	}
+
+	/**
 	 * @return the obj_name
 	 */
 	public String getObj_name() {
@@ -102,17 +141,17 @@ public class AccessCtlObjectDAO {
 	}
 
 	/**
-	 * @return the detail_obj
+	 * @return the filter_type
 	 */
-	public String getDetail_obj() {
-		return detail_obj;
+	public String getFilter_type() {
+		return filter_type;
 	}
 
 	/**
-	 * @param detail_obj the detail_obj to set
+	 * @param filter_type the filter_type to set
 	 */
-	public void setDetail_obj(String detail_obj) {
-		this.detail_obj = detail_obj;
+	public void setFilter_type(String filter_type) {
+		this.filter_type = filter_type;
 	}
 
 	/**
@@ -155,20 +194,6 @@ public class AccessCtlObjectDAO {
 	 */
 	public void setCreate_date(Timestamp create_date) {
 		this.create_date = create_date;
-	}
-
-	/**
-	 * @return the dontuse_object
-	 */
-	public String getDontuse_object() {
-		return dontuse_object;
-	}
-
-	/**
-	 * @param dontuse_object the dontuse_object to set
-	 */
-	public void setDontuse_object(String dontuse_object) {
-		this.dontuse_object = dontuse_object;
 	}
 
 }

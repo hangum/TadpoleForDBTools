@@ -27,6 +27,7 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.security.DBAccessCtlManager;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -82,16 +83,15 @@ public class DBSystemSchema {
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 		if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
-			List<TableDAO> listView = sqlClient.queryForList("viewList", userDB.getSchema());
+			listTblView = sqlClient.queryForList("viewList", userDB.getSchema());
 			// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
 			StringBuffer strViewList = new StringBuffer();
-			for(TableDAO td : listView) {
+			for(TableDAO td : listTblView) {
 				td.setSysName(SQLUtil.makeIdentifierName(userDB, td.getName()));
 				strViewList.append(MakeContentAssistUtil.makeObjectPattern(td.getSchema_name(), td.getSysName(), "View")); //$NON-NLS-1$
 			}
-			userDB.setTableListSeparator( StringUtils.removeEnd(strViewList.toString(), MakeContentAssistUtil._PRE_GROUP)); //$NON-NLS-1$
+			userDB.setViewListSeparator( StringUtils.removeEnd(strViewList.toString(), MakeContentAssistUtil._PRE_GROUP)); //$NON-NLS-1$
 			
-			return listView;
 		} else if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup()) {
 			List<HashMap<String,String>> listView = sqlClient.queryForList("viewList", userDB.getSchema());
 			// 1. 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
@@ -110,7 +110,6 @@ public class DBSystemSchema {
 			}
 			userDB.setViewListSeparator( StringUtils.removeEnd(strViewList.toString(), MakeContentAssistUtil._PRE_GROUP)); //$NON-NLS-1$
 			
-			return listTblView; 
 		} else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 			List<HashMap<String,String>> listView = sqlClient.queryForList("viewList", userDB.getSchema());
 			// 1. 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
@@ -128,7 +127,6 @@ public class DBSystemSchema {
 			}
 			userDB.setViewListSeparator( StringUtils.removeEnd(strViewList.toString(), MakeContentAssistUtil._PRE_GROUP)); //$NON-NLS-1$
 			
-			return listTblView; 
 		} else {
 			List<String> listView = sqlClient.queryForList("viewList", userDB.getDb());
 			// 1. 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
@@ -144,9 +142,12 @@ public class DBSystemSchema {
 				strViewList.append(MakeContentAssistUtil.makeObjectPattern(tblDao.getSchema_name(), tblDao.getSysName(), "View")); //$NON-NLS-1$
 			}
 			userDB.setViewListSeparator( StringUtils.removeEnd(strViewList.toString(), MakeContentAssistUtil._PRE_GROUP)); //$NON-NLS-1$
-			
-			return listTblView; 
 		}
+		
+		/** filter 정보가 있으면 처리합니다. */
+		listTblView = DBAccessCtlManager.getInstance().getTableFilter(listTblView, userDB);
+		
+		return listTblView;
 	}
 	
 	/**
@@ -206,6 +207,9 @@ public class DBSystemSchema {
 			listFunction = sqlClient.queryForList("functionList", userDB.getDb()); //$NON-NLS-1$
 		}
 		
+		// function filter
+		listFunction = DBAccessCtlManager.getInstance().getFunctionFilter(listFunction, userDB);
+		
 		// 1. 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
 		// 2. create to default keyword 
 		StringBuffer strFunctionlist = new StringBuffer();
@@ -232,7 +236,7 @@ public class DBSystemSchema {
 		}
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-		List<ProcedureFunctionDAO> listProcedure;
+		List<ProcedureFunctionDAO> listProcedure = new ArrayList<ProcedureFunctionDAO>();
 		if(DBGroupDefine.ORACLE_GROUP == userDB.getDBGroup() || DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup() ){
 			listProcedure = sqlClient.queryForList("procedureList", userDB.getSchema()); //$NON-NLS-1$
 		}else if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()){
@@ -240,6 +244,9 @@ public class DBSystemSchema {
 		}else{
 			listProcedure = sqlClient.queryForList("procedureList", userDB.getDb()); //$NON-NLS-1$
 		}
+		
+		// procedure filter
+		listProcedure = DBAccessCtlManager.getInstance().getProcedureFilter(listProcedure, userDB);
 		
 		// 시스템에서 사용하는 용도록 수정합니다. '나 "를 붙이도록.
 		for(ProcedureFunctionDAO pfDao : listProcedure) {

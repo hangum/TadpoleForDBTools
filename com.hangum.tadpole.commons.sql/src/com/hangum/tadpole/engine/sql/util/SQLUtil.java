@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.engine.sql.util;
 
+import java.util.Date;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringEscapeUtils;
@@ -75,10 +76,10 @@ public class SQLUtil {
 	private static final Pattern PATTERN_DML_BASIC = Pattern.compile(BASE_PATTERN_STATEMENT, PATTERN_FLAG);
 	
 	/** 허용되지 않는 sql 정의 */
-	private static final String[] NOT_ALLOWED_SQL = {
+//	private static final String[] NOT_ALLOWED_SQL = {
 		/* MSSQL- USE DATABASE명 */
 //		"USE"
-	};
+//	};
 	
 	/**
 	 * tadpole 에서 사용하는 특수 컬럼여부 
@@ -133,25 +134,25 @@ public class SQLUtil {
 		return strCheckSQL;
 	}
 	
-	/**
-	 * 쿼리중에 허용하지 않는 쿼리 목록.
-	 * 쿼리문 위에 주석을 빼야... -- / ** * / / * * /
-	 * 
-	 * @param strSQL
-	 * @return
-	 */
-	public static boolean isNotAllowed(String strSQL) {
-		boolean isRet = false;
-		String cmpSql = removeComment(strSQL);
-		
-		for (String strNAllSQL : NOT_ALLOWED_SQL) {
-			if(StringUtils.startsWithIgnoreCase(cmpSql, strNAllSQL)) {
-				return true;
-			}
-		}
-		
-		return isRet;
-	}
+//	/**
+//	 * 쿼리중에 허용하지 않는 쿼리 목록.
+//	 * 쿼리문 위에 주석을 빼야... -- / ** * / / * * /
+//	 * 
+//	 * @param strSQL
+//	 * @return
+//	 */
+//	public static boolean isNotAllowed(String strSQL) {
+//		boolean isRet = false;
+//		String cmpSql = removeComment(strSQL);
+//		
+//		for (String strNAllSQL : NOT_ALLOWED_SQL) {
+//			if(StringUtils.startsWithIgnoreCase(cmpSql, strNAllSQL)) {
+//				return true;
+//			}
+//		}
+//		
+//		return isRet;
+//	}
 	
 	/**
 	 * 쿼리의 패턴이 <code>PATTERN_STATEMENT</code>인지?
@@ -378,6 +379,10 @@ public class SQLUtil {
 	 * @return query type
 	 */
 	public static PublicTadpoleDefine.QUERY_DML_TYPE sqlQueryType(String sql) {
+		logger.debug("##[시작]####################################################################################");
+		logger.debug(new Date());
+		logger.debug(sql);
+		
 		PublicTadpoleDefine.QUERY_DML_TYPE queryType = PublicTadpoleDefine.QUERY_DML_TYPE.UNKNOWN;
 		
 		try {
@@ -398,6 +403,10 @@ public class SQLUtil {
 			logger.error(String.format("sql parse exception. [ %s ]", sql));
 			queryType = PublicTadpoleDefine.QUERY_DML_TYPE.UNKNOWN;
 		}
+		
+		
+		logger.debug(new Date());
+		logger.debug("##[시작]####################################################################################");
 		
 		return queryType;
 	}

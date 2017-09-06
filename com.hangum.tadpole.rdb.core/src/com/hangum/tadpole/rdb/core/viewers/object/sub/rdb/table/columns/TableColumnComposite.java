@@ -240,10 +240,15 @@ public class TableColumnComposite extends AbstractTableComposite {
 		
 		// menu	
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		if(DBGroupDefine.MYSQL_GROUP == getUserDB().getDBGroup()) {
-			menuMgr.add(tableColumnModifyAction);
-			menuMgr.add(tableColumnDeleteAction);
-			menuMgr.add(new Separator());
+		
+		if(!PublicTadpoleDefine.YES_NO.YES.name().equals(getUserDB().getIs_readOnlyConnect())) {
+			if(PublicTadpoleDefine.YES_NO.NO.name().equals(getUserDB().getDbAccessCtl().getDdl_lock())) {
+				if(DBGroupDefine.MYSQL_GROUP == getUserDB().getDBGroup()) {
+					menuMgr.add(tableColumnModifyAction);
+					menuMgr.add(tableColumnDeleteAction);
+					menuMgr.add(new Separator());
+				}
+			}
 		}
 		menuMgr.add(tableColumnSelectionAction);
 

@@ -20,11 +20,8 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.engine.query.dao.system.accesscontrol.AccessCtlObjectDAO;
-import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
 import com.hangum.tadpole.engine.sql.util.SQLConvertCharUtil;
 
 /**
@@ -199,44 +196,45 @@ public class ResultSetUtils {
 	 */
 	public static Map<Integer, String> getColumnName(UserDBDAO userDB, Map<Integer, String> columnTableName,
 			boolean isShowRowNum, ResultSet rs) throws Exception {
-		Map<Integer, String> mapColumnName = getColumnName(isShowRowNum, rs);
-		DBAccessControlDAO dbAccessCtlDao = userDB.getDbAccessCtl();
-		Map<String, AccessCtlObjectDAO> mapDetailCtl = dbAccessCtlDao.getMapSelectAccessCtl();
-		
-		if(!mapDetailCtl.isEmpty()) {
-			Map<Integer, String> mapReturnColumnName = new HashMap<Integer, String>();
-			int intColumnCnt = 0;
-
-			// 컬럼 중에 db access 관련 있는 테이블이 있는 지 검증합니다.
-			for(int i=0; i<mapColumnName.size(); i++) {
-				String strTableName = columnTableName.get(i);
-				
-				// Is filter column?
-				if(mapDetailCtl.containsKey(strTableName)) {
-					// is filter table?
-					AccessCtlObjectDAO acDao = mapDetailCtl.get(strTableName);
-
-					String strTableOfAccessColumns = acDao.getDetail_obj();
-					String strResultColumn = mapColumnName.get(i);
-					if(StringUtils.containsIgnoreCase(strTableOfAccessColumns, strResultColumn)
-							| acDao.getDontuse_object().equals("YES")
-					) {
-//						if(logger.isDebugEnabled()) logger.debug("This colum is remove stauts " + strResultColumn);
-					} else {
-//						if(logger.isDebugEnabled()) logger.debug("This colum is normal stauts " + strResultColumn);
-						mapReturnColumnName.put(intColumnCnt, mapColumnName.get(i));
-						intColumnCnt++;
-					}
-				} else {
-					mapReturnColumnName.put(intColumnCnt, mapColumnName.get(i));
-					intColumnCnt++;
-				}
-			}
-			
-			return mapReturnColumnName;
-		} else {
-			return mapColumnName;			
-		}
+		return getColumnName(isShowRowNum, rs);
+//		Map<Integer, String> mapColumnName = getColumnName(isShowRowNum, rs);
+//		DBAccessControlDAO dbAccessCtlDao = userDB.getDbAccessCtl();
+//		Map<String, AccessCtlObjectDAO> mapDetailCtl = dbAccessCtlDao.getMapSelectAccessCtl();
+//		
+//		if(!mapDetailCtl.isEmpty()) {
+//			Map<Integer, String> mapReturnColumnName = new HashMap<Integer, String>();
+//			int intColumnCnt = 0;
+//
+//			// 컬럼 중에 db access 관련 있는 테이블이 있는 지 검증합니다.
+//			for(int i=0; i<mapColumnName.size(); i++) {
+//				String strTableName = columnTableName.get(i);
+//				
+//				// Is filter column?
+//				if(mapDetailCtl.containsKey(strTableName)) {
+//					// is filter table?
+//					AccessCtlObjectDAO acDao = mapDetailCtl.get(strTableName);
+//					logger.debug("----- table filter-----");
+////					String strTableOfAccessColumns = acDao.getDetail_obj();
+////					String strResultColumn = mapColumnName.get(i);
+////					if(StringUtils.containsIgnoreCase(strTableOfAccessColumns, strResultColumn)
+////							| acDao.getDontuse_object().equals("YES")
+////					) {
+//////						if(logger.isDebugEnabled()) logger.debug("This colum is remove stauts " + strResultColumn);
+////					} else {
+//////						if(logger.isDebugEnabled()) logger.debug("This colum is normal stauts " + strResultColumn);
+////						mapReturnColumnName.put(intColumnCnt, mapColumnName.get(i));
+////						intColumnCnt++;
+////					}
+//				} else {
+//					mapReturnColumnName.put(intColumnCnt, mapColumnName.get(i));
+//					intColumnCnt++;
+//				}
+//			}
+//			
+//			return mapReturnColumnName;
+//		} else {
+//			return mapColumnName;			
+//		}
 	}
 	
 	/**
@@ -264,46 +262,55 @@ public class ResultSetUtils {
 		return mapColumnName;
 	}
 	
-	
+	/**
+	 * get column label name
+	 * 
+	 * @param userDB
+	 * @param columnTableName
+	 * @param isShowRowNum
+	 * @param rs
+	 * @return
+	 * @throws Exception
+	 */
 	public static Map<Integer, String> getColumnLabelName(UserDBDAO userDB, Map<Integer, String> columnTableName, boolean isShowRowNum, ResultSet rs) throws Exception {
-		Map<Integer, String> mapColumnName = getColumnLabelName(isShowRowNum, rs);
-		DBAccessControlDAO dbAccessCtlDao = userDB.getDbAccessCtl();
-		Map<String, AccessCtlObjectDAO> mapDetailCtl = dbAccessCtlDao.getMapSelectAccessCtl();
-		
-		if(!mapDetailCtl.isEmpty()) {
-			Map<Integer, String> mapReturnColumnName = new HashMap<Integer, String>();
-			int intColumnCnt = 0;
-		
-			// 컬럼 중에 db access 관련 있는 테이블이 있는 지 검증합니다.
-			for(int i=0; i<mapColumnName.size(); i++) {
-				String strTableName = columnTableName.get(i);
-				
-				// Is filter column?
-				if(mapDetailCtl.containsKey(strTableName)) {
-					// is filter table?
-					AccessCtlObjectDAO acDao = mapDetailCtl.get(strTableName);
-		
-					String strTableOfAccessColumns = acDao.getDetail_obj();
-					String strResultColumn = mapColumnName.get(i);
-					if(StringUtils.containsIgnoreCase(strTableOfAccessColumns, strResultColumn)
-							| acDao.getDontuse_object().equals("YES")
-					) {
-		//				if(logger.isDebugEnabled()) logger.debug("This colum is remove stauts " + strResultColumn);
-					} else {
-		//				if(logger.isDebugEnabled()) logger.debug("This colum is normal stauts " + strResultColumn);
-						mapReturnColumnName.put(intColumnCnt, mapColumnName.get(i));
-						intColumnCnt++;
-					}
-				} else {
-					mapReturnColumnName.put(intColumnCnt, mapColumnName.get(i));
-					intColumnCnt++;
-				}
-			}
-			
-			return mapReturnColumnName;
-		} else {
-			return mapColumnName;			
-		}
+		return getColumnLabelName(isShowRowNum, rs);
+//		Map<Integer, String> mapColumnName = getColumnLabelName(isShowRowNum, rs);
+//		DBAccessControlDAO dbAccessCtlDao = userDB.getDbAccessCtl();
+//		Map<String, AccessCtlObjectDAO> mapDetailCtl = dbAccessCtlDao.getMapSelectAccessCtl();
+//		
+//		if(!mapDetailCtl.isEmpty()) {
+//			Map<Integer, String> mapReturnColumnName = new HashMap<Integer, String>();
+//			int intColumnCnt = 0;
+//		
+//			// 컬럼 중에 db access 관련 있는 테이블이 있는 지 검증합니다.
+//			for(int i=0; i<mapColumnName.size(); i++) {
+////				String strTableName = columnTableName.get(i);
+////				
+////				// Is filter column?
+////				if(mapDetailCtl.containsKey(strTableName)) {
+////					// is filter table?
+////					AccessCtlObjectDAO acDao = mapDetailCtl.get(strTableName);
+////					String strTableOfAccessColumns = acDao.getDetail_obj();
+////					String strResultColumn = mapColumnName.get(i);
+////					if(StringUtils.containsIgnoreCase(strTableOfAccessColumns, strResultColumn)
+////							| acDao.getDontuse_object().equals("YES")
+////					) {
+////		//				if(logger.isDebugEnabled()) logger.debug("This colum is remove stauts " + strResultColumn);
+////					} else {
+////		//				if(logger.isDebugEnabled()) logger.debug("This colum is normal stauts " + strResultColumn);
+////						mapReturnColumnName.put(intColumnCnt, mapColumnName.get(i));
+////						intColumnCnt++;
+////					}
+////				} else {
+//					mapReturnColumnName.put(intColumnCnt, mapColumnName.get(i));
+//					intColumnCnt++;
+////				}
+//			}
+//			
+//			return mapReturnColumnName;
+//		} else {
+//			return mapColumnName;			
+//		}
 	}
 	
 	/**

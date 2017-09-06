@@ -18,10 +18,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 
-import au.com.bytecode.opencsv.CSVReader;
-
 import com.hangum.tadpole.commons.util.DateUtil;
 import com.hangum.tadpole.commons.util.UnicodeBOMInputStream;
+import com.opencsv.CSVReader;
 
 /**
  * csv loader 

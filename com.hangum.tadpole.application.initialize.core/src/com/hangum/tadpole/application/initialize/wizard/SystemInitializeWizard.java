@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.application.initialize.wizard;
 
+import java.sql.Timestamp;
 import java.util.Locale;
 
 import org.apache.log4j.Logger;
@@ -92,7 +93,8 @@ public class SystemInitializeWizard extends Wizard {
 						PublicTadpoleDefine.YES_NO.NO.name(), 
 						"",
 						"*",
-						PublicTadpoleDefine.SYSTEM_DEFAULT_USER); //$NON-NLS-1$ //$NON-NLS-2$
+						PublicTadpoleDefine.SYSTEM_DEFAULT_USER,
+						new Timestamp(System.currentTimeMillis())); //$NON-NLS-1$ //$NON-NLS-2$
 				
 			} catch(Exception e) {
 				logger.error("System initialize Exception", e);
@@ -117,7 +119,8 @@ public class SystemInitializeWizard extends Wizard {
 				PublicTadpoleDefine.YES_NO.NO.name(), 
 				"", 
 				"*",
-				adminDao.getEmail()); //$NON-NLS-1$ //$NON-NLS-2$
+				adminDao.getEmail(),
+				new Timestamp(System.currentTimeMillis())); //$NON-NLS-1$ //$NON-NLS-2$
 				
 			} catch(Exception e) {
 				logger.error("System initialize Exception", e);
