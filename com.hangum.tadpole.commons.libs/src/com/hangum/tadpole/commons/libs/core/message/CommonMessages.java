@@ -66,10 +66,9 @@ public class CommonMessages {
 	public String CreateTime;
 	
 	// 공통 출력 메시지. 
-		// 정의 명령이 완료 되었습니다.)
-		public String CommandCoompleted;
-		// 데이터를 가져오는 중입니다.
-		public String DataIsBeginAcquired;
+	// 정의 명령이 완료 되었습니다.)
+	public String CommandCoompleted;
+	
 		
 	// 회사 정보
 	public String CompanyInfo;
@@ -134,7 +133,32 @@ public class CommonMessages {
 	public String ExportCSV;
 
 	public String ExportExcel;
+	
+	public String OperationSuccessfullyCompleted;
+	
+	public String EnterYourEmailAddress;
+	
+	public String EnableGoogleAuthenticator;
+	public String GoogleAuthenticator;
+	public String GoogleAuthenticatorSettings;
+	
+	public String SecretKey; /* Google Authenticator */
+	public String QRCode; /* Google Authenticator */
+	public String OTP; /* Google Authenticator */
+	
+	public String Enable; /* Enable */
+	
+	public String Password; 
+	public String ChangePassword;
 
+	public String List;
+
+	public String Type;
+
+	public String Schema;
+
+	public String TotalRowIs;
+	
 	public static CommonMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, CommonMessages.class);
 	}

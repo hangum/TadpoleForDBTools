@@ -30,7 +30,9 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.TadpoleProperties;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.commons.libs.core.message.WarningMessages;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
@@ -101,7 +103,7 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 		comboFontSize.setVisibleItemCount(9);
 		
 		btnIsWrap = new Button(container, SWT.CHECK);
-		btnIsWrap.setText(Messages.get().EditorPreferencePage_1);
+		btnIsWrap.setText(Messages.get().MaximumNumberOfCharactersPerLine);
 		
 		textWrapLimit = new Text(container, SWT.BORDER);
 		textWrapLimit.addModifyListener(new ModifyListener() {
@@ -143,13 +145,17 @@ public class EditorPreferencePage extends TadpoleDefaulPreferencePage implements
 			textWrapLimit.setFocus();
 			
 			setValid(false);
-			setErrorMessage(Messages.get().SQLFormatterPreferencePage_8);
+			setErrorMessage(WarningMessages.get().EnterNumbersOnly);
 			return false;
-		} else if(!(NumberUtils.toInt(txtWrapLimit) >= 40 && NumberUtils.toInt(txtWrapLimit) <= 1000)) {
+		} else if(!((NumberUtils.toInt(txtWrapLimit) >= TadpoleProperties.NUMBER_OF_CHARACTERS_PER_LINE_MIN)
+			  	 && (NumberUtils.toInt(txtWrapLimit) <= TadpoleProperties.NUMBER_OF_CHARACTERS_PER_LINE_MAX))) {
 			textWrapLimit.setFocus();
 			
 			setValid(false);
-			setErrorMessage(String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().EditorPreferencePage_1, "40", "1,000"));
+			setErrorMessage(String.format(WarningMessages.get().InvalidRange_GEAndLEWithItem, 
+					                      Messages.get().MaximumNumberOfCharactersPerLine, 
+					                      TadpoleProperties.NUMBER_OF_CHARACTERS_PER_LINE_MIN,
+					                      TadpoleProperties.NUMBER_OF_CHARACTERS_PER_LINE_MAX));
 			return false;
 		}
 		

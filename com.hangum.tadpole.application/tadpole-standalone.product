@@ -51,6 +51,7 @@
       <plugin id="com.hangum.tadpole.cipher.core"/>
       <plugin id="com.hangum.tadpole.cipher.renew.core"/>
       <plugin id="com.hangum.tadpole.commons.admin.core"/>
+      <plugin id="com.hangum.tadpole.commons.csv.core"/>
       <plugin id="com.hangum.tadpole.commons.excel.core"/>
       <plugin id="com.hangum.tadpole.commons.libs"/>
       <plugin id="com.hangum.tadpole.commons.otp.core"/>

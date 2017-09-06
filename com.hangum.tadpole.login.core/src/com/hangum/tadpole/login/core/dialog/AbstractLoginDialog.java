@@ -185,11 +185,16 @@ public abstract class AbstractLoginDialog extends Dialog {
 	 * @param strYesNO
 	 * @param strReason
 	 */
-	protected void saveLoginHistory(String strEmail, String ip_servletRequest, String strYesNO, String strReason) {
+	protected void saveWrongLoginHistory(String strEmail, String ip_servletRequest, String strYesNO, String strReason) {
 		try {
 			List<UserDAO> listUser = TadpoleSystem_UserQuery.findExistUser(strEmail);
 			if(!listUser.isEmpty()) {
-				saveLoginHistory(listUser.get(0).getSeq(), ip_servletRequest, strYesNO, strReason);
+				UserDAO userDao = listUser.get(0);
+				saveLoginHistory(userDao.getSeq(), ip_servletRequest, strYesNO, strReason);
+				
+				// 마지막 성공이후 5번 이상 패스워드가 틀렸을 경우 계정을 잠급니다.
+				TadpoleSystem_UserQuery.failLoginCheck(5, userDao.getSeq(), userDao.getEmail());
+				
 			}
 		} catch (Exception e) {
 			logger.error("get userlist", e);

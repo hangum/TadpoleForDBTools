@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -38,13 +39,17 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
+import com.hangum.tadpole.commons.libs.core.dao.LicenseDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.commons.libs.core.message.InfoMessages;
+import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
-import com.hangum.tadpole.commons.utils.zip.util.ZipUtils;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.engine.sql.util.SQLConvertCharUtil;
 import com.hangum.tadpole.engine.sql.util.export.AllDataExporter;
 import com.hangum.tadpole.engine.sql.util.export.CSVExpoter;
@@ -82,7 +87,7 @@ public class ResultSetDownloadDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(ResultSetDownloadDialog.class);
 	
 	/** null 기본값 */
-	private String strDefaultNullValue = "";//GetPreferenceGeneral.getResultNull();
+	private String strDefaultNullValue = "";
 	
 	/** 다운로드 실행시에 사용할 쿼리 지정 */
 	private String exeSQL = "";
@@ -281,12 +286,12 @@ public class ResultSetDownloadDialog extends Dialog {
 		}
 		
 		// job
-		final String MSG_DataIsBeginAcquired = CommonMessages.get().DataIsBeginAcquired;
+		final String MSG_LoadingData = InfoMessages.get().LoadingData;;
 		final AbstractExportDAO _dao = exportDAO;
 		Job job = new Job(Messages.get().MainEditor_45) {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
-				monitor.beginTask(MSG_DataIsBeginAcquired, IProgressMonitor.UNKNOWN);
+				monitor.beginTask(MSG_LoadingData, IProgressMonitor.UNKNOWN);
 				
 				try {
 					if("text".equalsIgnoreCase(selectionTab)) {			
@@ -354,9 +359,9 @@ public class ResultSetDownloadDialog extends Dialog {
 	 */
 	protected void exportResultCSVType(boolean isAddHead, String targetName, char seprator, String encoding) throws Exception {
 		if (btnStatus == BTN_STATUS.PREVIEW) {
-			previewDataLoad(targetName, CSVExpoter.makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator, PREVIEW_COUNT, strDefaultNullValue), encoding);
+			previewDataLoad(targetName, CSVExpoter.makeContent(isAddHead, queryExecuteResultDTO, seprator, PREVIEW_COUNT, strDefaultNullValue), encoding);
 		}else if (btnStatus == BTN_STATUS.SENDEDITOR) {
-			targetEditor(CSVExpoter.makeContent(isAddHead, targetName, queryExecuteResultDTO, seprator, strDefaultNullValue));
+			targetEditor(CSVExpoter.makeContent(isAddHead, queryExecuteResultDTO, seprator, strDefaultNullValue));
 		}else{
 			String strFullPath = AllDataExporter.makeCSVAllResult(queryExecuteResultDTO.getUserDB(), exeSQL, isAddHead, targetName, seprator, encoding, strDefaultNullValue, intMaxDownloadCnt);
 			downloadFile(targetName, strFullPath, encoding);
@@ -542,22 +547,65 @@ public class ResultSetDownloadDialog extends Dialog {
 			@Override
 			public void run() {
 				try {
-					String strZipFile = ZipUtils.pack(strFileLocation);
-					byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
+//					String strZipFile = ZipUtils.pack(strFileLocation);
+//					byte[] bytesZip = FileUtils.readFileToByteArray(new File(strZipFile));
+//					if(logger.isDebugEnabled()) logger.debug("zipFile is " + strZipFile + ", file name is " + fileName +".zip");
 					
-					if(logger.isDebugEnabled()) logger.debug("zipFile is " + strZipFile + ", file name is " + fileName +".zip");
+					File file = new File(strFileLocation);
+					String strExt = StringUtils.substringAfter(strFileLocation, ".");
+					if(logger.isInfoEnabled()) {
+						logger.info("#####[start]#####################[resource download]");
+						logger.info("\tfile ext : " + strExt);
+						logger.info("\tfile size : " + file.length());
+						logger.info("#####[end]#####################[resource download]");
+					}
 					
-					_downloadExtFile(fileName +".zip", bytesZip); //$NON-NLS-1$
+					byte[] bytesZip = FileUtils.readFileToByteArray(file);
+					_downloadExtFile(fileName + "." + strExt, bytesZip); //$NON-NLS-1$
 					
 					// 사용후 파일을 삭제한다.
-					FileUtils.deleteDirectory(new File(new File(strFileLocation).getParent()));
-					FileUtils.forceDelete(new File(strZipFile));
+					FileUtils.deleteDirectory(new File(file.getParent()));
+//					FileUtils.forceDelete(new File(strZipFile));
 				} catch(Exception e) {
 					logger.error("download file", e);
 				}
 			}
 		});
 	}
+	
+//	/**
+//	 * 쿼리 실행 결과를 저장한다.
+//	 * 
+//	 * @param reqResultDAO
+//	 * @param rsDAO
+//	 * @return
+//	 */
+//	public long saveExecutedSQLData(RequestResultDAO reqResultDAO, QueryExecuteResultDTO rsDAO) {
+//		long longHistorySeq = -1;
+//		
+//		LicenseDAO licenseDAO = LicenseValidator.getLicense();
+//		if(licenseDAO.isValidate()) {
+//			try {
+//				
+//				String strExecuteResultData = "";
+//				if(rsDAO != null) {
+//					if(PublicTadpoleDefine.YES_NO.YES.name().equals(rsDAO.getUserDB().getIs_result_save())) {
+//						strExecuteResultData = CSVExpoter.makeContent(true, rsDAO, ',', "UTF-8");
+//					}
+//				}
+//				
+//				longHistorySeq = TadpoleSystem_ExecutedSQL.saveExecuteSQUeryResource(getRdbResultComposite().getUserSeq(), 
+//								getRdbResultComposite().getUserDB(), 
+//								PublicTadpoleDefine.EXECUTE_SQL_TYPE.EDITOR, 
+//								strExecuteResultData,
+//								reqResultDAO);
+//			
+//				
+//			} catch(Exception e) {
+//				logger.error("save the user query", e); //$NON-NLS-1$
+//			}
+//		}
+//	}
 	
 	/** registery service handler */
 	protected void registerServiceHandler() {

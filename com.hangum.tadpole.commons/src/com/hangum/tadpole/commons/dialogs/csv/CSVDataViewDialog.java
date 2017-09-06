@@ -10,14 +10,12 @@
  ******************************************************************************/
 package com.hangum.tadpole.commons.dialogs.csv;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -31,29 +29,29 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.AutoResizeTableLayout;
-import com.hangum.tadpole.commons.util.CSVFileUtils;
+import com.hangum.tadpole.commons.util.CSVUtils;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
-import org.eclipse.swt.widgets.Label;
 
 /**
- * CSV file view dialog
+ * CSV data view dialog
  * 
  * @author hangum
  *
  */
-public class CSVFileViewDialog extends Dialog {
-	private static final Logger logger = Logger.getLogger(CSVFileViewDialog.class);
+public class CSVDataViewDialog extends Dialog {
+	private static final Logger logger = Logger.getLogger(CSVDataViewDialog.class);
 	
 	final int DOWNLOAD_BTN_ID = IDialogConstants.CLIENT_ID + 1;
 	private List<String[]> listData = new ArrayList<String[]>();
 	
-	private String fileName = "";
+	private String strData = "";
 	private Label lblTotalRowIs;
 	private TableViewer tableViewer;
 
@@ -61,17 +59,17 @@ public class CSVFileViewDialog extends Dialog {
 	 * Create the dialog.
 	 * @param parentShell
 	 */
-	public CSVFileViewDialog(Shell parentShell, String fileName) {
+	public CSVDataViewDialog(Shell parentShell, String strData) {
 		super(parentShell);
 		setShellStyle(SWT.MAX | SWT.RESIZE | SWT.TITLE);
 		
-		this.fileName = fileName;
+		this.strData = strData;
 	}
 	
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText("CSV File viewer");
+		newShell.setText("Data viewer");
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 	/**
@@ -114,14 +112,8 @@ public class CSVFileViewDialog extends Dialog {
 	 * 
 	 */
 	private void initUI() {
-		boolean isExists = new File(fileName).exists();
-		if(!isExists) {
-			MessageDialog.openError(getShell(), CommonMessages.get().Error, CommonMessages.get().FileNotFound);
-			return;
-		}
-		
-		listData = CSVFileUtils.readFile(fileName, ',');
-		lblTotalRowIs.setText(String.format("Total row is %s", listData.size()-1));
+		listData = CSVUtils.readData(strData, ',');
+		lblTotalRowIs.setText(String.format(CommonMessages.get().TotalRowIs, listData.size()-1));
 		createTableColumn();
 		
 		tableViewer.setLabelProvider(new CSViewerLabelProvider());
@@ -186,13 +178,12 @@ public class CSVFileViewDialog extends Dialog {
 	}
 
 }
-
 /**
- * csv viewer lable provider
- * 
- * @author hangum
- *
- */
+* csv viewer lable provider
+* 
+* @author hangum
+*
+*/
 class CSViewerLabelProvider  extends LabelProvider implements ITableLabelProvider {
 	private static final Logger logger = Logger.getLogger(CSViewerLabelProvider.class);
 	

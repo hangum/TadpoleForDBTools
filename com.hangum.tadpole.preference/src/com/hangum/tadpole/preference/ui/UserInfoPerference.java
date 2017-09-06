@@ -205,20 +205,22 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 				dialog.open();
 			}
 		});
-		btnPasswordChange.setText(Messages.get().PasswordChange);
+		btnPasswordChange.setText(CommonMessages.get().ChangePassword);
 		
 		Label lblPasswordDescription = new Label(container, SWT.NONE);
-		lblPasswordDescription.setText(Messages.get().UserInfoPerference_11);
+		lblPasswordDescription.setText(Messages.get().OnlyUsedForPasswordRecovery);
 		lblPasswordDescription.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
 		// google auth
 		Group grpGoogleAuth = new Group(container, SWT.NONE);
 		grpGoogleAuth.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		grpGoogleAuth.setText(Messages.get().UserInfoPerference_grpGoogleAuth_text);
+		grpGoogleAuth.setText(CommonMessages.get().GoogleAuthenticatorSettings);
 		grpGoogleAuth.setLayout(new GridLayout(2, false));
 		
 		btnGetOptCode = new Button(grpGoogleAuth, SWT.CHECK);
 		btnGetOptCode.addSelectionListener(new SelectionAdapter() {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				generateGoogleOTP();
@@ -227,11 +229,11 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		if(PublicTadpoleDefine.YES_NO.YES.name().equals(SessionManager.getUseOTP())) {
 			btnGetOptCode.setSelection(true);
 		}
-		btnGetOptCode.setText(Messages.get().UserInfoPerference_btnGoogleOtp_text_1);
+		btnGetOptCode.setText(CommonMessages.get().EnableGoogleAuthenticator);
 		new Label(grpGoogleAuth, SWT.NONE);
 		
 		Label lblSecretKey = new Label(grpGoogleAuth, SWT.NONE);
-		lblSecretKey.setText(Messages.get().UserInfoPerference_lblSecretKey_text_1);
+		lblSecretKey.setText(CommonMessages.get().SecretKey);
 		
 		textSecretKey = new Text(grpGoogleAuth, SWT.BORDER);
 		textSecretKey.setText(SessionManager.getOTPSecretKey());
@@ -243,7 +245,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		textSecretKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		Label lblQrcodeUrl = new Label(grpGoogleAuth, SWT.NONE);
-		lblQrcodeUrl.setText("<a href='https://code.google.com/p/google-authenticator/' target='_blank'>" + Messages.get().UserInfoPerference_lblQrcodeUrl_text + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$
+		lblQrcodeUrl.setText("<a href='https://code.google.com/p/google-authenticator/' target='_blank'>" + CommonMessages.get().QRCode + "</a>"); //$NON-NLS-1$ //$NON-NLS-2$
 		lblQrcodeUrl.setData(RWT.MARKUP_ENABLED, Boolean.TRUE);
 		
 		textQRCodeURL = new Text(grpGoogleAuth, SWT.BORDER | SWT.WRAP | SWT.MULTI);
@@ -260,7 +262,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		}
 		
 		Label lblOptCode = new Label(grpGoogleAuth, SWT.NONE);
-		lblOptCode.setText(Messages.get().OTP);
+		lblOptCode.setText(CommonMessages.get().OTP);
 		
 		textOTPCode = new Text(grpGoogleAuth, SWT.BORDER);
 		textOTPCode.addModifyListener(new ModifyListener() {
@@ -275,7 +277,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 			buttonWithdrawal.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if(MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().UserInfoPerference_9)) { //$NON-NLS-1$
+					if(MessageDialog.openConfirm(null, CommonMessages.get().Confirm, Messages.get().infoCloseYourAccount)) { //$NON-NLS-1$
 						try {
 							TadpoleSystem_UserRole.withdrawal(SessionManager.getUserSeq());
 							
@@ -288,7 +290,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 						
 				}
 			});
-			buttonWithdrawal.setText(Messages.get().UserInfoPerference_button_text);
+			buttonWithdrawal.setText(Messages.get().CloseAccount);
 			new Label(container, SWT.NONE);
 		}
 		

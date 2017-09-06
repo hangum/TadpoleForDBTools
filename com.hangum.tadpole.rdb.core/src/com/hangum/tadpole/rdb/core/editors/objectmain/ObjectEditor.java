@@ -437,7 +437,7 @@ public class ObjectEditor extends MainEditor {
 	 * @param title
 	 */
 	private void afterProcess(RequestQuery reqQuery, RequestResultDAO reqResultDAO, String title) {
-		resultMainComposite.getCompositeQueryHistory().afterQueryInit(reqResultDAO);
+		resultMainComposite.getCompositeQueryHistory().saveExecutedSQLData(reqResultDAO, null);
 		resultMainComposite.resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
 		
 		if(PublicTadpoleDefine.SUCCESS_FAIL.S.name().equals(reqResultDAO.getResult())) {

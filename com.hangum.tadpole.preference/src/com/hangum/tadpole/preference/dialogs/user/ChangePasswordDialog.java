@@ -25,7 +25,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.commons.libs.core.message.InfoMessages;
+import com.hangum.tadpole.commons.libs.core.utils.SHA256Utils;
 import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
+import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserQuery;
 import com.hangum.tadpole.preference.Messages;
@@ -41,11 +44,12 @@ import com.hangum.tadpole.session.manager.SessionManager;
 public class ChangePasswordDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(ChangePasswordDialog.class);
 
+	/** 화면을 닫을수 있는지 여부 */
+	private boolean isCloseEnable = false;
 	private Text textOldPassword;
 	
 	private Text textPassword;
 	private Text textRePassword;
-
 
 	/**
 	 * Create the dialog.
@@ -59,7 +63,8 @@ public class ChangePasswordDialog extends Dialog {
 	@Override
 	protected void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.get().PasswordChange);
+		newShell.setText(CommonMessages.get().ChangePassword);
+		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
 	/**
@@ -99,6 +104,7 @@ public class ChangePasswordDialog extends Dialog {
 		textRePassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textRePassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
+		textOldPassword.setFocus();
 		return container;
 	}
 
@@ -106,7 +112,7 @@ public class ChangePasswordDialog extends Dialog {
 	protected void okPressed() {
 		String strPasswdComplexity = GetAdminPreference.getPasswdComplexity();
 		int intLengthLimit = Integer.parseInt(GetAdminPreference.getPasswdLengthLimit());
-
+		
 		try {
 			TadpoleSystem_UserQuery.login(SessionManager.getEMAIL(), textOldPassword.getText());
 		} catch(Exception e) {
@@ -114,8 +120,6 @@ public class ChangePasswordDialog extends Dialog {
 			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, String.format(CommonMessages.get().IsIncorrect, Messages.get().OldPassword));
 			return;
 		}
-		
-		String.format(CommonMessages.get().ValueIsLessThanOrOverThan, Messages.get().Password, intLengthLimit, "30");
 		
 		String strPasswd 	= textPassword.getText();
 		String strRePasswd 	= textRePassword.getText();
@@ -141,20 +145,37 @@ public class ChangePasswordDialog extends Dialog {
 			}
 		}
 		
-		if(MessageDialog.openConfirm(getShell(), CommonMessages.get().Confirm, CommonMessages.get().doYouWantTosave)) {
+		// 마지막 패스워드와 같을수는 없습니다.
+		try {
+			String lastPasswd = SHA256Utils.getSHA256(textOldPassword.getText());
+			String newPasswd = SHA256Utils.getSHA256(strPasswd);
+			if(lastPasswd.equals(newPasswd)) {
+				MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, InfoMessages.get().PasswdOldNewIsSame);
+				textPassword.setFocus();
+				return;
+			}
+			
+		} catch(Exception e) {
+			logger.error("password sha exception", e);
+			MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, Messages.get().PasswordDoNotMatch);
+			textPassword.setFocus();
+			return;
+		}
+		
 			UserDAO userDAO = new UserDAO();
 			userDAO.setSeq(SessionManager.getUserSeq());
 			userDAO.setPasswd(textPassword.getText()); 
 		
-			try {
-				TadpoleSystem_UserQuery.updateUserPassword(userDAO);
-				MessageDialog.openInformation(null, CommonMessages.get().Confirm, Messages.get().ChangedPassword);
-			} catch(Exception e) {
-				logger.error("Changing password", e); //$NON-NLS-1$
-				MessageDialog.openError(getShell(),CommonMessages.get().Error, e.getMessage());			 //$NON-NLS-1$
-			}	
-		}
+		try {
+			TadpoleSystem_UserQuery.updateUserPassword(userDAO);
+			MessageDialog.openInformation(null, CommonMessages.get().Confirm, Messages.get().ChangedPassword);
+		} catch(Exception e) {
+			logger.error("Changing password", e); //$NON-NLS-1$
+			MessageDialog.openError(getShell(),CommonMessages.get().Error, e.getMessage());			 //$NON-NLS-1$
+			return;
+		}	
 
+		isCloseEnable = true;
 		super.okPressed();
 	}
 
@@ -166,7 +187,7 @@ public class ChangePasswordDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Save, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Cancel, false);
+//		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Cancel, false);
 	}
 
 	/**
@@ -175,6 +196,13 @@ public class ChangePasswordDialog extends Dialog {
 	@Override
 	protected Point getInitialSize() {
 		return new Point(350, 200);
+	}
+	
+	@Override
+	public boolean close() {
+		if(!isCloseEnable) return false;
+		
+		return super.close();
 	}
 
 }

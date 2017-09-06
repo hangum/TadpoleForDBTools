@@ -26,6 +26,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
+import com.hangum.tadpole.engine.manager.TadpoleSQLTransactionManager;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.Activator;
@@ -54,6 +55,8 @@ public class DisconnectDBAction implements IViewActionDelegate {
 	public void run(IAction action) {
 
 		final UserDBDAO userDB = (UserDBDAO)sel.getFirstElement();
+		final String strUserID = SessionManager.getEMAIL();
+		
 		// editor 삭제
 		MainEditorInput mei = new MainEditorInput(userDB);		
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
@@ -80,7 +83,16 @@ public class DisconnectDBAction implements IViewActionDelegate {
 		
 		// realdb disconnect
 		try {
-			TadpoleSQLManager.removeInstance(userDB);			
+			TadpoleSQLManager.removeInstance(userDB);
+		} catch (Exception e) { 
+			logger.error("disconnection exception", e);			
+			
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), CommonMessages.get().Error, "Disconnection Exception", errStatus); //$NON-NLS-1$
+		}
+		
+		try {
+			TadpoleSQLTransactionManager.rollback(strUserID, userDB);
 		} catch (Exception e) { 
 			logger.error("disconnection exception", e);			
 			

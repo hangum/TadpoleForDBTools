@@ -11,6 +11,7 @@
 package com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail;
 
 import java.io.InputStream;
+import java.sql.Timestamp;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -47,8 +48,10 @@ import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.engine.sql.util.RDBTypeToJavaTypeUtils;
+import com.hangum.tadpole.engine.sql.util.export.CSVExpoter;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultFilter;
@@ -72,7 +75,6 @@ import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.mysql.MySQL
 import com.hangum.tadpole.rdb.core.editors.main.composite.tail.ResultTailComposite;
 import com.hangum.tadpole.rdb.core.editors.main.utils.TableToDataUtils;
 import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtension;
-import com.hangum.tadpole.rdb.core.util.QueryResultSaved;
 import com.hangum.tadpole.session.manager.SessionManager;
 import com.swtdesigner.SWTResourceManager;
 
@@ -589,7 +591,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 						if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
 						/** 쿼리 결과를 저장합니다 */
 						if(PublicTadpoleDefine.YES_NO.YES.name().equals(rsDAO.getUserDB().getIs_result_save())) {
-							QueryResultSaved.saveQueryResult(""+longHistorySeq, newRsDAO);
+							TadpoleSystem_ExecutedSQL.insertResourceResultData(longHistorySeq, new Timestamp(System.currentTimeMillis()), CSVExpoter.makeContent(false, rsDAO, ',', "UTF-8"));
 						} 
 						
 						oldTadpoleResultSet.getData().addAll(newRsDAO.getDataList().getData());

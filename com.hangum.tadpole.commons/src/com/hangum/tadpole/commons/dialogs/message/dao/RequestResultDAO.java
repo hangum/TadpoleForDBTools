@@ -48,6 +48,8 @@ public class RequestResultDAO {
 	
 	/** execute_sql_type */
 	PublicTadpoleDefine.EXECUTE_SQL_TYPE EXECUSTE_SQL_TYPE = PublicTadpoleDefine.EXECUTE_SQL_TYPE.SESSION;
+	
+	String result_save_yn = PublicTadpoleDefine.YES_NO.NO.name();
 
 	public RequestResultDAO(int duration, Timestamp dateExecute, String strSQLText, Timestamp endDateExecute, int rows, String result, String message) {
 		this.duration = duration;
@@ -267,5 +269,20 @@ public class RequestResultDAO {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	/**
+	 * @return the result_save_yn
+	 */
+	public String getResult_save_yn() {
+		return result_save_yn;
+	}
+
+	/**
+	 * @param result_save_yn the result_save_yn to set
+	 */
+	public void setResult_save_yn(String result_save_yn) {
+		this.result_save_yn = result_save_yn;
+	}
+	
 
 }

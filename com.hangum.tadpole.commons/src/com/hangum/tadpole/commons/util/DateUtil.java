@@ -56,7 +56,6 @@ public class DateUtil {
 		_cal.setTimeInMillis(longTimeMills);
 		return _cal.get(Calendar.YEAR) + "" + StringUtils.leftPad(""+(_cal.get(Calendar.MONTH) + 1), 2, "0"); 
 	}
-
 	
 	/**
 	 * 몇개월 후
@@ -67,6 +66,19 @@ public class DateUtil {
 	public static long afterMonthToMillsMonth(int month) {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MONTH, month);
+		
+		return cal.getTimeInMillis();
+	}
+	
+	/**
+	 * 몇개월 전
+	 * 
+	 * @param month
+	 * @return
+	 */
+	public static long beforeMonthToMillsMonth(int month) {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.MONTH, -month);
 		
 		return cal.getTimeInMillis();
 	}
@@ -85,6 +97,19 @@ public class DateUtil {
 	}
 	
 	/**
+	 * 몇일 전
+	 * 
+	 * @param day
+	 * @return
+	 */
+	public static long beforeMonthToMillis(int day) {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_YEAR, -day);
+		
+		return cal.getTimeInMillis();
+	}
+	
+	/**
 	 * 주어진 시간 기준으로 몇일 후
 	 * 
 	 * @param time
@@ -95,6 +120,21 @@ public class DateUtil {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(time);
 		cal.add(Calendar.DAY_OF_YEAR, day);
+		
+		return cal.getTimeInMillis();
+	}
+	
+	/**
+	 * 주어진 시간 기준으로 몇일 후
+	 * 
+	 * @param time
+	 * @param intMaxDay
+	 * @return
+	 */
+	public static long beforeMonthToMillis(long time, int day) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(time);
+		cal.add(Calendar.DAY_OF_YEAR, -day);
 		
 		return cal.getTimeInMillis();
 	}

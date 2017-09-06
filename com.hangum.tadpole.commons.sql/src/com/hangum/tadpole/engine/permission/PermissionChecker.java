@@ -12,8 +12,13 @@ package com.hangum.tadpole.engine.permission;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
+import com.hangum.tadpole.commons.libs.core.message.InfoMessages;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.security.DBAccessCtlManager;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 
 /**
@@ -23,7 +28,7 @@ import com.hangum.tadpole.engine.sql.util.SQLUtil;
  *
  */
 public class PermissionChecker {
-	
+	private static final Logger logger = Logger.getLogger(PermissionChecker.class);
 	/**
 	 * db를 추가/삭제/수정 할 수 있는 권한이 있는지.
 	 * 
@@ -64,11 +69,11 @@ public class PermissionChecker {
 	 * @param listStrExecuteQuery
 	 * @return
 	 */
-	public static boolean isExecute(String strUserType, UserDBDAO userDB, List<String> listStrExecuteQuery) {
+	public static boolean isExecute(String strUserType, UserDBDAO userDB, List<String> listStrExecuteQuery) throws Exception {
 		boolean isReturn = true;
 		
 		for (String strQuery : listStrExecuteQuery) {
-			if(!isExecute(strUserType, userDB, strQuery)) return false;	
+			isExecute(strUserType, userDB, strQuery);	
 		}
 		
 		return isReturn;
@@ -83,35 +88,42 @@ public class PermissionChecker {
 	 * @param strSQL
 	 * @return
 	 */
-	public static boolean isExecute(String strUserType, UserDBDAO userDB, String strSQL) {
-		boolean boolReturn = false;
+	public static void isExecute(String strUserType, UserDBDAO userDB, String strSQL) throws Exception {
+//		boolean boolReturn = false;
 		
-		if(SQLUtil.isNotAllowed(strSQL)) {
-			return false;
-		}
+//		if(SQLUtil.isNotAllowed(strSQL)) {
+//			return false;
+//		}
 		
 		// 디비권한이 read only connection 옵션이 선택되었으면 statement문만 권한을 허락합니다.
 		if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_readOnlyConnect())) {
-			if(!SQLUtil.isStatement(strSQL)) return false;
+			if(!SQLUtil.isStatement(strSQL)) throw new Exception(InfoMessages.get().ThisIsReadOnlyDatabase);
 		}
 		
-		//
-		// 유저의 권한을 검사합니다.
-		//
-		PublicTadpoleDefine.DBOperationType opType = PublicTadpoleDefine.DBOperationType.valueOf(userDB.getOperation_type());
-		if(opType != PublicTadpoleDefine.DBOperationType.PRODUCTION) {
-			return true;
-		// real db라면 
-		} else {
-			if(PublicTadpoleDefine.DB_USER_ROLE_TYPE.ADMIN.name().equals(strUserType) || 
-					PublicTadpoleDefine.DB_USER_ROLE_TYPE.MANAGER.name().equals(strUserType) ||
-					PublicTadpoleDefine.DB_USER_ROLE_TYPE.DBA.name().equals(strUserType)) return true;
-			
-			// GUEST USER인 경우 SELECT 만 허락합니다.
-			if(SQLUtil.isStatement(strSQL)) return true;
+//		//
+//		// 유저가 일반 권한일 경우 프러덕션 디비의 수정을 할 수 없습니다.
+//		//
+//		PublicTadpoleDefine.DBOperationType opType = PublicTadpoleDefine.DBOperationType.valueOf(userDB.getOperation_type());
+//		if(opType != PublicTadpoleDefine.DBOperationType.PRODUCTION) {
+//			boolReturn = true;
+//		// real db라면 
+//		} else {
+//			if(PublicTadpoleDefine.DB_USER_ROLE_TYPE.ADMIN.name().equals(strUserType) || 
+//					PublicTadpoleDefine.DB_USER_ROLE_TYPE.MANAGER.name().equals(strUserType) ||
+//					PublicTadpoleDefine.DB_USER_ROLE_TYPE.DBA.name().equals(strUserType)) boolReturn = true;
+//			
+//			// GUEST USER인 경우 SELECT 만 허락합니다.
+//			if(SQLUtil.isStatement(strSQL)) boolReturn = true;
+//		}
+		
+		try {
+			DBAccessCtlManager.getInstance().tableFilterTest(userDB, strSQL);
+		} catch (Exception e) {
+			logger.error("table filter exception", e);
+			throw e;
 		}
 		
-		return boolReturn;
+//		return boolReturn;
 	}
 	
 	/**

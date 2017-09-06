@@ -13,6 +13,8 @@ package com.hangum.tadpole.engine.query.dao.system;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+
 /**
  * 실행쿼리 리소스 정보.
  * 
@@ -31,10 +33,19 @@ public class ExecutedSqlResourceDAO {
      int row;
      String result;
      String message;
+     
+     int accesscontrol_seq;
 
-     Timestamp create_time;
      String delYn;
      String ipAddress;
+     
+     // sql 결과 데이터 관리 항목
+     String result_save_yn = PublicTadpoleDefine.YES_NO.NO.name();
+     int result_del_user_seq;
+     Timestamp result_del_time;
+     String result_del_msg;
+     
+     Timestamp create_time;
      
 	public ExecutedSqlResourceDAO() {
 	}
@@ -213,6 +224,76 @@ public class ExecutedSqlResourceDAO {
 	 */
 	public void setDuration(int duration) {
 		this.duration = duration;
+	}
+
+	/**
+	 * @return the accesscontrol_seq
+	 */
+	public int getAccesscontrol_seq() {
+		return accesscontrol_seq;
+	}
+
+	/**
+	 * @param accesscontrol_seq the accesscontrol_seq to set
+	 */
+	public void setAccesscontrol_seq(int accesscontrol_seq) {
+		this.accesscontrol_seq = accesscontrol_seq;
+	}
+
+	/**
+	 * @return the result_save_yn
+	 */
+	public String getResult_save_yn() {
+		return result_save_yn;
+	}
+
+	/**
+	 * @param result_save_yn the result_save_yn to set
+	 */
+	public void setResult_save_yn(String result_save_yn) {
+		this.result_save_yn = result_save_yn;
+	}
+
+	/**
+	 * @return the result_del_user_seq
+	 */
+	public int getResult_del_user_seq() {
+		return result_del_user_seq;
+	}
+
+	/**
+	 * @param result_del_user_seq the result_del_user_seq to set
+	 */
+	public void setResult_del_user_seq(int result_del_user_seq) {
+		this.result_del_user_seq = result_del_user_seq;
+	}
+
+	/**
+	 * @return the result_del_time
+	 */
+	public Timestamp getResult_del_time() {
+		return result_del_time;
+	}
+
+	/**
+	 * @param result_del_time the result_del_time to set
+	 */
+	public void setResult_del_time(Timestamp result_del_time) {
+		this.result_del_time = result_del_time;
+	}
+
+	/**
+	 * @return the result_del_msg
+	 */
+	public String getResult_del_msg() {
+		return result_del_msg;
+	}
+
+	/**
+	 * @param result_del_msg the result_del_msg to set
+	 */
+	public void setResult_del_msg(String result_del_msg) {
+		this.result_del_msg = result_del_msg;
 	}
 	
 }
