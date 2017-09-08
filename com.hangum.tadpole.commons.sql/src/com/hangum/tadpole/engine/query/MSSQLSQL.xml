@@ -239,7 +239,9 @@ select
     ,object_schema_name(i.object_id) as index_schema
     ,i.name as index_name
 from sys.indexes i 
-where i.object_id = object_id(#table_schema#+'.'+#table_name#)      
+where 1=1
+  and i.type > 0
+  and i.object_id = object_id(#table_schema#+'..'+#table_name#)      
 </select>
 
 <!-- 
@@ -291,8 +293,7 @@ select
     ,null as initially_deferred
 from sys.objects 
 where 1=1
-  and schema_id = schema_id(#table_schema#)
-  and parent_object_id = object_id(#table_name#)
+  and parent_object_id = object_id(#table_schema#+'..'+#table_name#)
   and type in ('C ','PK','UQ','F ', 'D ')
 </select>
 
