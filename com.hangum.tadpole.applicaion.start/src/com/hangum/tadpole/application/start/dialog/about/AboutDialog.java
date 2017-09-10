@@ -104,14 +104,6 @@ public class AboutDialog extends Dialog {
 		
 		new Label(composite_1, SWT.NONE);
 		
-		Label lblNewLabel0 = new Label(composite_1, SWT.NONE);
-		lblNewLabel0.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel0.setText(Messages.get().AboutDialog_5);
-
-		Label lblNewLabel2 = new Label(composite_1, SWT.NONE);
-		lblNewLabel2.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
-		lblNewLabel2.setText(Messages.get().AboutDialog_6);
-		
 		Label lblNewLabel3 = new Label(composite_1, SWT.NONE);
 		lblNewLabel3.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		lblNewLabel3.setText(Messages.get().AboutDialog_7);
@@ -119,6 +111,14 @@ public class AboutDialog extends Dialog {
 		Label lblNewLabelUseLicense = new Label(composite_1, SWT.NONE);
 		lblNewLabelUseLicense.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
 		lblNewLabelUseLicense.setText(Messages.get().UseLicense);
+		
+		Label lblNewLabel0 = new Label(composite_1, SWT.NONE);
+		lblNewLabel0.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+		lblNewLabel0.setText(Messages.get().AboutDialog_5);
+
+		Label lblNewLabel2 = new Label(composite_1, SWT.NONE);
+		lblNewLabel2.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+		lblNewLabel2.setText(Messages.get().AboutDialog_6);
 		
 		Label lblNewLabel4 = new Label(composite_1, SWT.NONE);
 		lblNewLabel4.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );

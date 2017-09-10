@@ -201,7 +201,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		btnPasswordChange.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ChangePasswordDialog dialog = new ChangePasswordDialog(getShell());
+				ChangePasswordDialog dialog = new ChangePasswordDialog(getShell(), true);
 				dialog.open();
 			}
 		});
