@@ -24,6 +24,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.rap.rwt.RWT;
 
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
+import com.hangum.tadpole.commons.libs.core.dao.LicenseDAO;
+import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -106,6 +108,10 @@ public class TadpoleSystem_SchemaHistory {
 	public static SchemaHistoryDAO save(int user_seq, UserDBDAO userDB, 
 										String strWorkType, String strObjecType, String strObjectId, String strSQL) {
 		SchemaHistoryDAO schemaDao = new SchemaHistoryDAO(); 
+		LicenseDAO licenseDAO = LicenseValidator.getLicense();
+		if(!licenseDAO.isValidate()) {
+			return schemaDao;
+		}
 		
 		try {
 			schemaDao = new SchemaHistoryDAO();

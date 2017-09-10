@@ -278,16 +278,12 @@ public class TableColumnObjectQuery {
 			
 			if (null != columnDAO.getDefault()){
 				if (RDBTypeToJavaTypeUtils.isNumberType(columnDAO.getType())) {
-					strQuery = String.format("ALTER TABLE %s ALTER %s SET DEFAULT %s", 
-						tableDAO.getFullName(), 
-						SQLUtil.makeIdentifierName(userDB, columnDAO.getField()),  						
-						columnDAO.getDefault());
+					strQuery = String.format("ALTER TABLE %s ALTER %s SET DEFAULT %s", tableDAO.getFullName(), SQLUtil.makeIdentifierName(userDB, columnDAO.getField()), columnDAO.getDefault());
 					ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
+				} else if(RDBTypeToJavaTypeUtils.isDateType(columnDAO.getType())) {
+					// nothing
 				}else{
-					strQuery = String.format("ALTER TABLE %s ALTER %s SET DEFAULT %s", 
-						tableDAO.getFullName(), 
-						SQLUtil.makeIdentifierName(userDB, columnDAO.getField()),  						
-						SQLUtil.makeQuote(columnDAO.getDefault()));
+					strQuery = String.format("ALTER TABLE %s ALTER %s SET DEFAULT %s", tableDAO.getFullName(), SQLUtil.makeIdentifierName(userDB, columnDAO.getField()), SQLUtil.makeQuote(columnDAO.getDefault()));
 					ExecuteDDLCommand.executSQL(userDB, reqReResultDAO, strQuery);
 				}
 			}

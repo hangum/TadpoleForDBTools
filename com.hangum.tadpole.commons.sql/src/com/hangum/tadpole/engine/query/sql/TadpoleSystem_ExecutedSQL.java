@@ -315,6 +315,9 @@ public class TadpoleSystem_ExecutedSQL {
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void insertResourceResultData(final long seq, final Timestamp startDateExecute, final String contents) throws TadpoleSQLManagerException, SQLException {
+		LicenseDAO licenseDAO = LicenseValidator.getLicense();
+		if(!licenseDAO.isValidate()) return;
+		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		
 		// content data를 저장합니다.
