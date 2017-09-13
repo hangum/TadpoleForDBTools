@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.editors.main;
 
 import java.io.File;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
@@ -109,7 +110,11 @@ public class MainEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return userDB.getDisplay_name();
+		if(PublicTadpoleDefine.DBOperationType.PRODUCTION.toString().equals(userDB.getOperation_type())) {
+			return String.format("[%s]%s", StringUtils.substring(userDB.getOperation_type(), 0, 1), userDB.getDisplay_name());
+		}  else {
+			return userDB.getDisplay_name();
+		}
 	}
 
 	@Override
