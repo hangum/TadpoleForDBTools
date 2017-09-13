@@ -526,6 +526,7 @@ public class MainEditor extends EditorExtension {
 				if(logger.isDebugEnabled()) logger.debug("[set commit][user id]" + getUserEMail() + "[user id]" + userDB); //$NON-NLS-1$ //$NON-NLS-2$
 				
 				TadpoleSQLTransactionManager.commit(getUserEMail(), userDB);
+				MessageDialog.openInformation(getSite().getShell(), CommonMessages.get().Confirm, Messages.get().ConfirmCommit);
 			}
 		});
 		
@@ -538,6 +539,7 @@ public class MainEditor extends EditorExtension {
 				if(logger.isDebugEnabled()) logger.debug("[set rollback][user id]" + getUserEMail() + "[user id]" + userDB); //$NON-NLS-1$ //$NON-NLS-2$
 				
 				TadpoleSQLTransactionManager.rollback(getUserEMail(), userDB);
+				MessageDialog.openInformation(getSite().getShell(), CommonMessages.get().Confirm, Messages.get().ConfirmRollback);
 			}
 		});
 		new ToolItem(toolBar, SWT.SEPARATOR);
