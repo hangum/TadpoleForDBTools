@@ -218,7 +218,7 @@ public abstract class AbstractLoginDialog extends Dialog {
 			long longChangedTime = DateUtil.afterMonthToMillis(userDao.getChanged_passwd_time().getTime(), intMaxDay);
 			if(System.currentTimeMillis() > longChangedTime) {
 				if(logger.isDebugEnabled()) logger.debug("Must be changed password. " + new Date(longChangedTime));
-				ChangePasswordDialog dialog = new ChangePasswordDialog(getShell());
+				ChangePasswordDialog dialog = new ChangePasswordDialog(getShell(), false);
 				dialog.open();
 			} else {
 				if(logger.isDebugEnabled()) logger.debug("Doesnot chaged password. password chaged date is " + new Date(longChangedTime));

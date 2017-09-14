@@ -152,8 +152,8 @@ public class TadpoleConstraintComposite extends AbstractObjectComposite {
 				menuMgr.add(dropAction_Constraint);
 				menuMgr.add(new Separator());
 			}
-			menuMgr.add(refreshAction_Constraint);
 		}
+		menuMgr.add(refreshAction_Constraint);
 
 		constraintTableViewer.getTable().setMenu(menuMgr.createContextMenu(constraintTableViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, constraintTableViewer);

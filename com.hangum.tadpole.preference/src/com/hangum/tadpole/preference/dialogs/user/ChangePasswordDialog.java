@@ -55,9 +55,12 @@ public class ChangePasswordDialog extends Dialog {
 	 * Create the dialog.
 	 * 
 	 * @param parentShell
+	 * @param isCloseEnable 화면을 닫을수 있는지 여부
 	 */
-	public ChangePasswordDialog(Shell parentShell) {
+	public ChangePasswordDialog(Shell parentShell, boolean isCloseEnable) {
 		super(parentShell);
+		
+		this.isCloseEnable = isCloseEnable;
 	}
 
 	@Override
@@ -187,7 +190,7 @@ public class ChangePasswordDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		createButton(parent, IDialogConstants.OK_ID, CommonMessages.get().Save, true);
-//		createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Cancel, false);
+		if(isCloseEnable) createButton(parent, IDialogConstants.CANCEL_ID, CommonMessages.get().Cancel, false);
 	}
 
 	/**

@@ -15,6 +15,7 @@
             name="%page.name.0">
       </page>
       <page
+            category="com.hangum.tadpole.preference.page.DB"
             class="com.hangum.tadpole.preference.ui.RDBPreferencePage"
             id="com.hangum.db.browser.rap.core.page.rdb"
             name="%page.name.1">
@@ -26,6 +27,7 @@
             name="%page.name.2">
       </page>
       <page
+            category="com.hangum.tadpole.preference.page.DB"
             class="com.hangum.tadpole.preference.ui.MongoDBPreferencePage"
             id="com.hangum.tadpole.preference.page.mongodb"
             name="%page.name.3">
@@ -53,6 +55,11 @@
             class="com.hangum.tadpole.preference.ui.EditorPreferencePage"
             id="com.hangum.tadpole.preference.page.editor"
             name="%page.name.7">
+      </page>
+      <page
+            class="com.hangum.tadpole.preference.ui.DBPreferencePage"
+            id="com.hangum.tadpole.preference.page.DB"
+            name="%page.name.8">
       </page>
    </extension>
 </plugin>

@@ -308,7 +308,12 @@ public class TadpoleObjectQuery {
 		    	}
 			}
 			
-		} else if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()){
+		} else {
+			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+			returnColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
+		}
+		
+		if(DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()){
 			try{
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 				List<SQLiteForeignKeyListDAO> foreignKeyList = sqlClient.queryForList("tableForeignKeyList", mapParam); //$NON-NLS-1$
@@ -326,9 +331,6 @@ public class TadpoleObjectQuery {
 			}catch(Exception e){
 				logger.error("not found foreignkey for " + tableDao.getName());
 			}
-		} else {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			returnColumns = sqlClient.queryForList("tableColumnList", mapParam); //$NON-NLS-1$
 		}
 		
 		// if find the keyword is add system quote.

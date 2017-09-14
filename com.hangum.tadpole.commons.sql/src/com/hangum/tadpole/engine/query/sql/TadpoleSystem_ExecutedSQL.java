@@ -24,7 +24,9 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
+import com.hangum.tadpole.commons.libs.core.dao.LicenseDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.initialize.TadpoleSystemInitializer;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -82,6 +84,11 @@ public class TadpoleSystem_ExecutedSQL {
 	 * @throws SQLException
 	 */
 	public static List<RequestResultDAO> getExecuteQueryHistoryDetail(String strEmail, String strType, String dbSeq, long startTime, long endTime, int duringExecute, String strSearch, int _indexStart, int _indexEnd) throws TadpoleSQLManagerException, SQLException {
+		LicenseDAO licenseDAO = LicenseValidator.getLicense();
+		if(!licenseDAO.isValidate()) {
+			return new ArrayList<RequestResultDAO>();
+		}
+		
 		List<RequestResultDAO> returnSQLHistory = new ArrayList<RequestResultDAO>();
 		
 		Map<String, Object> queryMap = new HashMap<String, Object>();
@@ -308,6 +315,9 @@ public class TadpoleSystem_ExecutedSQL {
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void insertResourceResultData(final long seq, final Timestamp startDateExecute, final String contents) throws TadpoleSQLManagerException, SQLException {
+		LicenseDAO licenseDAO = LicenseValidator.getLicense();
+		if(!licenseDAO.isValidate()) return;
+		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		
 		// content data를 저장합니다.

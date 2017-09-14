@@ -264,10 +264,10 @@ public class TadpoleIndexesComposite extends AbstractObjectComposite {
 				menuMgr.add(dropAction_Index);
 				menuMgr.add(new Separator());
 			}
-			menuMgr.add(refreshAction_Index);
-//			menuMgr.add(new Separator());
-//			menuMgr.add(viewDDLAction);
 		}
+		menuMgr.add(refreshAction_Index);
+//		menuMgr.add(new Separator());
+//		menuMgr.add(viewDDLAction);
 
 		indexTableViewer.getTable().setMenu(menuMgr.createContextMenu(indexTableViewer.getTable()));
 		getSite().registerContextMenu(menuMgr, indexTableViewer);

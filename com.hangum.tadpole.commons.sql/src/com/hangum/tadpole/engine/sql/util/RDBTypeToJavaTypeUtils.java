@@ -131,6 +131,36 @@ public class RDBTypeToJavaTypeUtils {
 
 		return false;
 	}
+	
+	/**
+	 * Date 컬럼인지
+	 * 
+	 * @param sqlType
+	 * @return
+	 */
+	public static boolean isDateType(int sqlType) {
+		switch (sqlType) {
+		case Types.DATE:
+		case Types.TIME:
+		case Types.TIMESTAMP:
+			return true;
+		}
+
+		return false;
+	}
+	
+	public static boolean isDateType(String rdbType) {
+		if(rdbType == null) return false;
+		
+		// 데이터 타입하고 데이터 사이즈가 함께 있을경우.. decimal(8) 
+		if(StringUtils.contains(rdbType, "(")){
+			rdbType = StringUtils.substringBefore(rdbType, "(");
+		}
+		
+		Integer intType = mapTypes.get(rdbType.toUpperCase());
+		if(intType == null) return false;
+		return isDateType(intType);
+	}
 
 	public static boolean isNumberType(String rdbType) {
 		if(rdbType == null) return false;
@@ -141,9 +171,7 @@ public class RDBTypeToJavaTypeUtils {
 		}
 		
 		Integer intType = mapTypes.get(rdbType.toUpperCase());
-		
 		if(intType == null) return false;
-		
 		return isNumberType(intType);
 	}
 
