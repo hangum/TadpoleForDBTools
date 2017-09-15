@@ -1,5 +1,8 @@
 package com.hangum.tadpole.commons.libs.core.dao;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * License dao
  * 
@@ -14,6 +17,9 @@ public class LicenseDAO {
 	
 	String customer_email = "";
 	String customer = "";
+	
+	String mActivationDate = "";
+	String mExpirationDate = "";
 	
 	public LicenseDAO() {
 	}
@@ -100,6 +106,43 @@ public class LicenseDAO {
 	 */
 	public void setTerm(String term) {
 		this.term = term;
+	}
+	
+	public void setActivationDate(String aDate) {
+		mActivationDate = aDate;
+	}
+	
+	public String getActivationDate() {
+		return mActivationDate;
+	}
+	
+	public void setExpirationDate(String aDate) {
+		this.mExpirationDate = aDate;
+	}
+	
+	public String getExpirationDate() {
+		return mExpirationDate;
+	}
+	
+	public long getRemaining() {
+		long sRemaining = 0;
+		
+		if( this.mActivationDate != "" && this.mExpirationDate != "" ) {
+			SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			
+			try {
+				Date sActivationDate = sDateFormat.parse(this.mActivationDate);
+				Date sExpirationDate = sDateFormat.parse(this.mExpirationDate);
+				
+				/* Get how many days left */
+				sRemaining = (sExpirationDate.getTime() - sActivationDate.getTime()) / (24 * 60 * 60 * 1000); 
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return sRemaining;
 	}
 	
 }

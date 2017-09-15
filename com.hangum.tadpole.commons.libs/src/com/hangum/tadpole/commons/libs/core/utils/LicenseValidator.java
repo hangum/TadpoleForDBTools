@@ -59,4 +59,19 @@ public class LicenseValidator {
 		LicenseDAO licenseDAO = LicenseValidator.getLicense();
 		return licenseDAO.isEnterprise();
 	}
+	
+	public static String getActivationDate() {
+		LicenseDAO licenseDAO = LicenseValidator.getLicense();
+		return licenseDAO.getActivationDate();
+	}
+	
+	public static String getExpirationDate() {
+		LicenseDAO licenseDAO = LicenseValidator.getLicense();
+		return licenseDAO.getExpirationDate();
+	}
+	
+	public static long getRemaining() {
+		LicenseDAO licenseDAO = LicenseValidator.getLicense();
+		return licenseDAO.getRemaining();
+	}
 }
