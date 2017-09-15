@@ -57,7 +57,7 @@ public class AdminPreferenceDefine {
 	public static final String PASSWD_LENGTH_LIMIT = _PREFIX + "PASSWD_LENGTH_LIMIT";
 	public static final String PASSWD_LENGTH_LIMIT_VALUE = "8";
 	
-	/** 패스워드 최하 길이 */
+	/** 패스워드 최대 길이 */
 	public static final String PASSWD_DATE_LIMIT = _PREFIX + "PASSWD_DATE_LIMIT";
 	public static final String PASSWD_DATE_LIMIT_VALUE = "30";
 	

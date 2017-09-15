@@ -30,7 +30,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.TadpoleProperties;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.commons.libs.core.message.WarningMessages;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
@@ -135,14 +134,14 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 			textWidth.setFocus();
 			
 			setValid(false);
-			setErrorMessage(WarningMessages.get().EnterNumbersOnly);
+			setErrorMessage(CommonMessages.get().EnterNumbersOnly);
 			return false;
 		} else if(!((NumberUtils.toInt(strTextWidth) >= TadpoleProperties.NUMBER_OF_CHARACTERS_PER_LINE_MIN)
 				 && (NumberUtils.toInt(strTextWidth) <= TadpoleProperties.NUMBER_OF_CHARACTERS_PER_LINE_MAX))) {
 			textWidth.setFocus();
 
 			setValid(false);
-			setErrorMessage(String.format(WarningMessages.get().InvalidRange_GEAndLEWithItem, 
+			setErrorMessage(String.format(CommonMessages.get().InvalidRange_GEAndLEWithItem, 
 									 	 Messages.get().MaximumNumberOfCharactersPerLine, 
 										 TadpoleProperties.NUMBER_OF_CHARACTERS_PER_LINE_MIN, 
 										 TadpoleProperties.NUMBER_OF_CHARACTERS_PER_LINE_MAX));
