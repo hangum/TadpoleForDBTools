@@ -159,6 +159,17 @@ public class CommonMessages {
 
 	public String TotalRowIs;
 	
+	public String LoadingData;
+	public String PasswdOldNewIsSame;
+	public String ThisIsReadOnlyDatabase;
+
+	public String EnterNumbersOnly;
+	public String EnterNumbersOnlyWithItem;
+	
+	/* [%s] must be greater than or equal to %d and less than or equal to %d. */
+	public String InvalidRange_GEAndLEWithItem; 
+
+	
 	public static CommonMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, CommonMessages.class);
 	}
