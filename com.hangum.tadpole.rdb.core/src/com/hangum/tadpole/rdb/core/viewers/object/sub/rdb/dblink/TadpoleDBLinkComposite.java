@@ -340,6 +340,7 @@ public class TadpoleDBLinkComposite extends AbstractObjectComposite {
 	public void filter(String textSearch) {
 		dbLinkFilter.setSearchString(textSearch);
 		dbLinkListViewer.refresh();
+		TableUtil.packTable(dbLinkListViewer.getTable());
 	}
 
 	@Override

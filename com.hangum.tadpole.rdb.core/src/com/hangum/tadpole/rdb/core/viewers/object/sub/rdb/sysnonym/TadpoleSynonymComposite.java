@@ -448,6 +448,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	public void filter(String textSearch) {
 		synonymFilter.setSearchString(textSearch);
 		synonymListViewer.refresh();
+		TableUtil.packTable(synonymListViewer.getTable());
 	}
 
 	@Override
