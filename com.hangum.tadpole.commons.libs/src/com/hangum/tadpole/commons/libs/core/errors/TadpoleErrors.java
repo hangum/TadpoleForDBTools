@@ -4,16 +4,18 @@ import java.util.logging.Level;
 import com.hangum.tadpole.commons.libs.core.errors.TadpoleErrorMessages;
 
 public enum TadpoleErrors implements ErrorCodable {
-	/* Warning messages relating user actions */
+	/* Warning messages relating to user actions */
 	TDP_001("TDP-001", Level.WARNING, TadpoleErrorMessages.get().EnterNumbersOnly),
 	TDP_002("TDP-002", Level.WARNING, TadpoleErrorMessages.get().ItemIsEmpty),
+	
+	/* Password */
 	TDP_003("TDP-003", Level.WARNING, TadpoleErrorMessages.get().PasswordRule), 
 	
 	/* License */
 	TDP_100("TDP-100", Level.SEVERE, TadpoleErrorMessages.get().InvalidLicense),
 	
 	/* Account */
-	TDP_200("TDP-300", Level.SEVERE, TadpoleErrorMessages.get().UserNotFound)
+	TDP_200("TDP-200", Level.SEVERE, TadpoleErrorMessages.get().UserNotFound)
 	;
 	
 	private String code;
