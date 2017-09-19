@@ -32,6 +32,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -53,6 +54,7 @@ public class SingleFileuploadDialog extends Dialog {
 	private String strTitle = ""; //$NON-NLS-1$
 	
 	private static final String INITIAL_TEXT = "No files uploaded."; //$NON-NLS-1$
+	public enum ENUM_OPEN_TYPE {ADD_APPEND, NEW_WINDOW, REMOVE_AND_ADD};
 	
 	// file upload
 	private FileUpload fileUpload;
@@ -60,6 +62,10 @@ public class SingleFileuploadDialog extends Dialog {
 	private ServerPushSession pushSession;
 	
 	private Text fileNameLabel;
+	private Combo comboOpenType;
+	
+	private String strFileContent = ""; //$NON-NLS-1$
+	private String strComboOpenType;
 
 	/**
 	 * Create the dialog.
@@ -107,12 +113,6 @@ public class SingleFileuploadDialog extends Dialog {
 		final String url = startUploadReceiver();
 		pushSession = new ServerPushSession();
 
-		/* fileUpload 주석 후 디자인을 위한 임시 컨트롤 */
-		/*
-		Label lblDumy = new Label(compositeHead, SWT.NONE);
-		lblDumy.setText(Messages.get().CsvToRDBImportDialog_2);
-		lblDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-		*/		
 		fileUpload = new FileUpload(compositeHead, SWT.NONE);
 		fileUpload.setText(Messages.get().FileUploadDialog_fileSelect);
 		fileUpload.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
@@ -128,8 +128,24 @@ public class SingleFileuploadDialog extends Dialog {
 				pushSession.start();
 				fileUpload.submit(url);
 			}
-		});		
-			
+		});
+		
+		new Label(compositeHead, SWT.NONE);
+		
+		comboOpenType = new Combo(compositeHead, SWT.READ_ONLY);
+		comboOpenType.add(Messages.get().FILEOPEN_ADD_APPEND);//"열어서 추가히기");
+		comboOpenType.add(Messages.get().FILEOPEN_NEW_WINDOW);//"새로운 창으로 열기");
+		comboOpenType.add(Messages.get().FILEOPEN_REMOVE_AND_ADD);//"지우고 추가하기");
+		
+		comboOpenType.setData(Messages.get().FILEOPEN_ADD_APPEND, ENUM_OPEN_TYPE.ADD_APPEND.name());
+		comboOpenType.setData(Messages.get().FILEOPEN_NEW_WINDOW, ENUM_OPEN_TYPE.NEW_WINDOW.name());
+		comboOpenType.setData(Messages.get().FILEOPEN_REMOVE_AND_ADD, ENUM_OPEN_TYPE.REMOVE_AND_ADD.name());
+		comboOpenType.select(0);
+		
+		comboOpenType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(compositeHead, SWT.NONE);
+		new Label(compositeHead, SWT.NONE);
+		
 		return container;
 	}
 	
@@ -142,14 +158,19 @@ public class SingleFileuploadDialog extends Dialog {
 			return;
 		}
 		
+		strComboOpenType = ""+comboOpenType.getData(comboOpenType.getText());
+		
 		super.okPressed();
 	}
 	
-	public String getStrTxtFile() {
-		return strTxtFile;
+	public String getStrFileContent() {
+		return strFileContent;
+	}
+	
+	public String getStrComboOpenType() {
+		return strComboOpenType;
 	}
 
-	String strTxtFile = ""; //$NON-NLS-1$
 	private boolean insert() throws Exception {
 		BOMInputStream bomInputStream ;
 		
@@ -165,11 +186,11 @@ public class SingleFileuploadDialog extends Dialog {
 			ByteOrderMark bom = bomInputStream.getBOM();
 			String charsetName = bom == null ? "CP949" : bom.getCharsetName(); //$NON-NLS-1$
 
-			strTxtFile = FileUtils.readFileToString(userUploadFile, charsetName);			
+			strFileContent = FileUtils.readFileToString(userUploadFile, charsetName);			
 			if (bom != null){ 
 				// ByteOrderMark.UTF_8.equals(strTxtFile.getBytes()[0]);
 				//데이터의 첫바이트에 위치하는 BOM마크를 건너뛴다.
-				strTxtFile = strTxtFile.substring(1);
+				strFileContent = strFileContent.substring(1);
 			}
 						
 		} catch (Exception e) {
@@ -237,7 +258,7 @@ public class SingleFileuploadDialog extends Dialog {
 	 */
 	@Override
 	protected Point getInitialSize() {
-		return new Point(450, 130);
+		return new Point(450, 160);
 	}
 
 }
