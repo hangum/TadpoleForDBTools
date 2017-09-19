@@ -752,6 +752,7 @@ SELECT
 	, u.name as user_name
 	, m.db_seq as db_seq
 	, m.name as name
+	, m.filter_yn as filter_yn
 	, m.shared_type as shared_type
 	, m.description as description
 	, m.create_time as create_time
@@ -762,7 +763,7 @@ SELECT
   FROM user_db_resource m
   	inner join tadpole_user u on m.user_seq = u.seq
   where 1=1
-  and m.resource_types in ( 'SQL' , 'ERD' )
+  and m.resource_types in ( 'SQL' , 'ERD', 'OBJECT' )
   and m.delyn = 'NO'
   and m.db_seq = #seq# 
   order by m.resource_types, m.resource_seq
@@ -779,7 +780,9 @@ SELECT
 
 <update id="userDbResourceUpdate" parameterClass="com.hangum.tadpole.engine.query.dao.ResourceManagerDAO">
 	update user_db_resource
-	set shared_type = #shared_type#
+	set 
+		filter_yn = #filter_yn#
+	   ,shared_type = #shared_type#
 	   ,name = #name#
 	   ,description = #description#
 	   ,restapi_yesno = #restapi_yesno#

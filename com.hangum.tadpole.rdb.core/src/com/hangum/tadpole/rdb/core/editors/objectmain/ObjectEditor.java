@@ -94,7 +94,11 @@ public class ObjectEditor extends MainEditor {
 		String strPartName = "";
 		if("".equals(qei.getObjectName())) strPartName = qei.getName(); //$NON-NLS-1$
 		else strPartName = String.format("%s (%s)", qei.getName(), qei.getObjectName()); //$NON-NLS-1$
-
+		dBResource = qei.getResourceDAO();
+		if(dBResource != null) {
+			strPartName = dBResource.getName();
+		}
+		
 		setSite(site);
 		setInput(input);
 		setPartName(strPartName);

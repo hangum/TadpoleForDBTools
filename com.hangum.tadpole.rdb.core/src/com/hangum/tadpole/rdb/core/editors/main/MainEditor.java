@@ -947,7 +947,13 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	private UserDBResourceDAO getResouceName(UserDBResourceDAO initDBResource, String strContentData) {
-		ResourceSaveDialog rsDialog = new ResourceSaveDialog(null, initDBResource, userDB, PublicTadpoleDefine.RESOURCE_TYPE.SQL, strContentData);
+		PublicTadpoleDefine.RESOURCE_TYPE resourceType = PublicTadpoleDefine.RESOURCE_TYPE.OBJECT;
+		if(dbAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES | 
+				dbAction == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
+			resourceType = PublicTadpoleDefine.RESOURCE_TYPE.SQL;
+		}
+		
+		ResourceSaveDialog rsDialog = new ResourceSaveDialog(null, initDBResource, userDB, resourceType, strContentData);
 		if(rsDialog.open() == Window.OK) {
 			return rsDialog.getRetResourceDao();
 		} else {

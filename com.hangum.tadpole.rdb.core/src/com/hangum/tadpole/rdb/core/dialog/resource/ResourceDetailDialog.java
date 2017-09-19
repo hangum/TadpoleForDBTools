@@ -83,6 +83,7 @@ public class ResourceDetailDialog extends Dialog {
 	private Text textUser;
 	private Text textTitle;
 	private Combo comboSharedType;
+	private Combo comboSFilterType;
 	private Text textDescription;
 	private Combo comboUseAPI;
 	private Text textCreateTime;
@@ -138,7 +139,7 @@ public class ResourceDetailDialog extends Dialog {
 		textTitle.setText(originalResourceDB.getName());
 		
 		Label lblSharedType = new Label(compositeHead, SWT.NONE);
-		lblSharedType.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblSharedType.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
 		lblSharedType.setText("Shared type");
 		
 		comboSharedType = new Combo(compositeHead, SWT.READ_ONLY);
@@ -147,6 +148,17 @@ public class ResourceDetailDialog extends Dialog {
 			comboSharedType.add(type.toString());
 		}
 		comboSharedType.setText(originalResourceDB.getShared_type());
+		
+		Label lblFilterType = new Label(compositeHead, SWT.NONE);
+		lblFilterType.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1));
+		lblFilterType.setText(CommonMessages.get().Filter);
+		
+		comboSFilterType = new Combo(compositeHead, SWT.READ_ONLY);
+		comboSFilterType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		for(PublicTadpoleDefine.YES_NO type : PublicTadpoleDefine.YES_NO.values()) {
+			comboSFilterType.add(type.toString());
+		}
+		comboSFilterType.setText(originalResourceDB.getFilter());
 		
 		Label lblDescription = new Label(compositeHead, SWT.NONE);
 		lblDescription.setText(CommonMessages.get().Description);
@@ -290,6 +302,7 @@ public class ResourceDetailDialog extends Dialog {
 				resourceManagerDao.setName(textTitle.getText());
 				resourceManagerDao.setDescription(textDescription.getText());
 				resourceManagerDao.setShared_type(comboSharedType.getText());
+				resourceManagerDao.setFilter_yn(comboSFilterType.getText());
 				resourceManagerDao.setRestapi_yesno(comboUseAPI.getText());
 				resourceManagerDao.setRestapi_uri(textAPIURL.getText());
 				
@@ -314,6 +327,8 @@ public class ResourceDetailDialog extends Dialog {
 						ManagerViewer mv = (ManagerViewer)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().showView(ManagerViewer.ID);
 						mv.refreshResource(originalResourceDB);
 					}
+					
+					MessageDialog.openInformation(getShell(), CommonMessages.get().Confirm, CommonMessages.get().ModifyMessage);
 				} catch(Exception ee) {
 					logger.error("Resource title, desc saveing", ee);
 					MessageDialog.openError(getShell(), CommonMessages.get().Confirm, "Save exception." + ee.getMessage());

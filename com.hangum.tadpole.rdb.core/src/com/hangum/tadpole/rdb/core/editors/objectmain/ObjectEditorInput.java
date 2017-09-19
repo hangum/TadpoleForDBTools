@@ -12,6 +12,7 @@ package com.hangum.tadpole.rdb.core.editors.objectmain;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
 
 /**
@@ -36,6 +37,15 @@ public class ObjectEditorInput extends MainEditorInput {
 		super(userDB, lowSQL, initAction);
 		
 		this.objectName = objectName;
+	}
+	
+	/**
+	 * 기존 리소스 호출
+	 * @param userDB
+	 * @param dao
+	 */
+	public ObjectEditorInput(UserDBResourceDAO dao) throws Exception {
+		super(dao);
 	}
 	
 	/**
