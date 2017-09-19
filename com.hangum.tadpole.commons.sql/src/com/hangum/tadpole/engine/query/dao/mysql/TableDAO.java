@@ -117,8 +117,8 @@ public class TableDAO extends StructObjectDAO {
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof TableDAO) {
-			TableDAO userDB = (TableDAO)obj;
-			return userDB.getName() == getName();
+			TableDAO tableDAO = (TableDAO)obj;
+			return tableDAO.getFullName() == getFullName();
 		}
 		
 		return super.equals(obj);

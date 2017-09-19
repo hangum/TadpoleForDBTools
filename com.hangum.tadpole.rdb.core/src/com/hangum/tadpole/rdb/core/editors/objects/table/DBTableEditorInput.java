@@ -12,13 +12,16 @@ package com.hangum.tadpole.rdb.core.editors.objects.table;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
 
+import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.rdb.core.Messages;
 
 /**
  * TableEditor의 input
@@ -27,11 +30,12 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
  *
  */
 public class DBTableEditorInput implements IEditorInput {
+	private static final Logger logger = Logger.getLogger(DBTableEditorInput.class);
 	TableDAO tableDAO;
 	UserDBDAO userDB;
 	List<TableColumnDAO> showTableColumns;
 	
-	public DBTableEditorInput(TableDAO tableDAO, UserDBDAO userDB, List showTableColumns) {
+	public DBTableEditorInput(TableDAO tableDAO, UserDBDAO userDB, List<TableColumnDAO> showTableColumns) {
 		this.tableDAO = tableDAO;
 		this.userDB = userDB;
 		this.showTableColumns = showTableColumns;
@@ -50,7 +54,6 @@ public class DBTableEditorInput implements IEditorInput {
 	@Override
 	public boolean equals(Object obj) {
 		if( !(obj instanceof DBTableEditorInput) ) return false;
-		
 		return ((DBTableEditorInput)obj).getName().equals(getName());
 	}
 
@@ -61,7 +64,7 @@ public class DBTableEditorInput implements IEditorInput {
 
 	@Override
 	public String getName() {
-		return tableDAO.getName();
+		return String.format("%s [%s]", Messages.get().TableInformationEditor_1, tableDAO.getFullName());
 	}
 
 	@Override
@@ -71,7 +74,7 @@ public class DBTableEditorInput implements IEditorInput {
 
 	@Override
 	public String getToolTipText() {
-		return userDB.getDb() + "[" + tableDAO.getName() + "]";
+		return String.format("%s [%s]", Messages.get().TableInformationEditor_1, tableDAO.getFullName());
 	}
 
 	public TableDAO getTableDAO() {
