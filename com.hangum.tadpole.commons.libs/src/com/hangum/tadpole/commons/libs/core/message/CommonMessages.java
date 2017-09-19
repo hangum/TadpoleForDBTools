@@ -186,6 +186,7 @@ public class CommonMessages {
 	public String TadpoleHubWebsite;
 	public String ThankYouForUsingTadpoleDBHub;
 	public String AboutTadpoleDBHub;
+	public String Manual;
 
 	
 	public static CommonMessages get() {
