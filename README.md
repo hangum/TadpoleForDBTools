@@ -116,6 +116,7 @@ Customer
 * Kakaobank
 * LOEN ENTERTAINMENT(http://www.melon.com/)
 * 동아닷컴(http://www.donga.com/)
+* 두레시닝(주)(http://www.doore.co.kr/)
 
 Donation
 - Paypal(paypal.com) : hangum@gmail.com

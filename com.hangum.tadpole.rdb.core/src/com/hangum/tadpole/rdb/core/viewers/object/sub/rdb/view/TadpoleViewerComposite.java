@@ -347,6 +347,7 @@ public class TadpoleViewerComposite extends AbstractObjectComposite {
 	public void filter(String textSearch) {
 		viewFilter.setSearchText(textSearch);
 		viewListViewer.refresh();
+		TableUtil.packTable(viewListViewer.getTable());
 	}
 
 	/**

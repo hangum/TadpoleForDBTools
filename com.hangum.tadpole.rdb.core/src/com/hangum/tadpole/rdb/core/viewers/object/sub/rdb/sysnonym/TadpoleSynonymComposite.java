@@ -47,7 +47,6 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.commons.libs.core.message.InfoMessages;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymColumnDAO;
@@ -327,7 +326,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 			
 			selectDataOfTable(strObjectName);
 		} else {
-			final String MSG_LoadingData = InfoMessages.get().LoadingData;
+			final String MSG_LoadingData = CommonMessages.get().LoadingData;
 			Job job = new Job(Messages.get().MainEditor_45) {
 				@Override
 				public IStatus run(IProgressMonitor monitor) {
@@ -448,6 +447,7 @@ public class TadpoleSynonymComposite extends AbstractObjectComposite {
 	public void filter(String textSearch) {
 		synonymFilter.setSearchString(textSearch);
 		synonymListViewer.refresh();
+		TableUtil.packTable(synonymListViewer.getTable());
 	}
 
 	@Override

@@ -199,6 +199,7 @@ public class TadpoleProcedureComposite extends AbstractObjectComposite {
 	public void filter(String textSearch) {
 		procedureFilter.setSearchText(textSearch);
 		procedureTableViewer.refresh();
+		TableUtil.packTable(procedureTableViewer.getTable());
 	}
 
 	/**

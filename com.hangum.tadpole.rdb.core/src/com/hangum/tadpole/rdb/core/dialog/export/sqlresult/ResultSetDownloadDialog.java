@@ -43,7 +43,6 @@ import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.dao.LicenseDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.commons.libs.core.message.InfoMessages;
 import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
@@ -286,7 +285,7 @@ public class ResultSetDownloadDialog extends Dialog {
 		}
 		
 		// job
-		final String MSG_LoadingData = InfoMessages.get().LoadingData;;
+		final String MSG_LoadingData = CommonMessages.get().LoadingData;;
 		final AbstractExportDAO _dao = exportDAO;
 		Job job = new Job(Messages.get().MainEditor_45) {
 			@Override

@@ -159,6 +159,35 @@ public class CommonMessages {
 
 	public String TotalRowIs;
 	
+	public String LoadingData;
+	public String PasswdOldNewIsSame;
+	public String ThisIsReadOnlyDatabase;
+
+	public String EnterNumbersOnly;
+	public String EnterNumbersOnlyWithItem;
+	
+	public String Days;
+	
+	public String Version;
+	
+	/* [%s] must be greater than or equal to %d and less than or equal to %d. */
+	public String InvalidRange_GEAndLEWithItem; 
+	
+	/* License */
+	public String EnterpriseLicense;
+	public String OpensourceLicense;
+	public String LicenseType;
+	public String ActivationDate;
+	public String ExpirationDate;
+	public String Remaining;
+	
+	/* Company */
+	public String EmailCustomerSupport;
+	public String TadpoleHubWebsite;
+	public String ThankYouForUsingTadpoleDBHub;
+	public String AboutTadpoleDBHub;
+
+	
 	public static CommonMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, CommonMessages.class);
 	}

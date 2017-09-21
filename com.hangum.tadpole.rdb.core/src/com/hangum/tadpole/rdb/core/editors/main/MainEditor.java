@@ -88,6 +88,7 @@ import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtensio
 import com.hangum.tadpole.rdb.core.extensionpoint.handler.MainEditorContributionsHandler;
 import com.hangum.tadpole.rdb.core.util.DialogUtil;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
+import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.viewers.connections.DBIconsUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
@@ -399,7 +400,17 @@ public class MainEditor extends EditorExtension {
 				SingleFileuploadDialog dialog = new SingleFileuploadDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.get().MainEditor_36);
 				if(Dialog.OK == dialog.open()) {
 //					if(logger.isDebugEnabled()) logger.debug("============> " +  dialog.getStrTxtFile()); //$NON-NLS-1$
-					appendText(dialog.getStrTxtFile());
+					if(SingleFileuploadDialog.ENUM_OPEN_TYPE.ADD_APPEND.name().equals(dialog.getStrComboOpenType())) {
+						appendText(dialog.getStrFileContent());
+					} else if(SingleFileuploadDialog.ENUM_OPEN_TYPE.NEW_WINDOW.name().equals(dialog.getStrComboOpenType())) {
+						FindEditorAndWriteQueryUtil.run(userDB, "", dialog.getStrFileContent(), true, PublicTadpoleDefine.OBJECT_TYPE.TABLES);
+					} else if(SingleFileuploadDialog.ENUM_OPEN_TYPE.REMOVE_AND_ADD.name().equals(dialog.getStrComboOpenType())) {
+						try {
+							browserEvaluate(EditorFunctionService.RE_NEW_TEXT, dialog.getStrFileContent());
+						} catch(Exception ee) {
+							logger.error("browser re_new_text error");
+						}
+					}
 				}
 			}
 		});
@@ -936,7 +947,13 @@ public class MainEditor extends EditorExtension {
 	 * @return
 	 */
 	private UserDBResourceDAO getResouceName(UserDBResourceDAO initDBResource, String strContentData) {
-		ResourceSaveDialog rsDialog = new ResourceSaveDialog(null, initDBResource, userDB, PublicTadpoleDefine.RESOURCE_TYPE.SQL, strContentData);
+		PublicTadpoleDefine.RESOURCE_TYPE resourceType = PublicTadpoleDefine.RESOURCE_TYPE.OBJECT;
+		if(dbAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES | 
+				dbAction == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
+			resourceType = PublicTadpoleDefine.RESOURCE_TYPE.SQL;
+		}
+		
+		ResourceSaveDialog rsDialog = new ResourceSaveDialog(null, initDBResource, userDB, resourceType, strContentData);
 		if(rsDialog.open() == Window.OK) {
 			return rsDialog.getRetResourceDao();
 		} else {

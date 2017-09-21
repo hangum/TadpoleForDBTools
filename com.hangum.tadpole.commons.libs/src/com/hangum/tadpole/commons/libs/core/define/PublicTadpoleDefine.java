@@ -265,7 +265,7 @@ public class PublicTadpoleDefine {
 	public static enum EDITOR_OPEN_TYPE {NONE, STRING, FILE};
 	
 	/** save resource type */
-	public static enum RESOURCE_TYPE {ERD, SQL, AUTO_SQL};
+	public static enum RESOURCE_TYPE {ERD, SQL, AUTO_SQL, OBJECT};
 	
 	/** define SQL, ERD shared type */
 	public static enum SHARED_TYPE {PUBLIC, PRIVATE};

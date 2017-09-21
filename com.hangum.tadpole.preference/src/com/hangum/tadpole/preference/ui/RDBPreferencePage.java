@@ -35,7 +35,6 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.TadpoleProperties;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.commons.libs.core.message.WarningMessages;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserInfoData;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
@@ -250,14 +249,14 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		if(!NumberUtils.isNumber(txtSelectLimit)) {
 			textSelectLimit.setFocus();
 			setValid(false);
-			setErrorMessage(String.format(WarningMessages.get().EnterNumbersOnlyWithItem, Messages.get().MaxNumOfRowsBySelect));
+			setErrorMessage(String.format(CommonMessages.get().EnterNumbersOnlyWithItem, Messages.get().MaxNumOfRowsBySelect));
 			return false;
 		} else if(!((NumberUtils.toInt(txtSelectLimit) >= TadpoleProperties.NUMBER_OF_ROWS_BY_SELECT_MIN) 
 				&& (NumberUtils.toInt(txtSelectLimit) <= TadpoleProperties.NUMBER_OF_ROWS_BY_SELECT_MAX))) {
 			textSelectLimit.setFocus();
 
 			setValid(false);
-			setErrorMessage(String.format(WarningMessages.get().InvalidRange_GEAndLEWithItem, 
+			setErrorMessage(String.format(CommonMessages.get().InvalidRange_GEAndLEWithItem, 
 					                      Messages.get().MaxNumOfRowsBySelect, 
 					                      TadpoleProperties.NUMBER_OF_ROWS_BY_SELECT_MIN, 
 					                      TadpoleProperties.NUMBER_OF_ROWS_BY_SELECT_MAX));
@@ -265,14 +264,14 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		} else if(!NumberUtils.isNumber(txtResultPage)) {
 			textResultPage.setFocus();
 			setValid(false);
-			setErrorMessage(String.format(WarningMessages.get().EnterNumbersOnlyWithItem, Messages.get().RowsPerPage));
+			setErrorMessage(String.format(CommonMessages.get().EnterNumbersOnlyWithItem, Messages.get().RowsPerPage));
 			return false;
 		} else if(!((NumberUtils.toInt(txtResultPage) >= TadpoleProperties.ROWS_PER_PAGE_MIN)
 				 && (NumberUtils.toInt(txtResultPage) <= TadpoleProperties.ROWS_PER_PAGE_MAX))) {
 			textResultPage.setFocus();
 
 			setValid(false);
-			setErrorMessage(String.format(WarningMessages.get().InvalidRange_GEAndLEWithItem, 
+			setErrorMessage(String.format(CommonMessages.get().InvalidRange_GEAndLEWithItem, 
 					                      Messages.get().RowsPerPage, 
 					                      TadpoleProperties.ROWS_PER_PAGE_MIN, 
 					                      TadpoleProperties.ROWS_PER_PAGE_MAX));
@@ -281,14 +280,14 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 			textQueryTimeout.setFocus();
 
 			setValid(false);
-			setErrorMessage(Messages.get().QueryTimeout + WarningMessages.get().EnterNumbersOnlyWithItem);
+			setErrorMessage(Messages.get().QueryTimeout + CommonMessages.get().EnterNumbersOnlyWithItem);
 			return false;
 		} else if(!((NumberUtils.toInt(txtQueryTimtout) >= TadpoleProperties.QUERY_TIMEOUT_MIN)
 				 && (NumberUtils.toInt(txtQueryTimtout) <= TadpoleProperties.QUERY_TIMEOUT_MAX))) {
 			textQueryTimeout.setFocus();
 
 			setValid(false);
-			setErrorMessage(String.format(WarningMessages.get().InvalidRange_GEAndLEWithItem, 
+			setErrorMessage(String.format(CommonMessages.get().InvalidRange_GEAndLEWithItem, 
 					                      Messages.get().QueryTimeout, 
 					                      TadpoleProperties.QUERY_TIMEOUT_MIN, 
 					                      TadpoleProperties.QUERY_TIMEOUT_MAX));
@@ -297,14 +296,14 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 			textCommitCount.setFocus();
 
 			setValid(false);
-			setErrorMessage(String.format(WarningMessages.get().EnterNumbersOnlyWithItem, Messages.get().BatchSize));
+			setErrorMessage(String.format(CommonMessages.get().EnterNumbersOnlyWithItem, Messages.get().BatchSize));
 			return false;
 		} else if(!((NumberUtils.toInt(txtCommitCount) >= TadpoleProperties.BATCH_SIZE_MIN) 
 				 && (NumberUtils.toInt(txtCommitCount) <= TadpoleProperties.BATCH_SIZE_MAX))) {
 			textCommitCount.setFocus();
 
 			setValid(false);
-			setErrorMessage(String.format(WarningMessages.get().InvalidRange_GEAndLEWithItem, 
+			setErrorMessage(String.format(CommonMessages.get().InvalidRange_GEAndLEWithItem, 
 					                      Messages.get().BatchSize, 
 					                      TadpoleProperties.BATCH_SIZE_MIN, 
 					                      TadpoleProperties.BATCH_SIZE_MAX));
@@ -313,7 +312,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 			textShowInTheColumn.setFocus();
 
 			setValid(false);
-			setErrorMessage(String.format(WarningMessages.get().EnterNumbersOnlyWithItem, Messages.get().BatchSize));
+			setErrorMessage(String.format(CommonMessages.get().EnterNumbersOnlyWithItem, Messages.get().BatchSize));
 			return false;
 //		} else if(!((NumberUtils.toInt(txtShownInTheColumn) >= TadpoleProperties.NUMBER_OF_CHARACTERS_PER_COLUMN_MIN)
 //				 && (NumberUtils.toInt(txtShownInTheColumn) <= TadpoleProperties.NUMBER_OF_CHARACTERS_PER_COLUMN_MAX))) {

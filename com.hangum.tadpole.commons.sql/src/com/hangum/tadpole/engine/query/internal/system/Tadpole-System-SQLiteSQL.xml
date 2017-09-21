@@ -40,7 +40,8 @@
 		WHERE
 			a.user_seq = b.seq AND
 			a.db_seq = #seq#  AND
-			a.resource_types in ('ERD', 'SQL') AND
+			a.resource_types in ('ERD', 'SQL', 'OBJECT') AND
+			a.filter_yn = 'NO' AND
 			a.delYn = 'NO'		
 		ORDER BY a.resource_types, a.name
 	</select>

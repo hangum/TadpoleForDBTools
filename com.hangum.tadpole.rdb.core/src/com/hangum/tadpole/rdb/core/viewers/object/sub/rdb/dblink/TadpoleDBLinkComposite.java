@@ -43,7 +43,6 @@ import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.commons.libs.core.message.InfoMessages;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.rdb.OracleDBLinkDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
@@ -223,7 +222,7 @@ public class TadpoleDBLinkComposite extends AbstractObjectComposite {
 			
 			selectDataOfTable(strObjectName);
 		} else {
-			final String MSG_LoadingData = InfoMessages.get().LoadingData;
+			final String MSG_LoadingData = CommonMessages.get().LoadingData;
 			Job job = new Job(Messages.get().MainEditor_45) {
 				@Override
 				public IStatus run(IProgressMonitor monitor) {
@@ -340,6 +339,7 @@ public class TadpoleDBLinkComposite extends AbstractObjectComposite {
 	public void filter(String textSearch) {
 		dbLinkFilter.setSearchString(textSearch);
 		dbLinkListViewer.refresh();
+		TableUtil.packTable(dbLinkListViewer.getTable());
 	}
 
 	@Override

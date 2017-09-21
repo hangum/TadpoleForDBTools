@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.commons.libs.core.message.InfoMessages;
 import com.hangum.tadpole.commons.libs.core.utils.SHA256Utils;
 import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
@@ -153,7 +152,7 @@ public class ChangePasswordDialog extends Dialog {
 			String lastPasswd = SHA256Utils.getSHA256(textOldPassword.getText());
 			String newPasswd = SHA256Utils.getSHA256(strPasswd);
 			if(lastPasswd.equals(newPasswd)) {
-				MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, InfoMessages.get().PasswdOldNewIsSame);
+				MessageDialog.openWarning(getParentShell(), CommonMessages.get().Warning, CommonMessages.get().PasswdOldNewIsSame);
 				textPassword.setFocus();
 				return;
 			}

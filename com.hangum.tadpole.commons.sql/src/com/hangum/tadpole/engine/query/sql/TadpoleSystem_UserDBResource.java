@@ -228,7 +228,7 @@ public class TadpoleSystem_UserDBResource {
 	}
 	
 	/**
-	 * 해당 db의 모든 erd리스트를 가져온다
+	 * 해당 db의 모든 erd리스트를 가져온다. (필터되는것은 가져오지 않는다)
 	 * 
 	 * @param userDB
 	 * @return

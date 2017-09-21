@@ -330,6 +330,7 @@ public class TadpolePackageComposite extends AbstractObjectComposite {
 	public void filter(String textSearch) {
 		packageFilter.setSearchText(textSearch);
 		packageTableViewer.refresh();
+		TableUtil.packTable(packageTableViewer.getTable());
 	}
 
 	/**

@@ -36,6 +36,8 @@ import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditorInput;
+import com.hangum.tadpole.rdb.core.editors.objectmain.ObjectEditor;
+import com.hangum.tadpole.rdb.core.editors.objectmain.ObjectEditorInput;
 import com.hangum.tadpole.rdb.core.util.EditorUtils;
 import com.hangum.tadpole.rdb.core.util.FindEditorAndWriteQueryUtil;
 import com.hangum.tadpole.rdb.core.util.QueryTemplateUtils;
@@ -133,25 +135,49 @@ public abstract class AbstractQueryAction implements IViewActionDelegate {
 		IEditorReference reference = EditorUtils.findSQLEditor(dao);
 		
 		if(reference == null) {
-			try {
-				MainEditorInput mei = new MainEditorInput(dao);
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, MainEditor.ID);
-			} catch (Exception e) {
-				logger.error("new editor", e); //$NON-NLS-1$
-				
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, CommonMessages.get().Error, Messages.get().MainEditorInput_0, errStatus); //$NON-NLS-1$
+			if(PublicTadpoleDefine.RESOURCE_TYPE.OBJECT.name().equals(dao.getResource_types())) {
+				try {
+					ObjectEditorInput mei = new ObjectEditorInput(dao);
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, ObjectEditor.ID, false);
+				} catch (Exception e) {
+					logger.error("new sql editor open", e); //$NON-NLS-1$
+					
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+				}
+			} else {
+				try {
+					MainEditorInput mei = new MainEditorInput(dao);
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, MainEditor.ID);
+				} catch (Exception e) {
+					logger.error("new editor", e); //$NON-NLS-1$
+					
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(null, CommonMessages.get().Error, Messages.get().MainEditorInput_0, errStatus); //$NON-NLS-1$
+				}				
 			}
 		} else {
-			try {
-				MainEditor editor = (MainEditor)reference.getEditor(true);
-				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editor.getEditorInput(), MainEditor.ID, false);
-				editor.setFocus();
-			} catch (Exception e) {
-				logger.error("findEditor", e); //$NON-NLS-1$
-				
-				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(null, CommonMessages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+			if(PublicTadpoleDefine.RESOURCE_TYPE.OBJECT.name().equals(dao.getResource_types())) {
+				try {
+					ObjectEditorInput mei = new ObjectEditorInput(dao);
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(mei, ObjectEditor.ID, false);
+				} catch (Exception e) {
+					logger.error("new sql editor open", e); //$NON-NLS-1$
+					
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+				}
+			} else {
+				try {
+					MainEditor editor = (MainEditor)reference.getEditor(true);
+					PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editor.getEditorInput(), MainEditor.ID, false);
+					editor.setFocus();
+				} catch (Exception e) {
+					logger.error("findEditor", e); //$NON-NLS-1$
+					
+					Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+					ExceptionDetailsErrorDialog.openError(null, CommonMessages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+				}
 			}
 		}
 	}

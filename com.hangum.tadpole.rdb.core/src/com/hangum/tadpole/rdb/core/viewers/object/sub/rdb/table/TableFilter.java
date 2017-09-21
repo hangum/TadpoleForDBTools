@@ -10,6 +10,7 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -41,6 +42,7 @@ public class TableFilter extends TadpoleViewrFilter {
 		
 		TableDAO dao = (TableDAO)element;
 		if(SQLUtil.getTableName(userDB, dao).toUpperCase().matches(searchString.toUpperCase())) return true;
+		else if(StringUtils.upperCase(dao.getComment()).matches(searchString.toUpperCase())) return true;
 		
 		return false;
 	}

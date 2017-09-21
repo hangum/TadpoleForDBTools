@@ -60,7 +60,6 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.commons.libs.core.message.InfoMessages;
 import com.hangum.tadpole.commons.util.AutoResizeTableLayout;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
@@ -697,7 +696,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			getTabFolderObject().setSelection(tbtmTable);
 			
 		} else {
-			final String MSG_LoadingData = InfoMessages.get().LoadingData;
+			final String MSG_LoadingData = CommonMessages.get().LoadingData;
 			Job job = new Job(Messages.get().MainEditor_45) {
 				@Override
 				public IStatus run(IProgressMonitor monitor) {
@@ -838,6 +837,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 	public void filter(String textSearch) {
 		tableFilter.setSearchText(textSearch);
 		tableListViewer.refresh();
+		TableUtil.packTable(tableListViewer.getTable());
 	}
 	
 	/**

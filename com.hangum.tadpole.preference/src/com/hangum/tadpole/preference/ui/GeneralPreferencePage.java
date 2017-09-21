@@ -38,7 +38,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.commons.libs.core.message.WarningMessages;
 import com.hangum.tadpole.commons.util.CookieUtils;
 import com.hangum.tadpole.preference.Messages;
 import com.hangum.tadpole.preference.define.PreferenceDefine;
@@ -141,7 +140,7 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 		if(!NumberUtils.isNumber(txtSessionTime)) {
 			textSessionTime.setFocus();
 			setValid(false);
-			setErrorMessage(Messages.get().SessionTimeout_mins + WarningMessages.get().EnterNumbersOnly);
+			setErrorMessage(Messages.get().SessionTimeout_mins + CommonMessages.get().EnterNumbersOnly);
 
 			return false;
 		} else if(!((NumberUtils.toInt(txtSessionTime) >= SESSION_TIMEOUT_MIN) 
