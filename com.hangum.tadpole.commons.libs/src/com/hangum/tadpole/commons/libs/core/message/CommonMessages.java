@@ -173,6 +173,8 @@ public class CommonMessages {
 	/* [%s] must be greater than or equal to %d and less than or equal to %d. */
 	public String InvalidRange_GEAndLEWithItem; 
 	
+	public String EnterItem;
+	
 	/* License */
 	public String EnterpriseLicense;
 	public String OpensourceLicense;
