@@ -13,6 +13,9 @@ public class Messages {
 	public String ImageViewer;
 	
 	public String PleaseCheckIDpassword;
+	public String FILEOPEN_ADD_APPEND;
+	public String FILEOPEN_NEW_WINDOW;
+	public String FILEOPEN_REMOVE_AND_ADD;
 
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

@@ -719,6 +719,10 @@ public class Messages {
 	public String WarnEditorIsOpen;
 
 	public String DoNotSupportDynamoDB;
+
+	public String ConfirmCommit;
+
+	public String ConfirmRollback;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

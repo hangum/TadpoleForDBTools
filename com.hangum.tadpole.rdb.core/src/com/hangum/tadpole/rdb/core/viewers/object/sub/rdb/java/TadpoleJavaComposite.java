@@ -366,6 +366,7 @@ public class TadpoleJavaComposite extends AbstractObjectComposite {
 	public void filter(String textSearch) {
 		javaFilter.setSearchString(textSearch);
 		javaListViewer.refresh();
+		TableUtil.packTable(javaListViewer.getTable());
 	}
 
 	@Override

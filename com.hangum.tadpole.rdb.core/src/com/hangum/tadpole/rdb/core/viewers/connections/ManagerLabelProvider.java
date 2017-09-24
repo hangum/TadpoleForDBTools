@@ -178,6 +178,8 @@ public class ManagerLabelProvider extends ColumnLabelProvider {
 			Image baseImage = null;
 			if(PublicTadpoleDefine.RESOURCE_TYPE.SQL.toString().equals( dao.getResource_types())) {
 				baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/sql-query.png"); //$NON-NLS-1$
+			} else if(PublicTadpoleDefine.RESOURCE_TYPE.OBJECT.toString().equals( dao.getResource_types())) {
+				baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/compile.png"); //$NON-NLS-1$
 			} else if(PublicTadpoleDefine.RESOURCE_TYPE.ERD.toString().equals( dao.getResource_types())) {
 				baseImage = ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/erd.png"); //$NON-NLS-1$
 			}

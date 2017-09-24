@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -28,7 +29,6 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
-import com.hangum.tadpole.rdb.core.Messages;
 
 /**
  * table information editor
@@ -38,7 +38,7 @@ import com.hangum.tadpole.rdb.core.Messages;
  *
  */
 public class TableInformationEditor extends EditorPart {
-	
+	private static final Logger logger = Logger.getLogger(TableInformationEditor.class);
 	public static final String ID = "com.hangum.tadpole.rdb.core.editors.table.edit";
 	
 	private TableDAO tableDao;
@@ -49,7 +49,6 @@ public class TableInformationEditor extends EditorPart {
 	
 	///////////
 	private TableDirectEditorComposite compositeTableData;
-//	private DDLSourceComposite compositeDdl;
 
 	public TableInformationEditor() {
 		super();
@@ -70,7 +69,7 @@ public class TableInformationEditor extends EditorPart {
 		
 		DBTableEditorInput qei = (DBTableEditorInput)input;
 		userDB = qei.getUserDB();
-		setPartName(Messages.get().TableInformationEditor_1 + " [" + qei.getName() + "]");
+		setPartName(qei.getName());
 		
 		tableDao = qei.getTableDAO();
 		columnList = qei.getShowTableColumns();

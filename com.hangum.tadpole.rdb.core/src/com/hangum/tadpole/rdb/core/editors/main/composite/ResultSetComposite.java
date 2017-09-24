@@ -1041,7 +1041,7 @@ public class ResultSetComposite extends Composite {
 			isCheckRunning = true;
 			isUserInterrupt = true;
 			
-			progressBarQuery.setSelection(10);
+			progressBarQuery.setSelection(0);
 			
 			// HIVE는 CANCLE 기능이 없습니다. 
 			if(DBGroupDefine.HIVE_GROUP != getUserDB().getDBGroup()) {

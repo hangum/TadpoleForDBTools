@@ -14,6 +14,7 @@ package com.hangum.tadpole.engine.query.dao.system;
 import java.sql.Timestamp;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.YES_NO;
 
 /**
  * user_db_resource dao
@@ -28,6 +29,8 @@ public class UserDBResourceDAO {
 	int user_seq;
 	int db_seq;
 	String name = "";
+	String filter = YES_NO.NO.name();
+	
 	String shared_type = PublicTadpoleDefine.SHARED_TYPE.PUBLIC.name();
 	String description = "";
 	
@@ -258,4 +261,18 @@ public class UserDBResourceDAO {
 		this.dataString = dataString;
 	}
 
+	/**
+	 * @return the filter
+	 */
+	public String getFilter() {
+		return filter;
+	}
+
+	/**
+	 * @param filter the filter to set
+	 */
+	public void setFilter(String filter) {
+		this.filter = filter;
+	}
+	
 }

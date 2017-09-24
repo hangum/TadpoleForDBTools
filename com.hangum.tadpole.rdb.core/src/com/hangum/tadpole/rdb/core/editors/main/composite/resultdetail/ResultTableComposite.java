@@ -206,8 +206,9 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 				
 				final TableItem item = tableResult.getSelection()[0];
 				for (int i=0; i<tableResult.getColumnCount(); i++) {
+					
 					if (item.getBounds(i).contains(event.x, event.y)) {
-						Map<Integer, Object> mapColumns = getRsDAO().getDataList().getData().get(tableResult.getSelectionIndex());
+						Map<Integer, Object> mapColumns = getRsDAO().getDataList().getData().get(getColumnIndex(item));
 						// execute extension start =============================== 
 						IMainEditorExtension[] extensions = getRdbResultComposite().getRdbResultComposite().getMainEditor().getMainEditorExtions();
 						for (IMainEditorExtension iMainEditorExtension : extensions) {
@@ -388,6 +389,17 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	}
 	
 	/**
+	 * table column의 index
+	 * 소트를 통해 데이터행의 위치가 바꿀수 있으므로.....	-1 은 행의 넘버가 1부터 시작해서.
+	 * 
+	 * @param item
+	 * @return
+	 */
+	private int getColumnIndex(TableItem item) {
+		return Integer.parseInt(item.getText()) -1;
+	}
+	
+	/**
 	 * select table column to editor
 	 */
 	private TableColumnDAO findSelectRowData() {
@@ -401,7 +413,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 			
 			for (int i=0; i<tableResult.getColumnCount(); i++) {
 				if (item.getBounds(i).contains(eventTableSelect.x, eventTableSelect.y)) {
-					Map<Integer, Object> mapColumns = getRsDAO().getDataList().getData().get(tableResult.getSelectionIndex());
+					Map<Integer, Object> mapColumns = getRsDAO().getDataList().getData().get(getColumnIndex(item));
 					// execute extension start =============================== 
 					IMainEditorExtension[] extensions = getRdbResultComposite().getRdbResultComposite().getMainEditor().getMainEditorExtions();
 					for (IMainEditorExtension iMainEditorExtension : extensions) {
@@ -436,7 +448,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 			
 			for (int i=0; i<tableResult.getColumnCount(); i++) {
 				if (item.getBounds(i).contains(eventTableSelect.x, eventTableSelect.y)) {
-					Map<Integer, Object> mapColumns = getRsDAO().getDataList().getData().get(tableResult.getSelectionIndex());
+					Map<Integer, Object> mapColumns = getRsDAO().getDataList().getData().get(getColumnIndex(item));
 					// execute extension start =============================== 
 					IMainEditorExtension[] extensions = getRdbResultComposite().getRdbResultComposite().getMainEditor().getMainEditorExtions();
 					for (IMainEditorExtension iMainEditorExtension : extensions) {

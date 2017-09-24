@@ -38,6 +38,7 @@ public class ResourceManagerDAO extends AbstractDAO {
 	String display_name;
 	
 	long group_seq;
+	String filter_yn = PublicTadpoleDefine.YES_NO.NO.name();
 	String shared_type;
 	String name;
 	String description;
@@ -52,7 +53,7 @@ public class ResourceManagerDAO extends AbstractDAO {
 	}
 
 	public ResourceManagerDAO(long resource_seq, String resource_types, long user_seq, String user_name, long db_seq, long group_seq, String name,
-			String shared_type, String description, String create_time, String delyn, String restapi_yesno, String restapi_uri, String restapi_key) {
+			String filter_yn, String shared_type, String description, String create_time, String delyn, String restapi_yesno, String restapi_uri, String restapi_key) {
 		this.resource_seq = resource_seq;
 		this.resource_types = resource_types;
 		this.user_seq = user_seq;
@@ -60,6 +61,7 @@ public class ResourceManagerDAO extends AbstractDAO {
 		this.db_seq = db_seq;
 		this.group_seq = group_seq;
 		this.name = name;
+		this.filter_yn = filter_yn;
 		this.shared_type = shared_type;
 		this.description = description;
 		this.create_time = create_time;
@@ -283,6 +285,22 @@ public class ResourceManagerDAO extends AbstractDAO {
 
 	public void setDisplay_name(String display_name) {
 		this.display_name = display_name;
+	}
+	
+
+	/**
+	 * @return the filter_yn
+	 */
+	@FieldNameAnnotationClass(fieldKey = "filter_yn")
+	public String getFilter_yn() {
+		return filter_yn;
+	}
+
+	/**
+	 * @param filter_yn the filter_yn to set
+	 */
+	public void setFilter_yn(String filter_yn) {
+		this.filter_yn = filter_yn;
 	}
 
 	@Override

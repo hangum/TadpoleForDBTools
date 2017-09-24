@@ -64,30 +64,6 @@ public class TableDataEditorAction extends AbstractObjectSelectAction {
 	
 	@Override
 	public void run(IStructuredSelection selection, UserDBDAO userDB, OBJECT_TYPE actionType) {
-//		try {
-//			PublicTadpoleDefine.QUERY_DML_TYPE queryType = QUERY_DML_TYPE.INSERT;
-//			if(queryType == QUERY_DML_TYPE.INSERT) {
-//				if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getInsert_lock())) {
-//					throw new Exception(Messages.get().MainEditor_21);
-//				}
-//			}
-//			queryType = QUERY_DML_TYPE.UPDATE;
-//			if(queryType == QUERY_DML_TYPE.UPDATE) {
-//				if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getUpdate_lock())) {
-//					throw new Exception(Messages.get().MainEditor_21);
-//				}
-//			}
-//			queryType = QUERY_DML_TYPE.DELETE;
-//			if(queryType == QUERY_DML_TYPE.DELETE) {
-//				if(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getDbAccessCtl().getDelete_locl())) {
-//					throw new Exception(Messages.get().MainEditor_21);
-//				}
-//			}
-//		} catch(Exception e) {
-//			MessageDialog.openError(getWindow().getShell(),CommonMessages.get().Error, e.getMessage());
-//			return;
-//		}
-		
 		try {
 			if(!GrantCheckerUtils.ifExecuteQuery(userDB)) return;
 		} catch (Exception e) {

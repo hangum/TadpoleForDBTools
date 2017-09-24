@@ -200,6 +200,7 @@ public class TadpoleFunctionComposite extends AbstractObjectComposite {
 	public void filter(String textSearch) {
 		functionFilter.setSearchText(textSearch);
 		functionTableViewer.refresh();
+		TableUtil.packTable(functionTableViewer.getTable());
 	}
 
 	/**

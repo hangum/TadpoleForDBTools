@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.presentationFactories">
+      <factory
+            class="org.eclipse.rap.internal.design.example.business.BusinessPresentationFactory"
+            id="org.eclipse.rap.design.example.business.factory"
+            name="Business Presentation Factory">
+      </factory>
+      <factory
+            class="org.eclipse.rap.internal.design.example.fancy.FancyPresentationFactory"
+            id="org.eclipse.rap.design.example.fancy.factory"
+            name="Fancy Presentation Factory">
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.rap.ui.branding">
+      <branding
+            favicon="img/business/favicon.png"
+            id="org.eclipse.rap.design.example.business.branding"
+            themeId="org.eclipse.rap.design.example.business.theme"
+            title="RAP business design">
+         <presentationFactory
+               defaultLayoutId="org.eclipse.rap.design.example.business.layout"
+               id="org.eclipse.rap.design.example.business.factory"
+               name="Business Presentation Factory"
+               viewActionsVisible="false">
+            <defaultStackPresentation
+                  id="org.eclipse.rap.design.example.stack.view">
+            </defaultStackPresentation>
+         </presentationFactory>
+      </branding>
+      <branding
+            favicon="img/fancy/favicon.png"
+            id="org.eclipse.rap.design.example.fancy.branding"
+            themeId="org.eclipse.rap.design.example.fancy.theme"
+            title="RAP fancy design">
+         <presentationFactory
+               defaultLayoutId="org.eclipse.rap.design.example.fancy.layout"
+               id="org.eclipse.rap.design.example.fancy.factory"
+               name="Fancy Presentation Factory"
+               viewActionsVisible="false">
+            <defaultStackPresentation
+                  id="org.eclipse.rap.design.example.stack.view">
+            </defaultStackPresentation>
+         </presentationFactory>
+      </branding>
+   </extension>
+   <extension
+         point="org.eclipse.rap.ui.layouts">
+      <layout
+            id="org.eclipse.rap.design.example.business.layout"
+            name="Business Layout Blue">
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.business.layoutsets.LogoInitializer"
+               id="org.eclipse.rap.design.example.layoutset.logo"
+               name="Logo">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.business.layoutsets.HeaderInitializer"
+               id="org.eclipse.rap.design.example.layoutset.header"
+               name="Header">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.business.layoutsets.FooterInitializer"
+               id="org.eclipse.rap.design.example.layoutset.footer"
+               name="Footer">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.business.layoutsets.MenuBarInitializer"
+               id="org.eclipse.rap.design.example.layoutset.menubar"
+               name="MenuBar">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.business.layoutsets.PerspectiveSwitcherInitializer"
+               id="org.eclipse.rap.design.example.layoutset.perspective"
+               name="Perspective Switcher">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.business.layoutsets.StackInitializer"
+               id="org.eclipse.rap.design.example.layoutset.stack"
+               name="Business Stack">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.business.layoutsets.ConfigDialogInitializer"
+               id="org.eclipse.rap.design.example.layoutset.confdialog"
+               name="Config Dialog">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.business.layoutsets.CoolbarInitializer"
+               id="org.eclipse.rap.design.example.layoutset.coolbar"
+               name="Coolbar">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.business.layoutsets.CoolbarOverflowInitializer"
+               id="org.eclipse.rap.design.example.layoutset.coolbaroverflow"
+               name="Coolbar Overflow">
+         </layoutSet>
+      </layout>
+      <layout
+            id="org.eclipse.rap.design.example.fancy.layout"
+            name="Fancy Layout">
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.fancy.layoutsets.LogoInitializer"
+               id="org.eclipse.rap.design.example.layoutset.logo"
+               name="Logo">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.fancy.layoutsets.HeaderInitializer"
+               id="org.eclipse.rap.design.example.layoutset.header"
+               name="Header">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.fancy.layoutsets.FooterInitializer"
+               id="org.eclipse.rap.design.example.layoutset.footer"
+               name="Footer">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.fancy.layoutsets.MenuBarInitializer"
+               id="org.eclipse.rap.design.example.layoutset.menubar"
+               name="MenuBar">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.fancy.layoutsets.PerspectiveSwitcherInitializer"
+               id="org.eclipse.rap.design.example.layoutset.perspective"
+               name="Perspective Switcher">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.fancy.layoutsets.StackInitializer"
+               id="org.eclipse.rap.design.example.layoutset.stack"
+               name="Fancy Stack">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.fancy.layoutsets.ConfigDialogInitializer"
+               id="org.eclipse.rap.design.example.layoutset.confdialog"
+               name="Config Dialog">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.fancy.layoutsets.CoolbarInitializer"
+               id="org.eclipse.rap.design.example.layoutset.coolbar"
+               name="Coolbar">
+         </layoutSet>
+         <layoutSet
+               class="org.eclipse.rap.internal.design.example.fancy.layoutsets.CoolbarOverflowInitializer"
+               id="org.eclipse.rap.design.example.layoutset.coolbaroverflow"
+               name="Coolbar Overflow">
+         </layoutSet>
+      </layout>
+   </extension>
+   <extension
+         point="org.eclipse.rap.ui.themes">
+      <theme
+            file="theme/business/business.css"
+            id="org.eclipse.rap.design.example.business.theme"
+            name="Business Theme">
+      </theme>
+      <theme
+            file="theme/fancy/fancy.css"
+            id="org.eclipse.rap.design.example.fancy.theme"
+            name="Fancy Theme">
+      </theme>
+   </extension>
+   <extension
+         point="org.eclipse.rap.ui.stackPresentations">
+      <stackPresentation
+            actionClass="org.eclipse.rap.internal.design.example.stacks.ConfigAction"
+            class="org.eclipse.rap.internal.design.example.stacks.ViewStackPresentation"
+            id="org.eclipse.rap.design.example.stack.view"
+            name="Example Stack Presentation"
+            type="view">
+      </stackPresentation>
+   </extension>
+
+</plugin>

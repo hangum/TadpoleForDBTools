@@ -1,0 +1,31 @@
+Manifest-Version: 1.0
+Export-Package: org.eclipse.rap.internal.design.example;version="3.1.0
+ ";x-internal:=true,org.eclipse.rap.internal.design.example.builder;ve
+ rsion="3.1.0";x-internal:=true,org.eclipse.rap.internal.design.exampl
+ e.business;version="3.1.0";x-internal:=true,org.eclipse.rap.internal.
+ design.example.business.builder;version="3.1.0";x-internal:=true,org.
+ eclipse.rap.internal.design.example.business.layoutsets;version="3.1.
+ 0";x-internal:=true,org.eclipse.rap.internal.design.example.fancy;ver
+ sion="3.1.0";x-internal:=true,org.eclipse.rap.internal.design.example
+ .fancy.builder;version="3.1.0";x-internal:=true,org.eclipse.rap.inter
+ nal.design.example.fancy.layoutsets;version="3.1.0";x-internal:=true,
+ org.eclipse.rap.internal.design.example.managers;version="3.1.0";x-in
+ ternal:=true,org.eclipse.rap.internal.design.example.stacks;version="
+ 3.1.0";x-internal:=true
+Bundle-ClassPath: .
+Built-By: genie.rap
+Bundle-Localization: plugin
+Bundle-Name: %Bundle-Name
+Created-By: Apache Maven 3.2.1
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.eclipse.rap.ui;bundle-version="[3.1.0,4.0.0)"
+Bundle-Vendor: %Bundle-Vendor
+Eclipse-SourceReferences: scm:git:git://git.eclipse.org/gitroot/rap/or
+ g.eclipse.rap.git;path="examples/org.eclipse.rap.design.example";comm
+ itId=cdd536da7f864887dd8a05ebe1d1cbc158113026
+Build-Jdk: 1.7.0_80
+Bundle-Version: 3.1.0.20160909-1329
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.rap.design.example;singleton:=true
+Archiver-Version: Plexus Archiver
+

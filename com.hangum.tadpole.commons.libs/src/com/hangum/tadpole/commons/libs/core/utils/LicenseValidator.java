@@ -37,7 +37,7 @@ public class LicenseValidator {
 		try {
 			LicenseDAO licenseDAO = getLicense();
 			if(!"".equals(licenseDAO.getCustomer())) {
-				return licenseDAO.getCustomer();
+				return "Tadpole Hub for " + licenseDAO.getCustomer();
 			}
 		} catch(Exception e) {
 			logger.error("get licenseinfo", e);
