@@ -60,7 +60,7 @@ public class OTPInputDialog extends Dialog {
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.get().OTPLoginDialog_0);
+		newShell.setText(CommonMessages.get().OTP);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
@@ -79,7 +79,7 @@ public class OTPInputDialog extends Dialog {
 		gridLayout.numColumns = 2;
 		
 		Label lblOtpCode = new Label(container, SWT.NONE);
-		lblOtpCode.setText(Messages.get().OTP); //$NON-NLS-1$
+		lblOtpCode.setText(CommonMessages.get().OTP); //$NON-NLS-1$
 		
 		textOTPCode = new Text(container, SWT.BORDER);
 		textOTPCode.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -95,7 +95,9 @@ public class OTPInputDialog extends Dialog {
 	protected void okPressed() {
 		String strOTPCode = StringUtils.trim(textOTPCode.getText());
 		if("".equals(strOTPCode)) {
-			MessageDialog.openError(getShell(), CommonMessages.get().Error, Messages.get().OTPEmpty);//"OTP 값을 입력해 주십시오.");
+			MessageDialog.openError(getShell(), 
+					                CommonMessages.get().Error, 
+					                String.format(CommonMessages.get().EnterItem, CommonMessages.get().OTP));//"OTP 값을 입력해 주십시오.");
 			textOTPCode.setFocus();
 			return;
 		}

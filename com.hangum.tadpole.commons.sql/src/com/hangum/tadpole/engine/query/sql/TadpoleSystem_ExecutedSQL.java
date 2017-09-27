@@ -140,7 +140,9 @@ public class TadpoleSystem_ExecutedSQL {
 			String result = (String)resultMap.get("result");
 			
 			String userName =  resultMap.get("name") == null?"":(String)resultMap.get("name");
-			String userEmail = (String)resultMap.get("email");
+			String userEmail = resultMap.get("email") == null?"":(String)resultMap.get("email");
+			String strFullName = "".equals(userEmail)?"":userName+"("+ userEmail+")";
+			
 			String dbName = (String) resultMap.get("display_name");
 			
 			String ipAddress = (String) resultMap.get("ipaddress");
@@ -152,7 +154,7 @@ public class TadpoleSystem_ExecutedSQL {
 			
 			String strResultSaveYn = (String)resultMap.get("result_save_yn");
 
-			RequestResultDAO dao = new RequestResultDAO(duration,userName+"("+ userEmail+")", dbName, new Timestamp(startdateexecute), strSQLText, new Timestamp(enddateexecute), row, result, strMessage,
+			RequestResultDAO dao = new RequestResultDAO(duration,strFullName, dbName, new Timestamp(startdateexecute), strSQLText, new Timestamp(enddateexecute), row, result, strMessage,
 					ipAddress, dbSeq2, strDescription);
 			dao.setSeq(seq);
 			if(PublicTadpoleDefine.EXECUTE_SQL_TYPE.API.name().endsWith(strType)) {
@@ -315,9 +317,6 @@ public class TadpoleSystem_ExecutedSQL {
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
 	public static void insertResourceResultData(final long seq, final Timestamp startDateExecute, final String contents) throws TadpoleSQLManagerException, SQLException {
-		LicenseDAO licenseDAO = LicenseValidator.getLicense();
-		if(!licenseDAO.isValidate()) return;
-		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		
 		// content data를 저장합니다.

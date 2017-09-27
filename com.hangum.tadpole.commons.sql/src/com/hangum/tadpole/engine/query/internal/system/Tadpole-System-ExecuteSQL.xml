@@ -89,7 +89,6 @@
 	 </isNotNull>
  <![CDATA[
 	  	  a.delyn = 'NO'
-	  	AND a.user_seq  = role.user_seq  
         and role.delyn = 'NO'
         and a.db_seq    = role.db_seq 
 	  AND a.seq = b.executed_sql_resource_seq 
