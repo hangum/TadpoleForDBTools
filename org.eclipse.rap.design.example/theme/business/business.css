@@ -9,6 +9,9 @@
  *    Innoopract Informationssysteme GmbH - initial API and implementation
  *    EclipseSource - ongoing development
  *		hangum(hangum@gmail.com) - TadpoleDBHub
+ *
+ * Modify:
+ *		jeongjaehong(jeongjaehong@gmail.com) - CTab, Button style 변경.
  ******************************************************************************/
 
 /* RAP 1.4 default theme for all widgets */
@@ -148,15 +151,19 @@ Button[ARROW], Button[ARROW][BORDER] {
   cursor: pointer;
 }
 
+/* 엔터키가 눌릴때 실행될 기본 선택값이 지정된 버튼의 스타일 정의. */
 Button[ARROW]:default,
 Button[PUSH]:default,
 Button[TOGGLE]:default {
+  color: #333333;
+  font-weight: bold;
   background-color: white;
   background-image: gradient(
     linear, left top, left bottom,
     from( #ffffff ),
-    color-stop( 48%, #f0f0f0 ),
-    color-stop( 52%, #e0e0e0 ),
+    color-stop( 48%, #4ca6e2 ),
+    color-stop( 52%, #4ca6e2 ),
+    color-stop( 48%, #4ca6e2 ),
     to( #ffffff )
   );
   border: 1px solid #A4A4A4;
@@ -167,6 +174,7 @@ Button[ARROW]:disabled, Button[PUSH]:disabled, Button[TOGGLE]:disabled {
 }
 
 Button[ARROW]:hover, Button[PUSH]:hover, Button[TOGGLE]:hover {
+  color: #4ca6e2;
   background-image: gradient(
     linear, left top, left bottom,
     from( #ffffff ),
@@ -190,7 +198,7 @@ Button[ARROW]:pressed, Button[PUSH]:pressed, Button[TOGGLE]:pressed {
 Button[TOGGLE]:selected {
   background-image: gradient(
     linear, left top, left bottom,
-    from( #e0e0e0 ),
+    from( #e0e000 ),
     color-stop( 30%, #f0f0f0 ),
     color-stop( 70%, #e0e0e0 ),
     to( #b0b0b0 )
@@ -270,17 +278,20 @@ Button-ArrowIcon[RIGHT] {
   background-image: url( theme/resources/button/arrow-right.png );
 }
 
+/* 현재 포커스가 지정된 버튼에 점선 테두리 표시. */
 Button-FocusIndicator[ARROW], Button-FocusIndicator[PUSH], Button-FocusIndicator[TOGGLE] {
   background-color: transparent;
-  border: 2px dotted #b8b8b8;
-  margin: 2px;
+  border: 1px dotted #4ca6e2;
+  border-radius: 9px;
+  margin: 1px;
   padding: 0px;
   opacity: 1;
 }
 
 Button-FocusIndicator[CHECK], Button-FocusIndicator[RADIO] {
   background-color: transparent;
-  border: 1px dotted #b8b8b8;
+  border: 1px dotted #4ca6e2;
+  border-radius: 9px;
   padding: 2px 2px 2px 1px;
   margin: 0px;
   opacity: 1;
@@ -440,15 +451,20 @@ CoolItem-Handle {
 
 CTabFolder {
   border-color: #A4A4A4;
-  border-radius: 2px;
+  border-radius: 4px 10px 0px 0px;
 }
 
 CTabItem {
   font: 12px Verdana, "Lucida Sans", Arial, Helvetica, sans-serif;
   color: #4a4a4a;
   background-color: white;
-  background-image: none;
-  padding: 3px 5px;
+  /*background-image: none;*/
+  background-image: gradient(
+    linear, left top, left bottom,
+    from( #fafafa ),
+    to( #efefef )
+  );
+  padding: 3px 15px;
   spacing: 4px;
   text-shadow: none;
   text-decoration: none;
@@ -457,7 +473,7 @@ CTabItem {
 CTabItem:selected {
   color: white;
   background-color: #00589f;
-  padding: 1px 2px;
+  padding: 1px 12px;
 }
 
 /* Do not gray out disabled CTabItems, this is SWT behavior */
@@ -637,23 +653,24 @@ List-GridLine {
 
 Menu {
   background-image: none;
-  padding: 2px 0px;
+  padding: 5px 10px 4px 5px; /*top,right,bottom,left*/
   opacity: 1;
   animation: none;
   color: #0059a5;
-  background-color: white;
+  background-color: #ffffff;
   border: 1px solid #0059a5;
-  border-radius: 2px;
-  box-shadow: 2px 2px 2px rgba( 0, 0, 0, 0.5 );
+  border-radius: 4px 12px 0px 12px;
+  box-shadow: 3px 3px 3px rgba( 0, 0, 0, 0.3 );
 }
 
 MenuItem {
-  background-image: none;
   color: black;
   background-color: transparent;
   opacity: 1;
   text-shadow: none;
-  padding: 5px 6px 3px 5px;
+  border: 1px solid #cccccc;
+  border-radius: 4px 12px;
+  padding: 5px 20px 4px 5px; /*top,right,bottom,left*/
 }
 
 MenuItem[SEPARATOR] {
