@@ -463,11 +463,10 @@ public class ExplorerViewer extends ViewPart {
 				logger.error("get system schemas " + e.getMessage());
 				throw e;
 			}
-		}else if(userDB.getDBGroup() == DBGroupDefine.SQLITE_GROUP) {
-		
-			comboSchema.add(userDB.getDb());
-			comboSchema.setText(userDB.getDb());
-		}else if(userDB.getDBGroup() == DBGroupDefine.DYNAMODB_GROUP) {
+		}else if(userDB.getDBGroup() == DBGroupDefine.SQLITE_GROUP || 
+				userDB.getDBGroup() == DBGroupDefine.DYNAMODB_GROUP || 
+				userDB.getDBGroup() == DBGroupDefine.MONGODB_GROUP
+		) {
 			comboSchema.add(userDB.getDb());
 			comboSchema.setText(userDB.getDb());
 		}else{
