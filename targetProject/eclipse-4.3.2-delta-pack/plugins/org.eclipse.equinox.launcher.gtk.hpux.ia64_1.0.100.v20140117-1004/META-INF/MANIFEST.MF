@@ -1,0 +1,32 @@
+Manifest-Version: 1.0
+Bundle-Localization: launcher.gtk.hpux.ia64
+Fragment-Host: org.eclipse.equinox.launcher;bundle-version="1.0.0"
+Built-By: e4Build
+Bundle-SymbolicName: org.eclipse.equinox.launcher.gtk.hpux.ia64
+Eclipse-SourceReferences: scm:git:git://git.eclipse.org/gitroot/equino
+ x/rt.equinox.framework.git;path="bundles/org.eclipse.equinox.launcher
+ .gtk.hpux.ia64";tag="M20140117-0910";commitId=bcbcc3753018c058c674817
+ 3ae86dbc520600de6
+Bundle-Version: 1.0.100.v20140117-1004
+Eclipse-PlatformFilter: (& (osgi.ws=gtk) (osgi.os=hpux) (osgi.arch=ia6
+ 4))
+Build-Jdk: 1.7.0_25
+Bundle-Vendor: %providerName
+Bundle-Name: %pluginName
+Eclipse-BundleShape: dir
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Bundle-ManifestVersion: 2
+
+Name: eclipse_1508.so
+SHA1-Digest: 2pu0vzOkKyZiXAMMvf1cpVLuXM0=
+
+Name: launcher.gtk.hpux.ia64.properties
+SHA1-Digest: uE9faGa6xOLW08s6N4iP1Bmx9Cw=
+
+Name: META-INF/p2.inf
+SHA1-Digest: w36d5pE7X9sW0RIugdSe9hQwfwo=
+
+Name: about.html
+SHA1-Digest: a9lDHrGuLPkvHBUhsqWU+V2mhPw=
+

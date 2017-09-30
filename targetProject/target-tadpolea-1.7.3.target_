@@ -12,7 +12,7 @@
 </location>
 <location path="${project_loc:/targetProject}/multiTab" type="Directory"/>
 <location path="${project_loc:/targetProject}/test" type="Directory"/>
-<location path="${project_loc:/targetProject}/eclipse-4.3-delta-pack" type="Directory"/>
+<location path="${project_loc:/targetProject}/eclipse-4.3.2-delta-pack" type="Directory"/>
 <location path="${project_loc:/targetProject}/standalone-launcher" type="Directory"/>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.rap.gef.feature.feature.group" version="0.1.0.20170413-1152"/>
