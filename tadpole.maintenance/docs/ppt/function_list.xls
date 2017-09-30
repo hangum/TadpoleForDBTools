@@ -3967,7 +3967,7 @@
    <Row ss:AutoFitHeight="0" ss:Height="82.5" ss:Hidden="1">
     <Cell ss:StyleID="s73"><Data ss:Type="String">Conflicts with another component</Data><NamedCell
       ss:Name="_FilterDatabase"/></Cell>
-    <Cell ss:StyleID="s74"><Data ss:Type="String">/targetProject/eclipse-3.8M6-delta-pack/plugins/org.eclipse.equinox.launcher.cocoa.macosx.x86_64_1.1.200.v20111216-1710/about.html</Data><NamedCell
+    <Cell ss:StyleID="s74"><Data ss:Type="String">/targetProject/eclipse-3.8M6-delta-pack/plugins/org.eclipse.equinox.launcher.cocoa.macosx.x86_64_1.1.200.v20140116-2212/about.html</Data><NamedCell
       ss:Name="_FilterDatabase"/></Cell>
     <Cell ss:StyleID="s74"><Data ss:Type="String"></Data><NamedCell
       ss:Name="_FilterDatabase"/></Cell>
@@ -3993,7 +3993,7 @@
    <Row ss:AutoFitHeight="0" ss:Height="66" ss:Hidden="1">
     <Cell ss:StyleID="s73"><Data ss:Type="String">Conflicts with another component</Data><NamedCell
       ss:Name="_FilterDatabase"/></Cell>
-    <Cell ss:StyleID="s74"><Data ss:Type="String">/targetProject/eclipse-3.8M6-delta-pack/plugins/org.eclipse.equinox.launcher.cocoa.macosx.x86_64_1.1.200.v20111216-1710/META-INF/eclipse.inf</Data><NamedCell
+    <Cell ss:StyleID="s74"><Data ss:Type="String">/targetProject/eclipse-3.8M6-delta-pack/plugins/org.eclipse.equinox.launcher.cocoa.macosx.x86_64_1.1.200.v20140116-2212/META-INF/eclipse.inf</Data><NamedCell
       ss:Name="_FilterDatabase"/></Cell>
     <Cell ss:StyleID="s74"><Data ss:Type="String"></Data><NamedCell
       ss:Name="_FilterDatabase"/></Cell>

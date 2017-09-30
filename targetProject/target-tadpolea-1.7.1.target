@@ -13,7 +13,7 @@
 <location path="${project_loc:/targetProject}/ext" type="Directory"/>
 <location path="${project_loc:/targetProject}/multiTab" type="Directory"/>
 <location path="${project_loc:/targetProject}/test" type="Directory"/>
-<location path="${project_loc:/targetProject}/eclipse-4.3-delta-pack" type="Directory"/>
+<location path="${project_loc:/targetProject}/eclipse-4.3.2-delta-pack" type="Directory"/>
 <location path="${project_loc:/targetProject}/standalone-launcher" type="Directory"/>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.rap.sdk.feature.group" version="2.11.1.v20150806-0404"/>

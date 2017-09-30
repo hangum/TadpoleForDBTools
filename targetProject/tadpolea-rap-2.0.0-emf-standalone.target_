@@ -17,6 +17,6 @@
 <location path="${project_loc:/targetProject}/eclipse-babel-rap/es" type="Directory"/>
 <location path="${project_loc:/targetProject}/rap-3.1.0-N-20150914-1435" type="Directory"/>
 <location path="${project_loc:/targetProject}/addons" type="Directory"/>
-<location path="${project_loc:/targetProject}/eclipse-4.3-delta-pack" type="Directory"/>
+<location path="${project_loc:/targetProject}/eclipse-4.3.2-delta-pack" type="Directory"/>
 </locations>
 </target>
