@@ -56,7 +56,7 @@
 <repository location="http://download.eclipse.org/rt/rap/incubator/nightly/"/>
 </location>
 <location path="${project_loc:/targetProject}/test" type="Directory"/>
-<location path="${project_loc:/targetProject}/eclipse-4.3.2-delta-pack" type="Directory"/>
+<location path="${project_loc:/targetProject}/eclipse-4.3-delta-pack" type="Directory"/>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.rap.sdk.feature.group" version="2.11.1.v20150806-0404"/>
 <repository location="http://download.eclipse.org/releases/mars"/>
