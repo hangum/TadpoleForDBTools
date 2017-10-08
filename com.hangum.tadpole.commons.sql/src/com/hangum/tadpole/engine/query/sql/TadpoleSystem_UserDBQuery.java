@@ -268,13 +268,15 @@ public class TadpoleSystem_UserDBQuery {
 	 * group의 그룹명을 리턴합니다.
 	 * 
 	 * @param userSeq
+	 * @param isAdmin 어드민 검색 여부
 	 * @return
 	 * @throws TadpoleSQLManagerException, SQLException 
 	 */
-	public static List<String> getUserGroupName(int userSeq) throws TadpoleSQLManagerException, SQLException {
+	public static List<String> getUserGroupName(int userSeq, boolean isAdmin) throws TadpoleSQLManagerException, SQLException {
 		Map<String, Object> mapParam = new HashMap<String, Object>();
 		mapParam.put("user_seq", userSeq);//SessionManager.getUserSeq());
 		mapParam.put("thisTime", System.currentTimeMillis());
+		mapParam.put("isAdmin", isAdmin?"true":"false");
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<UserDBDAO> listUserDB = sqlClient.queryForList("userDB", mapParam);
 		
@@ -294,10 +296,11 @@ public class TadpoleSystem_UserDBQuery {
 	 * 
 	 * @param strGoupName
 	 * @param intUserSeq
+	 * @param isAdmin
 	 * @return
 	 * @throws TadpoleSQLManagerException, SQLException 
 	 */
-	public static List<UserDBDAO> getUserGroupDB(String strGoupName, int intUserSeq) throws TadpoleSQLManagerException, SQLException {
+	public static List<UserDBDAO> getUserGroupDB(String strGoupName, int intUserSeq, boolean isAdmin) throws TadpoleSQLManagerException, SQLException {
 		
 		long longCurrentTime = System.currentTimeMillis();
 		
@@ -305,6 +308,7 @@ public class TadpoleSystem_UserDBQuery {
 		mapParam.put("group_name", strGoupName);
 		mapParam.put("user_seq", intUserSeq);
 		mapParam.put("thisTime", longCurrentTime);
+		mapParam.put("isAdmin", isAdmin?"true":"false");
 		
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<UserDBDAO> listUserDB = sqlClient.queryForList("userGroupDB", mapParam);

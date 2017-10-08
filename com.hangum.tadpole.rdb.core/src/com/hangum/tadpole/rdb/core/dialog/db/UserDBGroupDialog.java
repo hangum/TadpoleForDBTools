@@ -60,7 +60,7 @@ public class UserDBGroupDialog extends Dialog {
 		// get group list ----------------------------------
 		try {
 			List<UserDBDAO> listUserMongodb = new ArrayList<>();
-			listUserGroup = TadpoleSystem_UserDBQuery.getUserGroupDB(oriUserDB.getGroup_name(), SessionManager.getUserSeq());
+			listUserGroup = TadpoleSystem_UserDBQuery.getUserGroupDB(oriUserDB.getGroup_name(), SessionManager.getUserSeq(), false);
 			for (UserDBDAO userDBDAO : listUserGroup) {
 				if(DBDefine.MONGODB_DEFAULT == userDBDAO.getDBDefine()) listUserMongodb.add(userDBDAO);
 			}
