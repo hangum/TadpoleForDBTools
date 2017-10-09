@@ -58,7 +58,6 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_STATE
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
-import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLExtManager;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
@@ -380,11 +379,8 @@ public class ResultSetComposite extends Composite {
 			}
 		}
 
-		// agens graph는 preparement 가 없습니다.
-		if(DBDefine.AGENSGRAPH_DEFAULT != getUserDB().getDBDefine()){
-			// 파라미터 쿼리이라면 파라미터 쿼리 상태로 만듭니다.
-			if(!ifIsParameterQuery(reqQuery)) return false;
-		}
+		// 파라미터 쿼리이라면 파라미터 쿼리 상태로 만듭니다.
+		if(!ifIsParameterQuery(reqQuery)) return false;
 
 		return _executeQuery(reqQuery);
 	}

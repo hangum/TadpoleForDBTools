@@ -44,7 +44,7 @@ public enum DBDefine {
 	CUBRID_DEFAULT,
 	AMAZON_REDSHIFT_DEFAULT,
 	POSTGRE_DEFAULT,
-	AGENSGRAPH_DEFAULT,
+//	AGENSGRAPH_DEFAULT,
 	ALTIBASE_DEFAULT,
 	
 	/** hive */
@@ -90,7 +90,7 @@ public enum DBDefine {
 			case SQLite_DEFAULT:		return prefix + "SQLiteConfig.xml";
 			case CUBRID_DEFAULT:		return prefix + "CUBRIDConfig.xml";
 			case POSTGRE_DEFAULT:		return prefix + "POSTGREConfig.xml";
-			case AGENSGRAPH_DEFAULT:	return prefix + "AgensGraphConfig.xml";
+//			case AGENSGRAPH_DEFAULT:	return prefix + "AgensGraphConfig.xml";
 			case HIVE_DEFAULT:			return prefix + "HIVEConfig.xml";
 			case HIVE2_DEFAULT:			return prefix + "HIVE2Config.xml";
 			case TAJO_DEFAULT:			return prefix  + "TAJOConfig.xml";
@@ -125,7 +125,7 @@ public enum DBDefine {
 		else if(type.equalsIgnoreCase("SQLite"))		return SQLite_DEFAULT;
 		else if(type.equalsIgnoreCase("Cubrid"))		return CUBRID_DEFAULT;
 		else if(type.equalsIgnoreCase("PostgreSQL"))	return POSTGRE_DEFAULT;
-		else if(type.equalsIgnoreCase("AgensGraph"))	return DBDefine.AGENSGRAPH_DEFAULT;
+//		else if(type.equalsIgnoreCase("AgensGraph"))	return DBDefine.AGENSGRAPH_DEFAULT;
 		
 		else if(type.equalsIgnoreCase("MongoDB"))		return MONGODB_DEFAULT;
 //		else if(type.equalsIgnoreCase("AmazonRDS")) 	return AMAZONRDS_DEFAULT;
@@ -165,8 +165,6 @@ public enum DBDefine {
 			case SQLite_DEFAULT:	return "org.sqlite.JDBC";
 			case CUBRID_DEFAULT:	return "cubrid.jdbc.driver.CUBRIDDriver";
 			case POSTGRE_DEFAULT:	return "org.postgresql.Driver";
-			case AGENSGRAPH_DEFAULT: return "net.bitnine.agensgraph.Driver";
-
 			case HIVE_DEFAULT:		return "org.apache.hadoop.hive.jdbc.HiveDriver";
 			case HIVE2_DEFAULT:		return "org.apache.hive.jdbc.HiveDriver";
 			case TAJO_DEFAULT:		return "org.apache.tajo.jdbc.TajoDriver";
@@ -206,7 +204,6 @@ public enum DBDefine {
 			 * postgresql이 ssl 을 지원할 경우 는 ?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory 를 써줘야합니다. 
 			 */
 			case POSTGRE_DEFAULT:	return "jdbc:postgresql://%s:%s/%s";
-			case AGENSGRAPH_DEFAULT: return "jdbc:agensgraph://%s:%s/%s";
 			
 			/* http://api.mongodb.org/java/1.2/com/mongodb/DBAddress.html
 			 *  
@@ -247,7 +244,6 @@ public enum DBDefine {
 			case SQLite_DEFAULT:		return "SQLite";
 			case CUBRID_DEFAULT:		return "Cubrid";
 			case POSTGRE_DEFAULT:		return "PostgreSQL";
-			case AGENSGRAPH_DEFAULT:	return "AgensGraph";
 			
 			case MONGODB_DEFAULT :  	return "MongoDB";
 			
@@ -282,7 +278,7 @@ public enum DBDefine {
 			return "SELECT name FROM sqlite_master where 1 = 0";
 		} else if(this == DBDefine.HIVE_DEFAULT || this == DBDefine.HIVE2_DEFAULT) {
 			return "show databases";
-		} else if(this == DBDefine.POSTGRE_DEFAULT || this == DBDefine.AGENSGRAPH_DEFAULT || this == DBDefine.AMAZON_REDSHIFT_DEFAULT) {
+		} else if(this == DBDefine.POSTGRE_DEFAULT || this == DBDefine.AMAZON_REDSHIFT_DEFAULT) {
 			return String.format("SELECT '%s'", strConnection);
 		} else if(this == DBDefine.CUBRID_DEFAULT) {
 			return String.format("select '%s' from db_root", strConnection);
@@ -316,8 +312,6 @@ public enum DBDefine {
 			extension += "hql"; //$NON-NLS-1$
 		} else if(this == POSTGRE_DEFAULT) {
 			extension += "pgsql"; //$NON-NLS-1$
-		} else if(this == AGENSGRAPH_DEFAULT) {
-			extension += "agens"; //$NON-NLS-1$
 		} else if(this == CUBRID_DEFAULT) {
 			extension += "cubrid"; //$NON-NLS-1$
 		} else if(this == TAJO_DEFAULT) {
@@ -355,7 +349,6 @@ public enum DBDefine {
 		case SQLite_DEFAULT:		return DBVariableDefine.SQLITE_VARIABLES;
 		case CUBRID_DEFAULT:		return DBVariableDefine.CUBRID_VARIABLES;
 		case POSTGRE_DEFAULT:		
-		case AGENSGRAPH_DEFAULT:
 		case AMAZON_REDSHIFT_DEFAULT:
 									return DBVariableDefine.PGSQL_VARIABLES;
 		
@@ -445,7 +438,6 @@ public enum DBDefine {
 		supportDb.add(TIBERO_DEFAULT);
 		
 		supportDb.add(AMAZON_REDSHIFT_DEFAULT);
-//		supportDb.add(AGENSGRAPH_DEFAULT);
 		supportDb.add(POSTGRE_DEFAULT);
 
 		supportDb.add(SQLite_DEFAULT);

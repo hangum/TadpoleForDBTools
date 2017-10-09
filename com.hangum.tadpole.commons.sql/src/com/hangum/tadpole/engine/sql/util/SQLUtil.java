@@ -361,10 +361,7 @@ public class SQLUtil {
 				dbAction == OBJECT_TYPE.INDEXES ||
 				dbAction == OBJECT_TYPE.SEQUENCE ||
 				dbAction == OBJECT_TYPE.LINK ||
-				dbAction == OBJECT_TYPE.JOBS ||
-				dbAction == OBJECT_TYPE.VERTEX ||
-				dbAction == OBJECT_TYPE.GRAPHPATH ||
-				dbAction == OBJECT_TYPE.EDGE
+				dbAction == OBJECT_TYPE.JOBS
 				) {
 			return true;
 		}

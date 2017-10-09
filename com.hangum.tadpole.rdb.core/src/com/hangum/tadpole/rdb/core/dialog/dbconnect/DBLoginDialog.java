@@ -208,8 +208,7 @@ public class DBLoginDialog extends Dialog {
 					dbDefine == DBDefine.ORACLE_DEFAULT |
 					dbDefine == DBDefine.SQLite_DEFAULT |
 					dbDefine == DBDefine.TIBERO_DEFAULT |
-					dbDefine == DBDefine.POSTGRE_DEFAULT |
-					dbDefine == DBDefine.AGENSGRAPH_DEFAULT
+					dbDefine == DBDefine.POSTGRE_DEFAULT 
 			) {
 				try {
 					ClassUtils.getClass(dbDefine.getDriverClass());
