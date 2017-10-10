@@ -52,10 +52,13 @@ public class CommonMessages {
 	public String Modify;
 	public String ModifyMessage;
 	public String Save;
+	public String SaveAs;
 	public String Run;
 	
 	public String Refresh;
 	public String Clear;
+	
+	public String Others; // Others, 기타
 	
 	public String Title;
 	public String Description;

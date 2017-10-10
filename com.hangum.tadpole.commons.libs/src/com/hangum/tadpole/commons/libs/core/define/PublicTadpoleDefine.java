@@ -234,12 +234,12 @@ public class PublicTadpoleDefine {
 	 *
 	 */
 	public enum DBOperationType {
-		PRODUCTION("Production Sever"),
-		DR("Disaster recovery"), 
-		DEVELOP("Develop Sever"), 
-		TEST("Test Sever"),
-		BACKUP("Backup Sever"),
-		OTHERS("Others Sever");
+		PRODUCTION("Production Server"),
+		DR("Disaster Recovery"), 
+		DEVELOP("Development Server"), 
+		TEST("Test Server"),
+		BACKUP("Backup Server"),
+		OTHERS("Others");
 
 		private String typeName;
 		
