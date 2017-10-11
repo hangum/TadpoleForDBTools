@@ -60,9 +60,6 @@ import com.hangum.tadpole.engine.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.agens.TadpoleGraphPathComposite;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.agens.edge.TadpoleEdgeComposite;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.agens.vertex.TadpoleVertexComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.collections.TadpoleMongoDBCollectionComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.index.TadpoleMongoDBIndexesComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.serversidescript.TadpoleMongoDBJavaScriptComposite;
@@ -126,11 +123,6 @@ public class ExplorerViewer extends ViewPart {
 	private TadpoleMongoDBIndexesComposite mongoIndexComposite 			= null;
 	private TadpoleMongoDBJavaScriptComposite mongoJavaScriptComposite 	= null;
 	
-	// agens graph
-	private TadpoleGraphPathComposite agensGraphPathComposite = null;
-	private TadpoleVertexComposite agensVertexComposite = null;
-	private TadpoleEdgeComposite agensEdgeComposite = null;
-
 	public ExplorerViewer() {
 		super();
 	}
@@ -314,18 +306,7 @@ public class ExplorerViewer extends ViewPart {
 		if(null != jobsComposite) jobsComposite.clearList();
 		if(null != javaComposite) javaComposite.clearList();
 		
-		if(null != this.agensGraphPathComposite) agensGraphPathComposite.clearList();
-		if(null != this.agensVertexComposite) agensVertexComposite.clearList();
-		if(null != this.agensEdgeComposite) agensEdgeComposite.clearList();
-
-		// 아젠스 그래프 디비인 경우는 첫번째 탭이 그래프 패스 이므로 그래프 패스가 선택 되도록 한다.
-		if(DBDefine.AGENSGRAPH_DEFAULT == userDB.getDBDefine()) {
-			//refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.GRAPHPATH.name());
-			this.agensGraphPathComposite.refreshGraphPath(userDB, true, "");
-		}else{
-			tableComposite.refreshTable(userDB, true, "");
-		}
-		
+		tableComposite.refreshTable(userDB, true, "");
 	}
 
 	/**
@@ -365,10 +346,6 @@ public class ExplorerViewer extends ViewPart {
 		if(null != dblinkComposite) dblinkComposite.dispose();
 		if(null != jobsComposite) jobsComposite.dispose();
 		if(null != javaComposite) javaComposite.dispose();
-		
-		if(null != this.agensGraphPathComposite) agensGraphPathComposite.dispose();
-		if(null != this.agensVertexComposite) agensVertexComposite.dispose();
-		if(null != this.agensEdgeComposite) agensEdgeComposite.dispose();
 		
 		if(null != mongoCollectionComposite) { 
 			mongoCollectionComposite.dispose();
@@ -463,11 +440,10 @@ public class ExplorerViewer extends ViewPart {
 				logger.error("get system schemas " + e.getMessage());
 				throw e;
 			}
-		}else if(userDB.getDBGroup() == DBGroupDefine.SQLITE_GROUP) {
-		
-			comboSchema.add(userDB.getDb());
-			comboSchema.setText(userDB.getDb());
-		}else if(userDB.getDBGroup() == DBGroupDefine.DYNAMODB_GROUP) {
+		}else if(userDB.getDBGroup() == DBGroupDefine.SQLITE_GROUP || 
+				userDB.getDBGroup() == DBGroupDefine.DYNAMODB_GROUP || 
+				userDB.getDBGroup() == DBGroupDefine.MONGODB_GROUP
+		) {
 			comboSchema.add(userDB.getDb());
 			comboSchema.setText(userDB.getDb());
 		}else{
@@ -646,31 +622,7 @@ public class ExplorerViewer extends ViewPart {
 				DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup() ||
 				DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()
 		) {
-			if(DBDefine.AGENSGRAPH_DEFAULT == userDB.getDBDefine()) {
-				createGraphPath();
-				createVertex();
-				createEdge();
-				
-				createTable();
-				createView();
-				createProcedure();
-				createFunction();
-				createTrigger();
-				
-				arrayStructuredViewer = new StructuredViewer[] { 
-					agensGraphPathComposite.getTableviewer(),
-					agensVertexComposite.getTableviewer(),
-					agensEdgeComposite.getTableviewer(),
-					tableComposite.getTableListViewer(), 
-					tableComposite.getTableColumnViewer(),
-					tableComposite.getIndexComposite().getTableViewer(),
-					tableComposite.getTriggerComposite().getTableViewer(),
-					viewComposite.getTableViewer(), 
-					procedureComposite.getTableViewer(), 
-					functionCompostite.getTableviewer(),
-					triggerComposite.getTableViewer()
-				};
-			} else if(DBDefine.AMAZON_REDSHIFT_DEFAULT == userDB.getDBDefine()) {
+			if(DBDefine.AMAZON_REDSHIFT_DEFAULT == userDB.getDBDefine()) {
 				createTable();
 				createView();
 				
@@ -732,11 +684,7 @@ public class ExplorerViewer extends ViewPart {
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 		}
 		
-		if(DBDefine.AGENSGRAPH_DEFAULT == userDB.getDBDefine()) {
-			refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.GRAPHPATH.name());
-		}else{
-			refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.TABLES.name());
-		}
+		refershSelectObject(PublicTadpoleDefine.OBJECT_TYPE.TABLES.name());
 	}
 	
 	/**
@@ -786,12 +734,6 @@ public class ExplorerViewer extends ViewPart {
 			refreshJobs(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JAVA.name())) {
 			refreshJava(isRefresh, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.VERTEX.name())) {
-			refreshVertex(isRefresh, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.EDGE.name())) {
-			refreshEdge(isRefresh, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.GRAPHPATH.name())) {
-			refreshGraph(isRefresh, strObjectName);
 		}
 		filterText();
 		
@@ -951,30 +893,6 @@ public class ExplorerViewer extends ViewPart {
 		javaComposite = new TadpoleJavaComposite(getSite(), tabFolderObject, userDB);
 		javaComposite.initAction();
 	}
-	
-	/**
-	 * Graph Path
-	 */
-	private void createGraphPath() {
-		agensGraphPathComposite = new TadpoleGraphPathComposite(getSite(), tabFolderObject, userDB, this);
-		agensGraphPathComposite.initAction();
-	}
-	
-	/**
-	 * agens vertext정의 
-	 */
-	private void createVertex() {
-		agensVertexComposite = new TadpoleVertexComposite(getSite(), tabFolderObject, userDB);
-		agensVertexComposite.initAction();
-	}
-	
-	/**
-	 * agens edge
-	 */
-	private void createEdge() {
-		agensEdgeComposite = new TadpoleEdgeComposite(getSite(), tabFolderObject, userDB);
-		agensEdgeComposite.initAction();
-	}
 
 	/**
 	 * Job 정보를 최신으로 리프레쉬합니다.
@@ -1033,36 +951,6 @@ public class ExplorerViewer extends ViewPart {
 		tableComposite.getTriggerComposite().refreshTrigger(userDB, boolRefresh, strObjectName);
 	}
 	
-	/**
-	 * graph 정보를 최신으로 갱신 합니다.
-	 * @param boolRefresh
-	 * @param strObjectName
-	 */
-	public void refreshGraph(boolean boolRefresh, String strObjectName) {
-		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.GRAPHPATH, userDB.getDefaultSchemanName(), null);
-		agensGraphPathComposite.refreshGraphPath(getUserDB(), boolRefresh, strObjectName);
-	}
-	
-	/**
-	 * vertex 정보를 최신으로 갱신 합니다.
-	 * @param boolRefresh
-	 * @param strObjectName
-	 */
-	public void refreshVertex(boolean boolRefresh, String strObjectName) {
-		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.VERTEX, userDB.getDefaultSchemanName(), null);
-		agensVertexComposite.refreshSequence(getUserDB(), boolRefresh, strObjectName);
-	}
-	
-	/**
-	 * edge 정보를 최신으로 갱신 합니다.
-	 * @param boolRefresh
-	 * @param strObjectName
-	 */
-	public void refreshEdge(boolean boolRefresh, String strObjectName) {
-		if(boolRefresh) userDB.setDBObject(OBJECT_TYPE.EDGE, userDB.getDefaultSchemanName(), null);
-		agensEdgeComposite.refreshSequence(getUserDB(), boolRefresh, strObjectName);
-	}
-
 	/**
 	 * 전체 trigger 정보를 최신으로 갱신 합니다.
 	 */

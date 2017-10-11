@@ -106,6 +106,7 @@ public class TableCommentEditorSupport extends EditingSupport {
 			}
 
 			viewer.update(element, null);
+			viewer.refresh();
 		} catch (Exception e) {
 			logger.error("setValue error ", e);
 		}

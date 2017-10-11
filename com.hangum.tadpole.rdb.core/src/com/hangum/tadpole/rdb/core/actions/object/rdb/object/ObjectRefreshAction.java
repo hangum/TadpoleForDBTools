@@ -68,10 +68,6 @@ public class ObjectRefreshAction extends AbstractObjectAction {
 			refreshJobs();
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.JAVA) {
 			refreshJava();
-		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.VERTEX) {
-			refreshVertex();
-		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.EDGE) {
-			refreshEdge();
 		}
 	}
 

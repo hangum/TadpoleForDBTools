@@ -18,6 +18,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -44,6 +45,7 @@ public class SQLTemplateDialog extends Dialog {
 	private SQL_TEMPLATE_TYPE sqlTemplateType;
 	
 	private Text textName;
+	private Combo comboCategory;
 	private Text textDescription;
 	private Text textSQL;
 	
@@ -54,6 +56,7 @@ public class SQLTemplateDialog extends Dialog {
 	 * Create the dialog.
 	 * @param parentShell
 	 * @param SQLTemplateType sql template type
+	 * @wbp.parser.constructor
 	 */
 	public SQLTemplateDialog(Shell parentShell, SQL_TEMPLATE_TYPE SQLTemplateType) {
 		super(parentShell);
@@ -85,6 +88,16 @@ public class SQLTemplateDialog extends Dialog {
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout gridLayout = (GridLayout) container.getLayout();
 		gridLayout.numColumns = 2;
+		
+		if(SessionManager.isSystemAdmin()) {
+			Label lblCategory = new Label(container, SWT.NONE);
+			lblCategory.setText(Messages.get().GroupName);
+			
+			comboCategory = new Combo(container, SWT.READ_ONLY);
+			comboCategory.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			comboCategory.add(SQL_TEMPLATE_TYPE.PRI.name());
+			comboCategory.add(SQL_TEMPLATE_TYPE.PUB.name());
+		}
 		
 		Label lblName = new Label(container, SWT.NONE);
 		lblName.setText(CommonMessages.get().Name);
@@ -120,7 +133,12 @@ public class SQLTemplateDialog extends Dialog {
 	 * initialize ui data 
 	 */
 	private void initUIData() {
+		if(sqlTemplateType != null) {
+			if(comboCategory != null) comboCategory.setText(sqlTemplateType.name());
+		}
+		
 		if(oldSQLTemplateDAO != null) {
+			if(comboCategory != null) comboCategory.setText(oldSQLTemplateDAO.getCategory());
 			textName.setText(oldSQLTemplateDAO.getName());
 			textDescription.setText(oldSQLTemplateDAO.getDescription());
 			textSQL.setText(oldSQLTemplateDAO.getContent());
@@ -129,6 +147,7 @@ public class SQLTemplateDialog extends Dialog {
 	
 	@Override
 	protected void okPressed() {
+		String strCategory = comboCategory != null?comboCategory.getText():SQL_TEMPLATE_TYPE.PRI.name();
 		String strTextName = textName.getText();
 		String strDescription = textDescription.getText();
 		String strSQL = textSQL.getText();
@@ -145,6 +164,7 @@ public class SQLTemplateDialog extends Dialog {
 		}
 		
 		if(oldSQLTemplateDAO != null) {
+			oldSQLTemplateDAO.setCategory(strCategory);
 			oldSQLTemplateDAO.setName(strTextName);
 			oldSQLTemplateDAO.setDescription(strDescription);
 			oldSQLTemplateDAO.setContent(strSQL);
@@ -159,7 +179,7 @@ public class SQLTemplateDialog extends Dialog {
 			// 
 			sqlTemplateDAO = new SQLTemplateDAO();
 			sqlTemplateDAO.setUser_seq(SessionManager.getUserSeq());
-			sqlTemplateDAO.setCategory(sqlTemplateType.toString());
+			sqlTemplateDAO.setCategory(strCategory);
 			sqlTemplateDAO.setGroup_name("");//strGroupName);
 			sqlTemplateDAO.setName(strTextName);
 			sqlTemplateDAO.setDescription(strDescription);

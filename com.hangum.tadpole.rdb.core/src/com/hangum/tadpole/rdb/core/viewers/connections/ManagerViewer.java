@@ -143,7 +143,7 @@ public class ManagerViewer extends ViewPart {
 					ManagerListDTO managerDTO = (ManagerListDTO)objSelect;
 					if(managerDTO.getManagerList().isEmpty()) {
 						try {
-							List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserGroupDB(managerDTO.getName(), SessionManager.getUserSeq());
+							List<UserDBDAO> userDBS = TadpoleSystem_UserDBQuery.getUserGroupDB(managerDTO.getName(), SessionManager.getUserSeq(), false);
 							for (UserDBDAO userDBDAO : userDBS) {
 								managerDTO.addLogin(userDBDAO);
 							}
@@ -243,9 +243,9 @@ public class ManagerViewer extends ViewPart {
 			if(logger.isDebugEnabled()) logger.debug("===== Manager Viewer add user session................");
 			
 			try {
-				for (String strGroupName : TadpoleSystem_UserDBQuery.getUserGroupName(SessionManager.getUserSeq())) {
+				for (String strGroupName : TadpoleSystem_UserDBQuery.getUserGroupName(SessionManager.getUserSeq(), false)) {
 					ManagerListDTO managerDTO = new ManagerListDTO(strGroupName);
-					for (UserDBDAO userDBDAO : TadpoleSystem_UserDBQuery.getUserGroupDB(managerDTO.getName(), SessionManager.getUserSeq())) {
+					for (UserDBDAO userDBDAO : TadpoleSystem_UserDBQuery.getUserGroupDB(managerDTO.getName(), SessionManager.getUserSeq(), false)) {
 						managerDTO.addLogin(userDBDAO);
 					}
 					
