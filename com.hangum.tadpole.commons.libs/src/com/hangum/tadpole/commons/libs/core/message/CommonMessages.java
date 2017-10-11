@@ -100,6 +100,12 @@ public class CommonMessages {
 	public String Role;
 
 	public String DatabaseInformation;
+	
+	public String Database;
+	
+	public String Databases;
+	
+	public String DatabaseList;
 
 	public String StartDate;
 
