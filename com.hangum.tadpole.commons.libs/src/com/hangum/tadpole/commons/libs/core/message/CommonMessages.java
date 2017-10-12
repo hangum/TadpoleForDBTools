@@ -155,6 +155,8 @@ public class CommonMessages {
 	public String QRCode; /* Google Authenticator */
 	public String OTP; /* Google Authenticator */
 	
+	public String TadpoleAdministrator;
+	
 	public String Enable; /* Enable */
 	
 	public String Password; 
