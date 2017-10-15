@@ -52,7 +52,6 @@ public class CommonMessages {
 	public String Modify;
 	public String ModifyMessage;
 	public String Save;
-	public String SaveAs;
 	public String Run;
 	
 	public String Refresh;
@@ -62,6 +61,7 @@ public class CommonMessages {
 	
 	public String Title;
 	public String Description;
+	public String DescriptionATag;
 	public String Email;
 	public String Name;
 	public String Date;
@@ -197,11 +197,8 @@ public class CommonMessages {
 	public String ThankYouForUsingTadpoleDBHub;
 	public String AboutTadpoleDBHub;
 	public String Manual;
-<<<<<<< HEAD
 	
 	public String TadpoleAdministrator;
-=======
->>>>>>> branch 'master' of https://github.com/hangum/TadpoleForDBTools.git
 
 	
 	public static CommonMessages get() {
