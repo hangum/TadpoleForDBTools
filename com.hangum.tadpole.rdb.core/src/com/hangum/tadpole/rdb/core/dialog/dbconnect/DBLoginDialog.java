@@ -171,7 +171,7 @@ public class DBLoginDialog extends Dialog {
 		
 		// db groupData 
 		try {
-			listGroupName = TadpoleSystem_UserDBQuery.getUserGroupName(SessionManager.getUserSeq());
+			listGroupName = TadpoleSystem_UserDBQuery.getUserGroupName(SessionManager.getUserSeq(), false);
 			
 		} catch (Exception e1) {
 			logger.error("get group info", e1); //$NON-NLS-1$
@@ -208,8 +208,7 @@ public class DBLoginDialog extends Dialog {
 					dbDefine == DBDefine.ORACLE_DEFAULT |
 					dbDefine == DBDefine.SQLite_DEFAULT |
 					dbDefine == DBDefine.TIBERO_DEFAULT |
-					dbDefine == DBDefine.POSTGRE_DEFAULT |
-					dbDefine == DBDefine.AGENSGRAPH_DEFAULT
+					dbDefine == DBDefine.POSTGRE_DEFAULT 
 			) {
 				try {
 					ClassUtils.getClass(dbDefine.getDriverClass());

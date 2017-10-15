@@ -66,7 +66,7 @@ public class Messages {
 	public String UserManagerDialog_2;
 	public String UserManagerDialog_22;
 	public String UserManagerDialog_3;
-	public String Delete;
+
 	public String UserManagerDialog_5;
 	public String Input;
 	public String ViewSource;

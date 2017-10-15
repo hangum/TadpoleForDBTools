@@ -20,7 +20,6 @@ import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AWSDynamoLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AgensLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AltibaseLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.CubridLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.HiveLoginComposite;
@@ -86,8 +85,6 @@ public class DBConnectionUtils {
 			loginComposite = new CubridLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if(dbDefine == DBDefine.POSTGRE_DEFAULT) {
 			loginComposite = new PostgresLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
-		} else if(dbDefine == DBDefine.AGENSGRAPH_DEFAULT) {
-			loginComposite = new AgensLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if(dbDefine == DBDefine.MONGODB_DEFAULT) {
 			loginComposite = new MongoDBLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 //		} else if(dbDefine == DBDefine.AMAZONRDS_DEFAULT) {

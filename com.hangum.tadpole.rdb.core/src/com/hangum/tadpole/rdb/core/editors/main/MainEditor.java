@@ -380,7 +380,8 @@ public class MainEditor extends EditorExtension {
 					userDB.setSchema(comboSchema.getText());
 				}
 			}
-			if(userDB.getSchemas().size() <= 15) comboSchema.setVisibleItemCount(userDB.getSchemas().size());
+			comboSchema.setVisibleItemCount(comboSchema.getItemCount() > 15 ? 15 : comboSchema.getItemCount());
+			
 			comboSchema.setText(userDB.getSchema());
 			comboSchema.pack();
 			new ToolItem(toolBar, SWT.SEPARATOR);
