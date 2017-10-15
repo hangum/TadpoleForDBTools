@@ -155,8 +155,6 @@ public class CommonMessages {
 	public String QRCode; /* Google Authenticator */
 	public String OTP; /* Google Authenticator */
 	
-	public String TadpoleAdministrator;
-	
 	public String Enable; /* Enable */
 	
 	public String Password; 
@@ -200,6 +198,8 @@ public class CommonMessages {
 	public String ThankYouForUsingTadpoleDBHub;
 	public String AboutTadpoleDBHub;
 	public String Manual;
+	
+	public String TadpoleAdministrator;
 
 	
 	public static CommonMessages get() {
