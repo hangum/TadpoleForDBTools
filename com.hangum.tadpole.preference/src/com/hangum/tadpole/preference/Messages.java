@@ -191,8 +191,6 @@ public class Messages {
 
 	public String PleaseInputEamil;
 
-	public String OldPassword;
-
 	public String EditorPreferen_AddComma;
 
 	public String WhenClickingOnColumnName;
@@ -203,6 +201,8 @@ public class Messages {
 	public String CopyColumnNameToEditor;
 	
 	public String RDBPreferencePage_lblNumberColumnAdd_text;
+	
+	public String General;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);
