@@ -197,8 +197,6 @@ public class Messages {
 
 	public String WhenClickingOnColumnName;
 	
-	public String warnSessionTimeoutValue;
-	
 	public String SortData;
 	public String CopyColumnNameToEditor;
 	

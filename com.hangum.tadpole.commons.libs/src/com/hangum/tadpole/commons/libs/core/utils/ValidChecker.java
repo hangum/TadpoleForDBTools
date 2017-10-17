@@ -61,9 +61,6 @@ public class ValidChecker {
 
 	/**
 	 * email valid checker
-	 * 
-	 * @param email
-	 * @return
 	 */
 	public static boolean isValidEmailAddress(String email) {
 		return EmailValidator.getInstance().isValid(email);

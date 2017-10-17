@@ -147,7 +147,8 @@ public class GeneralPreferencePage extends TadpoleDefaulPreferencePage implement
 				&& (NumberUtils.toInt(txtSessionTime) <= SESSION_TIMEOUT_MAX))) {
 			textSessionTime.setFocus();
 			setValid(false);
-			setErrorMessage(String.format(Messages.get().warnSessionTimeoutValue,  SESSION_TIMEOUT_MIN, SESSION_TIMEOUT_MAX));
+			setErrorMessage(String.format(CommonMessages.get().InvalidRange_GEAndLEWithItem, 
+                    Messages.get().SessionTimeout_mins,  SESSION_TIMEOUT_MIN, SESSION_TIMEOUT_MAX));
 			
 			return false;
 		}
