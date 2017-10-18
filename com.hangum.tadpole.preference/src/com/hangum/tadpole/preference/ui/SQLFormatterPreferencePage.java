@@ -83,6 +83,7 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 		comboTabsize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboTabsize.add("2"); //$NON-NLS-1$
 		comboTabsize.add("4"); //$NON-NLS-1$
+		comboTabsize.add("8"); //$NON-NLS-1$
 		comboTabsize.select(0);
 		
 		btnNoInsertNewDecode = new Button(container, SWT.CHECK);
