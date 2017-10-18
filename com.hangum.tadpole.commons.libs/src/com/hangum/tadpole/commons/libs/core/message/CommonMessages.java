@@ -111,6 +111,8 @@ public class CommonMessages {
 	public String EndDate;
 
 	public String Authentication;
+	
+	public String TwoStepVerfication;
 
 	public String ID;
 

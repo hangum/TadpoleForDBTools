@@ -48,7 +48,7 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 	private Combo comboTabsize;
 	private Button btnNoInsertNewDecode;
 	private Button btnNoInsertNewIn;
-	private Button btnNewLineBefeoreAndOr;
+	private Button btnNewLineBeforeAndOr;
 	private Button btnNewLineBeforeComma;
 	private Button btnRemoveEmptyLine;
 	private Button btnWordBreak;
@@ -88,15 +88,17 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 		btnNoInsertNewDecode = new Button(container, SWT.CHECK);
 		btnNoInsertNewDecode.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnNoInsertNewDecode.setText(Messages.get().SQLFormat_AddNewLineBeforeDECODE);
+		btnNoInsertNewDecode.setToolTipText(Messages.get().SQLFormat_AddNewLineBeforeDECODE_ToolTip);
 		
 		btnNoInsertNewIn = new Button(container, SWT.CHECK);
 		btnNoInsertNewIn.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnNoInsertNewIn.setText(Messages.get().SQLFormat_AddNewLineBeforeIN);
+		btnNoInsertNewIn.setToolTipText(Messages.get().SQLFormat_AddNewLineBeforeIN_ToolTip);
 		
-		
-		btnNewLineBefeoreAndOr = new Button(container, SWT.CHECK);
-		btnNewLineBefeoreAndOr.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-		btnNewLineBefeoreAndOr.setText(Messages.get().SQLFormat_AddNewLineBeforeANDOR);
+		btnNewLineBeforeAndOr = new Button(container, SWT.CHECK);
+		btnNewLineBeforeAndOr.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		btnNewLineBeforeAndOr.setText(Messages.get().SQLFormat_AddNewLineBeforeANDOR);
+		btnNewLineBeforeAndOr.setToolTipText(Messages.get().SQLFormat_AddNewLineBeforeANDOR_ToolTip);
 		
 		btnNewLineBeforeComma = new Button(container, SWT.CHECK);
 		btnNewLineBeforeComma.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
@@ -162,7 +164,7 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 		String txtNoInsertDecode = ""+btnNoInsertNewDecode.getSelection(); //$NON-NLS-1$
 		String txtNoInsertIn = ""+btnNoInsertNewIn.getSelection(); //$NON-NLS-1$
 		
-		String txtNewLineBefeoreAndOr = ""+btnNewLineBefeoreAndOr.getSelection(); //$NON-NLS-1$
+		String txtNewLineBefeoreAndOr = ""+btnNewLineBeforeAndOr.getSelection(); //$NON-NLS-1$
 		String txtNewLineBefeoreComma = ""+btnNewLineBeforeComma.getSelection(); //$NON-NLS-1$
 		String txtRemoveEmptyLine = ""+btnRemoveEmptyLine.getSelection(); //$NON-NLS-1$
 		
@@ -208,7 +210,7 @@ public class SQLFormatterPreferencePage extends TadpoleDefaulPreferencePage impl
 		btnNoInsertNewDecode.setSelection(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatDecode()));
 		btnNoInsertNewIn.setSelection(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatIn()));
 		
-		btnNewLineBefeoreAndOr.setSelection(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatNewLineBeforeAndOr()));
+		btnNewLineBeforeAndOr.setSelection(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatNewLineBeforeAndOr()));
 		btnNewLineBeforeComma.setSelection(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatNewLineBeforeComma()));
 		btnRemoveEmptyLine.setSelection(Boolean.parseBoolean(GetPreferenceGeneral.getSQLFormatRemoveEmptyLine()));
 		

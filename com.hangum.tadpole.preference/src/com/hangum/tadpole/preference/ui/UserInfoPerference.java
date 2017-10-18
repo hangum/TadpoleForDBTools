@@ -214,7 +214,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		// google auth
 		Group grpGoogleAuth = new Group(container, SWT.NONE);
 		grpGoogleAuth.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		grpGoogleAuth.setText(CommonMessages.get().GoogleAuthenticatorSettings);
+		grpGoogleAuth.setText(CommonMessages.get().TwoStepVerfication);
 		grpGoogleAuth.setLayout(new GridLayout(2, false));
 		
 		btnGetOptCode = new Button(grpGoogleAuth, SWT.CHECK);
@@ -229,7 +229,7 @@ public class UserInfoPerference extends TadpoleDefaulPreferencePage implements I
 		if(PublicTadpoleDefine.YES_NO.YES.name().equals(SessionManager.getUseOTP())) {
 			btnGetOptCode.setSelection(true);
 		}
-		btnGetOptCode.setText(CommonMessages.get().EnableGoogleAuthenticator);
+		btnGetOptCode.setText(CommonMessages.get().GoogleAuthenticator);
 		new Label(grpGoogleAuth, SWT.NONE);
 		
 		Label lblSecretKey = new Label(grpGoogleAuth, SWT.NONE);

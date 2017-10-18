@@ -333,10 +333,9 @@ public class ExceptionDetailsErrorDialog extends IconAndMessageDialog {
      *         button was pressed, or <code>Dialog.CANCEL</code> if this
      *         dialog's close window decoration or the ESC key was used.
      */
-    public static int openError(Shell parent, String dialogTitle,
-            String message, IStatus status) {
-        return openError(parent, dialogTitle, message, status, IStatus.OK
-                | IStatus.INFO | IStatus.WARNING | IStatus.ERROR);
+    public static int openError(Shell parent, String dialogTitle, String message, IStatus status) {
+        return openError(parent, dialogTitle, message, status, 
+        		            IStatus.OK | IStatus.INFO | IStatus.WARNING | IStatus.ERROR);
     }
 
     /**
