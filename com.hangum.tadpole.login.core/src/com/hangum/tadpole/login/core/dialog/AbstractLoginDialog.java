@@ -49,6 +49,7 @@ import com.hangum.tadpole.session.manager.SessionManager;
  * @author hangum
  *
  */
+@SuppressWarnings("serial")
 public abstract class AbstractLoginDialog extends Dialog {
 	private static final Logger logger = Logger.getLogger(AbstractLoginDialog.class);
 	
@@ -97,6 +98,7 @@ public abstract class AbstractLoginDialog extends Dialog {
 	 * @param strEmail
 	 * @param strPass
 	 */
+	@SuppressWarnings("static-access")
 	protected void ldapLogin(String strEmail, String strPass) throws TadpoleAuthorityException {
 		LDAPUtil.getInstance().ldapLogin(strEmail, strPass);
 	}

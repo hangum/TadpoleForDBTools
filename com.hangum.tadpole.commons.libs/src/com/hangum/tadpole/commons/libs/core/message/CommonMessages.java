@@ -57,8 +57,11 @@ public class CommonMessages {
 	public String Refresh;
 	public String Clear;
 	
+	public String Others; // Others, 기타
+	
 	public String Title;
 	public String Description;
+	public String DescriptionATag;
 	public String Email;
 	public String Name;
 	public String Date;
@@ -96,12 +99,20 @@ public class CommonMessages {
 	public String Role;
 
 	public String DatabaseInformation;
+	
+	public String Database;
+	
+	public String Databases;
+	
+	public String DatabaseList;
 
 	public String StartDate;
 
 	public String EndDate;
 
 	public String Authentication;
+	
+	public String TwoStepVerfication;
 
 	public String ID;
 
@@ -188,6 +199,8 @@ public class CommonMessages {
 	public String ThankYouForUsingTadpoleDBHub;
 	public String AboutTadpoleDBHub;
 	public String Manual;
+	
+	public String TadpoleAdministrator;
 
 	
 	public static CommonMessages get() {

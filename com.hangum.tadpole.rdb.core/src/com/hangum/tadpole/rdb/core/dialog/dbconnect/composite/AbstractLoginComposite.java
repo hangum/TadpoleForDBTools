@@ -75,7 +75,7 @@ public abstract class AbstractLoginComposite extends Composite {
 	protected PreConnectionInfoGroup preDBInfo;
 	protected OthersConnectionGroup othersConnectionInfo;
 	
-	protected String strOtherGroupName = "Other Group"; //$NON-NLS-1$
+	protected String strOtherGroupName = CommonMessages.get().Others;
 	protected String selGroupName = ""; //$NON-NLS-1$
 	
 	protected List<String> listGroupName = new ArrayList<String>();

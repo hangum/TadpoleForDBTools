@@ -63,6 +63,7 @@ import com.swtdesigner.SWTResourceManager;
  * @author hangum
  *
  */
+@SuppressWarnings("serial")
 public class LoginDialog extends AbstractLoginDialog {
 	private static final Logger logger = Logger.getLogger(LoginDialog.class);
 	

@@ -75,7 +75,7 @@ Document
  - English : http://www.cubrid.org/wiki_apps/entry/tadpole-sql-client-tutorial
 
 Site
-* http://tadpoledb.com
+* https://www.tadpolehub.com/
 
 Chrome web store
 * https://chrome.google.com/webstore/detail/tadpole-db-hub-db-client/nlelclofeoahhcfgfkcpbmhflfdimbie

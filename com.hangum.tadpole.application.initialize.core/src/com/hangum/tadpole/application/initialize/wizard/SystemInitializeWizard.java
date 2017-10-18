@@ -19,6 +19,7 @@ import org.eclipse.jface.wizard.Wizard;
 import com.hangum.tadpole.application.initialize.Messages;
 import com.hangum.tadpole.application.initialize.wizard.dao.SystemAdminWizardUserDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.Utils;
 import com.hangum.tadpole.engine.query.dao.system.UserDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystemQuery;
@@ -112,7 +113,7 @@ public class SystemInitializeWizard extends Wizard {
 				adminDao.getEmail(), Utils.getUniqueDigit(7), PublicTadpoleDefine.YES_NO.YES.name(),
 				adminDao.getPasswd(), 	
 				PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.toString(),
-				"System Default Admin", 
+				CommonMessages.get().TadpoleAdministrator,  
 				Locale.ENGLISH.getDisplayLanguage(Locale.ENGLISH), 
 				PublicTadpoleDefine.DEFAULT_TIME_ZONE,
 				PublicTadpoleDefine.YES_NO.YES.name(), 

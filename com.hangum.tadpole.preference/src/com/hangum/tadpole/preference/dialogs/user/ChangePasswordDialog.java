@@ -85,7 +85,7 @@ public class ChangePasswordDialog extends Dialog {
 		gridLayout.numColumns = 2;
 		
 		Label lblOldPassword = new Label(container, SWT.NONE);
-		lblOldPassword.setText(Messages.get().OldPassword);
+		lblOldPassword.setText(CommonMessages.get().Password);
 		
 		textOldPassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
 		textOldPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -119,7 +119,7 @@ public class ChangePasswordDialog extends Dialog {
 			TadpoleSystem_UserQuery.login(SessionManager.getEMAIL(), textOldPassword.getText());
 		} catch(Exception e) {
 			textOldPassword.setFocus();
-			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, String.format(CommonMessages.get().IsIncorrect, Messages.get().OldPassword));
+			MessageDialog.openWarning(getShell(), CommonMessages.get().Warning, String.format(CommonMessages.get().IsIncorrect, CommonMessages.get().Password));
 			return;
 		}
 		

@@ -90,7 +90,7 @@ public class JDBCDriverManageDialog extends Dialog {
 	@Override
 	public void configureShell(Shell newShell) {
 		super.configureShell(newShell);
-		newShell.setText(Messages.get().JDBCDriverSetting);
+		newShell.setText(Messages.get().JDBCDriverManager);
 		newShell.setImage(GlobalImageUtils.getTadpoleIcon());
 	}
 
