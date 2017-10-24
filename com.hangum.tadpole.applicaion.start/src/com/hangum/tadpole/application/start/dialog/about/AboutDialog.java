@@ -112,7 +112,11 @@ public class AboutDialog extends Dialog {
 			txtExpirationDate.setText(CommonMessages.get().ExpirationDate + ": " + LicenseValidator.getExpirationDate());
 			
 			Text txtRemaining =  new Text(composite_1, SWT.NONE);
-			txtRemaining.setText(CommonMessages.get().Remaining + ": " + LicenseValidator.getRemaining() + " " + CommonMessages.get().Days);
+			if(LicenseValidator.getRemaining() < 0) {
+				txtRemaining.setText(CommonMessages.get().Remaining + ": Expired");
+			} else {
+				txtRemaining.setText(CommonMessages.get().Remaining + ": " + LicenseValidator.getRemaining() + " " + CommonMessages.get().Days);
+			}
 			
 		} else {
 			Text txtLicenseType = new Text(composite_1, SWT.NONE);

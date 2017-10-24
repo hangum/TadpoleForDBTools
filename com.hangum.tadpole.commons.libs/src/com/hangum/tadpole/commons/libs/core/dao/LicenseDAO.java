@@ -1,6 +1,7 @@
 package com.hangum.tadpole.commons.libs.core.dao;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -127,15 +128,15 @@ public class LicenseDAO {
 	public long getRemaining() {
 		long sRemaining = 0;
 		
-		if( this.mActivationDate != "" && this.mExpirationDate != "" ) {
+		if( this.mExpirationDate != "" ) {
 			SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			
 			try {
-				Date sActivationDate = sDateFormat.parse(this.mActivationDate);
 				Date sExpirationDate = sDateFormat.parse(this.mExpirationDate);
+				Date sToday = new Date (); 
 				
 				/* Get how many days left */
-				sRemaining = (sExpirationDate.getTime() - sActivationDate.getTime()) / (24 * 60 * 60 * 1000); 
+				sRemaining = (sExpirationDate.getTime() - sToday.getTime()) / (24 * 60 * 60 * 1000); 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

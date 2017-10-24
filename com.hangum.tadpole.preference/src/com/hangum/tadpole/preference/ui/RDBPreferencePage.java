@@ -80,7 +80,7 @@ public class RDBPreferencePage extends TadpoleDefaulPreferencePage implements IW
 		
 		Label lblBasic = new Label(container, SWT.NONE);
 		lblBasic.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblBasic.setText("Basic");
+		lblBasic.setText(Messages.get().General);
 		
 		Label labelBasic = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
 		labelBasic.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));

@@ -126,11 +126,14 @@ public class Messages {
 	public String TabWidth;
 
 	public String SQLFormat_AddNewLineBeforeDECODE;
+	public String SQLFormat_AddNewLineBeforeDECODE_ToolTip;
 
 	public String SQLFormat_AddNewLineBeforeIN;
+	public String SQLFormat_AddNewLineBeforeIN_ToolTip;
 
 	public String MaximumNumberOfCharacters;
 	public String SQLFormat_AddNewLineBeforeANDOR;
+	public String SQLFormat_AddNewLineBeforeANDOR_ToolTip;
 	public String SQLFormat_AddCommaBeforeNewLine;
 	public String SQLFormat_AddCommaBeforeNewLine_ToolTip;
 	public String SQLFormat_RemoveEmptyLines;
@@ -191,8 +194,6 @@ public class Messages {
 
 	public String PleaseInputEamil;
 
-	public String OldPassword;
-
 	public String EditorPreferen_AddComma;
 
 	public String WhenClickingOnColumnName;
@@ -201,6 +202,8 @@ public class Messages {
 	public String CopyColumnNameToEditor;
 	
 	public String RDBPreferencePage_lblNumberColumnAdd_text;
+	
+	public String General;
 	
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

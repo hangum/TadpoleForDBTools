@@ -11,6 +11,7 @@
 package com.hangum.tadpole.rdb.core.viewers.connections;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -364,12 +365,20 @@ public class ManagerViewer extends ViewPart {
 				}
 				managerTV.refresh(userDB, true);
 				managerTV.expandToLevel(userDB, 1);
-				
+			} catch (SQLException sqle) {
+				Status status = new Status(IStatus.ERROR, Activator.PLUGIN_ID, sqle.getCause().toString(), sqle);
+				ExceptionDetailsErrorDialog.openError( getSite().getShell(), 
+						                               CommonMessages.get().Error, 
+						                               Messages.get().ManagerViewer_4, 
+						                               status);
 			} catch (Exception e) {
 				logger.error("user_db_erd list", e); //$NON-NLS-1$
 				
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-				ExceptionDetailsErrorDialog.openError(getSite().getShell(),CommonMessages.get().Error, Messages.get().ManagerViewer_4, errStatus); //$NON-NLS-1$
+				ExceptionDetailsErrorDialog.openError(getSite().getShell(),
+						                             CommonMessages.get().Error, 
+						                             Messages.get().ManagerViewer_4, 
+						                             errStatus); 
 			}
 		}
 	}
