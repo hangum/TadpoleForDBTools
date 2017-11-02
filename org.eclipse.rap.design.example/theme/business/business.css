@@ -156,7 +156,6 @@ Button[ARROW]:default,
 Button[PUSH]:default,
 Button[TOGGLE]:default {
   color: #333333;
-  font-weight: bold;
   background-color: white;
   background-image: gradient(
     linear, left top, left bottom,
