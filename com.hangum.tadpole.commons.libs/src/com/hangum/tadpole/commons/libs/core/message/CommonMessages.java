@@ -61,7 +61,6 @@ public class CommonMessages {
 	
 	public String Title;
 	public String Description;
-	public String DescriptionATag;
 	public String Email;
 	public String Name;
 	public String Date;

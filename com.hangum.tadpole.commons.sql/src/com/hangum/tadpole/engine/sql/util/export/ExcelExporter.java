@@ -34,6 +34,47 @@ import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 public class ExcelExporter extends AbstractTDBExporter {
 	
 	/**
+	 * 엑셀파일을 만든다.
+	 * 
+	 * @param strFullFileName
+	 * @param strSheetName
+	 * @param listData
+	 * @return
+	 * @throws Exception
+	 */
+	public static String makeFile(String strFullFileName, String strSheetName, List<String[]> listData) throws Exception {
+		XSSFWorkbook workbookExcel = null;
+		XSSFSheet sheetExcel = null;
+		int rowNum = 0;
+		
+		File fileXlsx = new File(strFullFileName);
+		if(fileXlsx.exists()) {
+			workbookExcel = new XSSFWorkbook(new FileInputStream(fileXlsx));
+			sheetExcel = workbookExcel.getSheet(strSheetName);
+			
+			rowNum = sheetExcel.getLastRowNum()+1;
+		} else {
+			workbookExcel = new XSSFWorkbook();
+			sheetExcel = workbookExcel.createSheet(strSheetName);
+		}
+		
+		for(int i=0; i<listData.size(); i++) {
+			Row row = sheetExcel.createRow(rowNum+i);
+			
+			String[] arryData = listData.get(i);
+			for(int j=0; j<arryData.length; j++) {
+				Cell cell = row.createCell(j);
+				cell.setCellValue(arryData[j]);
+			}
+		}
+		
+		workbookExcel.write(new FileOutputStream(new File(strFullFileName), true));
+		workbookExcel.close();
+		
+		return strFullFileName;
+	}
+	
+	/**
 	 * make content file
 	 * 
 	 * @param strTmpFile
@@ -43,24 +84,8 @@ public class ExcelExporter extends AbstractTDBExporter {
 	 * @throws Exception
 	 */
 	public static String makeContentFile(String strTmpFile, String strSheetName, List<String[]> listData) throws Exception {
-		String strFullPath = makeDirName(strTmpFile) + strTmpFile + "." + "xlsx";;
-		
-		XSSFWorkbook workbookExcel = new XSSFWorkbook();
-		XSSFSheet sheetExcel = workbookExcel.createSheet(strSheetName);
-		for(int i=0; i<listData.size(); i++) {
-			Row row = sheetExcel.createRow(i);
-			
-			String[] arryData = listData.get(i);
-			for(int j=0; j<arryData.length; j++) {
-				Cell cell = row.createCell(j);
-				cell.setCellValue(arryData[j]);
-			}
-		}
-		
-		workbookExcel.write(new FileOutputStream(new File(strFullPath)));
-		workbookExcel.close();
-		
-		return strFullPath;
+		String strFullFileName = makeDirName(strTmpFile) + strTmpFile + "." + "xlsx";;
+		return makeFile(strFullFileName, strSheetName, listData);
 	}
 
 	/**
