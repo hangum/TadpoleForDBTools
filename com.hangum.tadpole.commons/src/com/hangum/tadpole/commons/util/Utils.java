@@ -35,11 +35,11 @@ public class Utils {
 	 */
 	public static String convLineToHtml(String str) {
 		if(str == null) return "";
-
 		return StringUtils.replace(StringEscapeUtils.escapeHtml(str), PublicTadpoleDefine.LINE_SEPARATOR, "<br/>");
 	}
 	
 	public static String convHtmlToLine(String str) {
+		if(str == null) return "";
 		return StringUtils.replace(StringEscapeUtils.unescapeHtml(str), "<br/>", PublicTadpoleDefine.LINE_SEPARATOR);
 	}
 	

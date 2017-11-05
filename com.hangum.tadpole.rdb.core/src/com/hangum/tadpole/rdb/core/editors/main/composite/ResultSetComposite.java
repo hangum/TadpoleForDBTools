@@ -651,6 +651,7 @@ public class ResultSetComposite extends Composite {
 						// 처리를 위해 결과를 담아 둡니다.
 						reqQuery.setResultDao(reqResultDAO);
 						
+//						try {
 						// 히스토리 화면을 갱신합니다.
 						List<Long> listLongHistorySeq = new ArrayList<>();
 						if(listStrSQL.isEmpty()) {
@@ -663,7 +664,12 @@ public class ResultSetComposite extends Composite {
 							for(int i=0; i<listStrSQL.size(); i++) {
 								String strSQL = listStrSQL.get(i);
 								reqResultDAO.setStrSQLText(strSQL);
-								listLongHistorySeq.add(getRdbResultComposite().getCompositeQueryHistory().saveExecutedSQLData(reqResultDAO, listRSDao.get(i)));
+								// 배치 쿼리를 수행했을 경우 SELECT 결과가 없을수도 있다.
+								try {
+									listLongHistorySeq.add(getRdbResultComposite().getCompositeQueryHistory().saveExecutedSQLData(reqResultDAO, listRSDao.get(i)));
+								} catch(Exception e) {
+									logger.error("do not execute query " + strSQL);
+								}
 							}
 						}
 						
@@ -677,6 +683,9 @@ public class ResultSetComposite extends Composite {
 						
 						// 모든 쿼리가 종료 되었음을 알린다.
 						finallyEndExecuteCommand(listRSDao);
+//						}catch(Exception e) {
+//							logger.error("result set viewer", e);
+//						}
 					}
 				});	// end display.asyncExec
 			}	// end done
