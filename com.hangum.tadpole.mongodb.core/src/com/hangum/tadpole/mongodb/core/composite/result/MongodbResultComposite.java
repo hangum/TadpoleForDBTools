@@ -620,7 +620,7 @@ public class MongodbResultComposite extends Composite {
 	 * @param basicSort
 	 */
 	private void find(BasicDBObject basicFields, DBObject basicWhere, BasicDBObject basicSort, int cntSkip, int cntLimit) throws Exception {
-		if( (cntLimit - cntSkip) >= defaultMaxCount) {
+		if( (cntLimit - cntSkip) > defaultMaxCount) {
 //			"검색 수가 " + defaultMaxCount + "를 넘을수 없습니다. Prefernece에서 값을 조절하십시오."
 //			Search can not exceed the number 5. Set in Perference.
 			throw new Exception(String.format("Search can not exceed the number %s. Set in Perference.",  defaultMaxCount));//String.format(Messages.get().MongoDBTableEditor_0, "" + defaultMaxCount));  //$NON-NLS-2$ //$NON-NLS-1$
