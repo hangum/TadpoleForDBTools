@@ -12,7 +12,9 @@ package com.hangum.tadpole.engine.sql.util.executer.procedure;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,7 +96,7 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 			}
 			 
 			// make the script
-			String strExecuteScript = getMakeExecuteScript();
+			String strExecuteScript = getMakeExecuteScript(parameterList);
 			
 			if (StringUtils.startsWithIgnoreCase(strExecuteScript, "SELECT")){
 				// function execute...
@@ -120,8 +122,31 @@ public class OracleProcedureExecuter extends ProcedureExecutor {
 				
 				// Set input value
 				for (InOutParameterDAO inOutParameterDAO : parameterList) {
-					cstmt.setObject(inOutParameterDAO.getOrder(), inOutParameterDAO.getValue());
-				}
+					
+					if(logger.isDebugEnabled()) logger.debug("Input Parameter " + inOutParameterDAO.getOrder() + " JavaType is " + RDBTypeToJavaTypeUtils.getJavaType(inOutParameterDAO.getRdbType()));
+					if(logger.isDebugEnabled()) logger.debug("Input Parameter " + inOutParameterDAO.getOrder() + " Value is " + inOutParameterDAO.getValue() );
+					
+					if (RDBTypeToJavaTypeUtils.isCharType( inOutParameterDAO.getRdbType() )){
+						cstmt.setObject(inOutParameterDAO.getOrder(), inOutParameterDAO.getValue() );						
+					}else if (RDBTypeToJavaTypeUtils.isNumberType( inOutParameterDAO.getRdbType() )){
+						try{
+							float v = Float.valueOf(inOutParameterDAO.getValue());
+							cstmt.setObject(inOutParameterDAO.getOrder(), v );
+						}catch(Exception e){
+							// 숫자 타입일 경우 형변환 오류가 생기거나 기타 다른 오류가 발생할 경우 0을 기본값으로 사용하도록 한다.
+							cstmt.setObject(inOutParameterDAO.getOrder(), 0 );
+						}						
+					}else if (RDBTypeToJavaTypeUtils.isDateType( inOutParameterDAO.getRdbType() )){
+						//사용자가 인수값을 입력했을때만 처리한다.
+						if ( StringUtils.isNotEmpty(inOutParameterDAO.getValue()) ){						
+							//TODO:Date타입의 포맷은 사용자 환경설정값을 이용해야 하나? 
+							SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
+							Date to = transFormat.parse(inOutParameterDAO.getValue());
+							if(logger.isDebugEnabled()) logger.debug("Input Parameter " + inOutParameterDAO.getOrder() + " Value is " + to );
+							cstmt.setObject(inOutParameterDAO.getOrder(), new java.sql.Date(to.getTime()) );
+						}
+					}//isDateType
+				}//for 
 	
 				// Set the OUT Parameter
 				for (int i = 0; i < listOutParamValues.size(); i++) {
