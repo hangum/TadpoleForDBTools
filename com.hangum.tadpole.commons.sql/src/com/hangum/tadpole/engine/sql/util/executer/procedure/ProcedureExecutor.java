@@ -154,7 +154,7 @@ public abstract class ProcedureExecutor {
 				else sbQuery.append(String.format(":%s, ", inOutParameterDAO.getName()));
 			}
 			sbQuery.append(") from dual");
-		} else {
+		} else { 
 			sbQuery.append("{call " + procedureDAO.getFullName( !StringUtils.isBlank(procedureDAO.getPackagename()) ) + "(");
 			
 			// in script
