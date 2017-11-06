@@ -14,6 +14,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 public class TransactionManger {
 	/** define begin statement */
 	public static final String BEGIN_STATEMENT 		= "begin";// + PublicTadpoleDefine.SQL_DELIMITER;
+	public static final String BEGIN_MYSQL_STATEMENT = "start transaction";
 	
 	/** define commit statement */
 	public static final String COMMIT_STATEMENT 	= "commit";// + PublicTadpoleDefine.SQL_DELIMITER;
@@ -31,6 +32,7 @@ public class TransactionManger {
 	public static boolean isTransaction(String query) {
 		if(
 				StringUtils.startsWithIgnoreCase(query, BEGIN_STATEMENT) ||
+				StringUtils.startsWithIgnoreCase(query, BEGIN_MYSQL_STATEMENT) ||
 				StringUtils.startsWithIgnoreCase(query, COMMIT_STATEMENT) || 
 				StringUtils.startsWithIgnoreCase(query, ROLLBACK_STATEMENT) 
 		) { //$NON-NLS-1$
@@ -65,7 +67,8 @@ public class TransactionManger {
 	 * @return
 	 */
 	public static boolean isStartTransaction(String query) {
-		if(StringUtils.startsWithIgnoreCase(query, BEGIN_STATEMENT)) return true;
+		if(StringUtils.startsWithIgnoreCase(query, BEGIN_STATEMENT) ||
+				StringUtils.startsWithIgnoreCase(query, BEGIN_MYSQL_STATEMENT)) return true;
 		return false;
 	}
 

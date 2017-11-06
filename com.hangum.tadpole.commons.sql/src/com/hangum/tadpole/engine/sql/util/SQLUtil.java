@@ -392,7 +392,8 @@ public class SQLUtil {
 				queryType = PublicTadpoleDefine.QUERY_DML_TYPE.UPDATE;
 			} else if(statement instanceof Delete) {
 				queryType = PublicTadpoleDefine.QUERY_DML_TYPE.DELETE;
-//			} else {
+			} else {
+				
 //				queryType = PublicTadpoleDefine.QUERY_DML_TYPE.DDL;
 			}
 			

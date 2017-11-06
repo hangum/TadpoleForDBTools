@@ -33,11 +33,45 @@ import com.opencsv.CSVWriter;
 /**
  * Make all export data
  * 
+ * 에디터에서 데이터 내보내기는 전체를 받아 내보내는 식으로 수정합니다. (cpu, 메모리 릭의 염려가 있습니다) 
+ * 
  * @author hangum
  *
  */
 public class AllDataExporter {
 	private static final Logger logger = Logger.getLogger(AllDataExporter.class);
+	private static final int PER_DATA_SAVE_COUNT = 5000;
+	private static final int THREAD_SLEEP_MILLIS = 20;
+	
+//	/**
+//	 * excel export data
+//	 * 
+//	 * @param userDB
+//	 * @param strSQL
+//	 * @param fileName
+//	 * @param intMaxCount
+//	 * @return
+//	 * @throws Exception
+//	 */
+//	public static String makeExcelAllResult(UserDBDAO userDB, String strSQL, String fileName, int intMaxCount) throws Exception {
+//		String strFullPath = AbstractTDBExporter.makeDirName(fileName) + fileName + "." + "xlsx";
+//		/** 한번에 다운로드 받을 것인지 여부 */
+//		final boolean isOnetimeDownload = intMaxCount == -1?true:false;
+//		
+//		try {
+//			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, isOnetimeDownload, intMaxCount);
+//			while(sqlUtil.hasNext()) {
+//				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
+//
+//				ExcelExporter.makeContentFile(strFullPath, fileName, rsDAO);
+//			}
+//			
+//			return strFullPath;
+//		} catch(Exception e) {
+//			logger.error("make all CSV export data", e);
+//			throw e;
+//		}
+//	}
 	
 	/**
 	 * excel export data
@@ -50,23 +84,94 @@ public class AllDataExporter {
 	 * @throws Exception
 	 */
 	public static String makeExcelAllResult(UserDBDAO userDB, String strSQL, String fileName, int intMaxCount) throws Exception {
-		String strFullPath = AbstractTDBExporter.makeDirName(fileName) + fileName + "." + "xlsx";
+		long longSt = System.currentTimeMillis();
+		String strFullFileName = AbstractTDBExporter.makeDirName(fileName) + fileName + "." + "xlsx";
+
 		/** 한번에 다운로드 받을 것인지 여부 */
 		final boolean isOnetimeDownload = intMaxCount == -1?true:false;
 		
+		ResultSet rs = null;
+		PreparedStatement stmt = null;
+		java.sql.Connection javaConn = null;
+		
 		try {
-			SQLQueryUtil sqlUtil = new SQLQueryUtil(userDB, strSQL, isOnetimeDownload, intMaxCount);
-			while(sqlUtil.hasNext()) {
-				QueryExecuteResultDTO rsDAO = sqlUtil.nextQuery();
-
-				ExcelExporter.makeContentFile(strFullPath, fileName, rsDAO);
+			if(userDB.getDBGroup() == DBGroupDefine.DYNAMODB_GROUP) {
+				javaConn = TadpoleSQLExtManager.getInstance().getConnection(userDB);
+			} else {
+				javaConn = TadpoleSQLManager.getConnection(userDB);
 			}
 			
-			return strFullPath;
-		} catch(Exception e) {
-			logger.error("make all CSV export data", e);
-			throw e;
+			stmt = javaConn.prepareStatement(strSQL); 
+			rs = stmt.executeQuery();//Query( selText );
+			
+			List<String[]> listsvData = new ArrayList<String[]>();
+			String[] strArryData = new String[rs.getMetaData().getColumnCount()];
+			int intRowCnt = 0;
+			while(rs.next()) {
+				
+				strArryData = new String[rs.getMetaData().getColumnCount()];
+				for(int i=0; i<rs.getMetaData().getColumnCount(); i++) {
+					
+					final int intColIndex = i+1;
+					try {
+						int colType = rs.getMetaData().getColumnType(intColIndex); 
+						if (java.sql.Types.LONGVARCHAR == colType || 
+								java.sql.Types.LONGNVARCHAR == colType || 
+								java.sql.Types.CLOB == colType || 
+								java.sql.Types.NCLOB == colType){
+							StringBuffer sb = new StringBuffer();						  
+							Reader is =  rs.getCharacterStream(intColIndex);						
+							if (is != null) {
+								int cnum = 0;
+								char[] cbuf = new char[10];							 
+								while ((cnum = is.read(cbuf)) != -1) sb.append(cbuf, 0 ,cnum);
+							} // if
+
+							strArryData[i] = SQLConvertCharUtil.toClient(userDB, sb.toString());
+						} else if(java.sql.Types.BLOB == colType || java.sql.Types.STRUCT == colType) {
+//									tmpRow.put(intShowColIndex, rs.getObject(intColIndex));
+							strArryData[i] = "";
+						} else {
+							strArryData[i] = SQLConvertCharUtil.toClient(userDB, rs.getString(intColIndex));
+						}
+					} catch(Exception e) {
+						logger.error("ResutSet fetch error", e); //$NON-NLS-1$
+					}
+				}
+				listsvData.add(strArryData);
+				
+				if(((intRowCnt+1) % 5000) == 0) {
+					Thread.sleep(20);
+					if(logger.isDebugEnabled()) logger.debug("===processes =============>" + intRowCnt);
+					ExcelExporter.makeFile(strFullFileName, fileName, listsvData);
+					listsvData.clear();
+				}
+				intRowCnt++;
+				
+				// max row가 넘었으면 중지한다.
+				if(!isOnetimeDownload) {
+					if(intRowCnt > intMaxCount) {
+						break;
+					}
+				}
+			}
+			if(logger.isInfoEnabled()) {
+				logger.info("========== total count is " + intRowCnt);
+			}
+			if(!listsvData.isEmpty()) {
+				ExcelExporter.makeFile(strFullFileName, fileName, listsvData);
+				listsvData.clear();
+			}
+			
+		} finally {
+			try { if(rs != null) rs.close(); } catch(Exception e) {}
+			try { if(stmt != null) stmt.close();} catch(Exception e) {}
+			try { if(javaConn != null) javaConn.close(); } catch(Exception e) {}
 		}
+		long longEd = System.currentTimeMillis();
+		if(logger.isDebugEnabled()) logger.debug("== total resume is " + (longEd - longSt));
+		
+		return strFullFileName;
 	}
 	
 //	/**
@@ -210,8 +315,8 @@ public class AllDataExporter {
 				}
 				listsvData.add(strArryData);
 				
-				if(((intRowCnt+1) % 5000) == 0) {
-					Thread.sleep(10);
+				if(((intRowCnt+1) % PER_DATA_SAVE_COUNT) == 0) {
+					Thread.sleep(THREAD_SLEEP_MILLIS);
 					if(logger.isDebugEnabled()) logger.debug("===processes =============>" + intRowCnt);
 					writer.writeAll(listsvData);
 					listsvData.clear();

@@ -134,16 +134,14 @@ public class SendEmails {
 	 * @throws Exception
 	 */
 	private void sendSTMT(EmailDTO emailDao, SMTPDTO _smtpInfoDto) throws Exception {
-		Properties propSMTP = System.getProperties();
-		propSMTP.put("mail.smtp.starttls.enable", "YES".equals(_smtpInfoDto.getStarttls_enable())?"true":"false");
-		propSMTP.put("mail.smtp.host", _smtpInfoDto.getHost());
-		propSMTP.put("mail.smtp.auth", "YES".equals(_smtpInfoDto.getIsAuth())?"true":"false");
-		propSMTP.put("mail.smtp.port", _smtpInfoDto.getPort());
-		propSMTP.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");   
-		propSMTP.put("mail.smtp.socketFactory.fallback", "false");
+		Properties prop = System.getProperties();
+		prop.put("mail.smtp.starttls.enable", "YES".equals(_smtpInfoDto.getStarttls_enable())?"true":"false");
+		prop.put("mail.smtp.host", _smtpInfoDto.getHost());
+		prop.put("mail.smtp.auth", "YES".equals(_smtpInfoDto.getIsAuth())?"true":"false");
+		prop.put("mail.smtp.port", _smtpInfoDto.getPort());
 		
 		Authenticator auth = new MailAuthentication(_smtpInfoDto.getEmail(), _smtpInfoDto.getPasswd());
-		MimeMessage msg = new MimeMessage(Session.getDefaultInstance(propSMTP, auth));
+		MimeMessage msg = new MimeMessage(Session.getDefaultInstance(prop, auth));
 
 		try {
 			msg.setFrom(new InternetAddress(_smtpInfoDto.getEmail()));

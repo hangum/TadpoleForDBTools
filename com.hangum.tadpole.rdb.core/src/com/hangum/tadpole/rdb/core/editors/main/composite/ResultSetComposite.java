@@ -651,32 +651,42 @@ public class ResultSetComposite extends Composite {
 						// 처리를 위해 결과를 담아 둡니다.
 						reqQuery.setResultDao(reqResultDAO);
 						
-						// 히스토리 화면을 갱신합니다.
-						List<Long> listLongHistorySeq = new ArrayList<>();
-						if(listStrSQL.isEmpty()) {
-							if(listRSDao.isEmpty()) {
-								listLongHistorySeq.add(getRdbResultComposite().getCompositeQueryHistory().saveExecutedSQLData(reqResultDAO, null));
+						try {
+							// 히스토리 화면을 갱신합니다.
+							List<Long> listLongHistorySeq = new ArrayList<>();
+							if(listStrSQL.isEmpty()) {
+								if(listRSDao.isEmpty()) {
+									listLongHistorySeq.add(getRdbResultComposite().getCompositeQueryHistory().saveExecutedSQLData(reqResultDAO, null));
+								} else {
+									listLongHistorySeq.add(getRdbResultComposite().getCompositeQueryHistory().saveExecutedSQLData(reqResultDAO, listRSDao.get(0)));
+								}
 							} else {
-								listLongHistorySeq.add(getRdbResultComposite().getCompositeQueryHistory().saveExecutedSQLData(reqResultDAO, listRSDao.get(0)));
+								for(int i=0; i<listStrSQL.size(); i++) {
+									String strSQL = listStrSQL.get(i);
+									reqResultDAO.setStrSQLText(strSQL);
+									// 배치 쿼리를 수행했을 경우 SELECT 결과가 없을수도 있다.
+									try {
+										listLongHistorySeq.add(getRdbResultComposite().getCompositeQueryHistory().saveExecutedSQLData(reqResultDAO, listRSDao.get(i)));
+									} catch(Exception e) {
+										logger.error("do not execute query " + strSQL);
+									}
+								}
 							}
-						} else {
-							for(int i=0; i<listStrSQL.size(); i++) {
-								String strSQL = listStrSQL.get(i);
-								reqResultDAO.setStrSQLText(strSQL);
-								listLongHistorySeq.add(getRdbResultComposite().getCompositeQueryHistory().saveExecutedSQLData(reqResultDAO, listRSDao.get(i)));
+							
+							// 쿼리가 정상일 경우 결과를 테이블에 출력하고, 히스토리를 남기며, 필요하면 오브젝트익스플로에 리프레쉬한다.
+							if(jobEvent.getResult().isOK()) {
+								executeFinish(reqQuery, listRSDao, listLongHistorySeq, listStrExecuteQuery);
+							} else {
+								executeErrorProgress(reqQuery, jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
+								getRdbResultComposite().getMainEditor().browserEvaluateToStr(EditorFunctionService.SET_SELECTED_TEXT); //$NON-NLS-1$
 							}
-						}
+							
+							// 모든 쿼리가 종료 되었음을 알린다.
+							finallyEndExecuteCommand(listRSDao);
 						
-						// 쿼리가 정상일 경우 결과를 테이블에 출력하고, 히스토리를 남기며, 필요하면 오브젝트익스플로에 리프레쉬한다.
-						if(jobEvent.getResult().isOK()) {
-							executeFinish(reqQuery, listRSDao, listLongHistorySeq, listStrExecuteQuery);
-						} else {
-							executeErrorProgress(reqQuery, jobEvent.getResult().getException(), jobEvent.getResult().getMessage());
-							getRdbResultComposite().getMainEditor().browserEvaluateToStr(EditorFunctionService.SET_SELECTED_TEXT); //$NON-NLS-1$
+						}catch(Exception e) {
+							logger.error("result set viewer", e);
 						}
-						
-						// 모든 쿼리가 종료 되었음을 알린다.
-						finallyEndExecuteCommand(listRSDao);
 					}
 				});	// end display.asyncExec
 			}	// end done

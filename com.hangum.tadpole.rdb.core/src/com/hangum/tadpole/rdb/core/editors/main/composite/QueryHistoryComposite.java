@@ -258,18 +258,24 @@ public class QueryHistoryComposite extends Composite {
 		
 		item.setText(0, ""+gridSQLHistory.getRootItemCount()); //$NON-NLS-1$
 		item.setText(1, TimeZoneUtil.dateToStr(reqResultDAO.getStartDateExecute()));
-		item.setText(2, Utils.convLineToHtml(strSQL));
 		item.setToolTipText(2, strSQL);
-		
 		item.setText(3, ""+(reqResultDAO.getDuration())); //$NON-NLS-1$
 		item.setText(4, ""+reqResultDAO.getRows()); //$NON-NLS-1$
 		item.setText(5, reqResultDAO.getResult());
-		
-		item.setText(6, Utils.convLineToHtml(reqResultDAO.getMesssage()));
 		item.setToolTipText(6, reqResultDAO.getMesssage());
 		
 		if("F".equals(reqResultDAO.getResult())) { //$NON-NLS-1$
 			item.setBackground(SWTResourceManager.getColor(240, 180, 167));
+		}
+		
+		try {
+			item.setText(2, Utils.convLineToHtml(strSQL));
+			item.setText(6, Utils.convLineToHtml(reqResultDAO.getMesssage()));
+		} catch(Exception e) {
+			logger.error(String.format("failted to parse markup text is %s", strSQL));
+			
+			item.setText(2, "<![CDATA[" + strSQL + "]]>");
+			item.setText(6, "<![CDATA[" + reqResultDAO.getMesssage() + "]]>");
 		}
 	}
 	
