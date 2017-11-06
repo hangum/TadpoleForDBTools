@@ -92,6 +92,53 @@ public abstract class ProcedureExecutor {
 	
 	/**
 	 * make execut script
+	 * @param parameterList에 값이 없는 경우는 생성되는 스크립트에 parameter를 생성하지 않도록 한다. (기본값을 사용하도록...)
+	 * @return
+	 * @throws Exception
+	 */
+	public String getMakeExecuteScript(List<InOutParameterDAO> parameterList) throws Exception {
+		StringBuffer sbQuery = new StringBuffer();
+		if ("FUNCTION".equalsIgnoreCase(procedureDAO.getType())){
+			sbQuery.append("SELECT " + procedureDAO.getFullName( !StringUtils.isBlank(procedureDAO.getPackagename()) ) + "(");
+			
+			List<InOutParameterDAO> inList = getInParameters();
+			for(int i=0; i<inList.size(); i++) {
+				InOutParameterDAO inOutParameterDAO = inList.get(i);
+				if(i == (inList.size()-1)) sbQuery.append(String.format(":%s ", inOutParameterDAO.getName()));
+				else sbQuery.append(String.format(":%s, ", inOutParameterDAO.getName()));
+			}
+			sbQuery.append(") from dual");
+		} else {
+			sbQuery.append("{call " + procedureDAO.getFullName( !StringUtils.isBlank(procedureDAO.getPackagename()) ) + "(");
+			
+			// in script
+			int intParamSize = getParametersCount();
+			int j = 0;
+			for (int i = 0; i < intParamSize; i++) {
+				if (parameterList.size() >= intParamSize) { 
+					//OUT Parameter가 있어서 사용자가 입력한 인수값과 인수갯수가 다를경우는 인수 갯수만큼 "?"를 생성한다.
+					InOutParameterDAO inOutParameterDAO = parameterList.get(i);
+					if ( StringUtils.isNotEmpty( inOutParameterDAO.getValue() ) ){
+						if (j == 0) sbQuery.append("?");
+						else 		sbQuery.append(",?");
+						j++;
+					}
+				}else{
+					if (i == 0) sbQuery.append("?");
+					else 		sbQuery.append(",?");
+				}
+			}
+			sbQuery.append(")}");
+		}
+
+		if(logger.isDebugEnabled()) logger.debug("Execute Procedure query is\t  " + sbQuery.toString());
+		
+		logger.debug("Execute Procedure query is\t  " + sbQuery.toString());
+		return sbQuery.toString();
+	}
+
+	/**
+	 * make execut script
 	 * @return
 	 * @throws Exception
 	 */
@@ -123,7 +170,6 @@ public abstract class ProcedureExecutor {
 		
 		return sbQuery.toString();
 	}
-
 	/**
 	 * Get parameter Count.
 	 * 
