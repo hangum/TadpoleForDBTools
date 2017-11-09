@@ -137,7 +137,7 @@ FROM sysobjects a INNER JOIN syscolumns b ON (a.id = b.id)
 	AND p.class = 1
 	AND p.name = 'MS_Description'	
 WHERE 1 = 1
-	and a.id = object_id('$table$')
+	and a.id = object_id('$schema$.$table$')
 ORDER BY a.id, b.colid
 </select>
 
@@ -455,7 +455,7 @@ from sys.tables  as tbl
 <!-- 
 	Table DDL Script
  -->
-<select id="getTableScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+<select id="getTableScript" resultClass="java.util.HashMap" parameterClass="java.util.Map">
 	select 
 		'[' + s.table_schema + '.' + t.name + ']' as TABLE_NAME
 	    , c.name as COLUMN_NAME
@@ -472,7 +472,7 @@ from sys.tables  as tbl
 	   inner join sys.types d on c.system_type_id = d.system_type_id
 	   left join sys.default_constraints v on v.parent_object_id = t.object_id and c.column_id = v.parent_column_id
 	 where 1=1
-	    and t.object_id = object_id('$table_name$')
+	    and t.object_id = object_id('$schema_name$.$table_name$')
 	order by c.column_id
 </select>
 
@@ -480,7 +480,7 @@ from sys.tables  as tbl
 	Table DDL Script => Primary key list
  -->
  
-<select id="getTableScript.pk" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+<select id="getTableScript.pk" resultClass="java.util.HashMap" parameterClass="java.util.Map">
 	select p.name as CONSTRAINT_NAME
 	, tc.name as COLUMN_NAME 
 	, c.is_descending_key as DESCENDING
@@ -490,7 +490,7 @@ from sys.tables  as tbl
 	  inner join sys.index_columns c on t.object_id = c.object_id 
 	  inner join sys.all_columns tc on tc.object_id = t.object_id and c.column_id = tc.column_id
 	  where 1=1
-	  and t.object_id = object_id('$table_name$')
+	  and t.object_id = object_id('$schema_name$.$table_name$')
 	order by c.key_ordinal
 
 </select>
@@ -499,7 +499,7 @@ from sys.tables  as tbl
 	Table DDL Script => Table, Column Comment Script
  -->
  
-<select id="getTableScript.comments" resultClass="java.lang.String" parameterClass="java.lang.String">
+<select id="getTableScript.comments" resultClass="java.lang.String" parameterClass="java.util.Map">
 SELECT
 	'exec sp_addextendedproperty ''MS_Description'', ''' 
 		+ convert(varchar, p.value) 
@@ -512,7 +512,7 @@ SELECT
    WHERE 1=1
         AND p.minor_id = 0
         AND p.class = 1
-        AND tbl.object_id = object_id('$table_name$')
+        AND tbl.object_id = object_id('$schema_name$.$table_name$')
         AND p.value &gt; ''
   UNION ALL
 SELECT  
@@ -528,7 +528,7 @@ FROM sysobjects a INNER JOIN syscolumns b ON (a.id = b.id)
 	LEFT OUTER JOIN dbo.sysindexkeys d ON (b.id =d.id and b.colid = d.colid and indid =1)
 	LEFT JOIN sys.extended_properties AS p ON p.major_id = a.id AND p.minor_id = b.colid AND p.class = 1
 WHERE 1=1
-  AND a.id = object_id('$table_name$')
+  AND a.id = object_id('$schema_name$.$table_name$')
   AND p.value &gt; ''
   
 </select>

@@ -222,7 +222,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 					
 					Object objDAO = is.getFirstElement();
 					TableDAO tableDao = (TableDAO) objDAO;
-					if (selectTableName.equals(tableDao.getName())) return;
+					// SelectionChanged 이벤트는 어차피 테이블 선택이 변경되었을때 발생하니까 굳이 한번더 비교하지 않아도 되지 않을까요?
+					//if (selectTableName.equals(tableDao.getName())) return;
 					
 					// column이 리프레쉬 될때만 selectTableName 값이 갱신되서 인덱스, 제약조건, 트리거 리프레쉬 전에 현재 선택된 테이블명 설정해줌.
 					setSelectTableName(tableDao.getName());
@@ -309,7 +310,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			@Override
 			public String getText(Object element) {
 				TableDAO table = (TableDAO) element;
-				return table.getName();
+				return table.getFullName();// .getName();
 			}
 		});
 		tvColName.setEditingSupport(new TableCommentEditorSupport(tableListViewer, userDB, 0));
