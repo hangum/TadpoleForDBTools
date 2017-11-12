@@ -53,11 +53,15 @@ public class MSSQL_8_LE_DDLScript extends AbstractRDBDDLScript {
 	public String getTableScript(TableDAO tableDAO) throws Exception {
 		SqlMapClient client = TadpoleSQLManager.getInstance(userDB);
 		
-		List<HashMap> srcList = client.queryForList("getTableScript", tableDAO.getName());
+		HashMap<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("schema_name", tableDAO.getSchema_name() == null ? userDB.getSchema() : tableDAO.getSchema_name()); //$NON-NLS-1$
+		paramMap.put("table_name", tableDAO.getName());	
+		
+		List<HashMap> srcList = client.queryForList("getTableScript", paramMap);
 		
 		StringBuilder result = new StringBuilder("");
 //		result.append("/* DROP TABLE " + tableDAO.getName() + " CASCADE CONSTRAINT; */ \n\n");
-		result.append("CREATE TABLE " + tableDAO.getName() + "( \n");
+		result.append("CREATE TABLE " + tableDAO.getFullName() + "( \n");
 		for (int i=0; i<srcList.size(); i++){
 			HashMap<String, Object> source =  srcList.get(i);
 			
@@ -98,7 +102,7 @@ public class MSSQL_8_LE_DDLScript extends AbstractRDBDDLScript {
 		}
 
 		// primary key 
-		List<HashMap> srcPkList = client.queryForList("getTableScript.pk", tableDAO.getName());				
+		List<HashMap> srcPkList = client.queryForList("getTableScript.pk", paramMap);				
 		for (int i=0; i<srcPkList.size(); i++){
 			HashMap<String, Object> source =  srcPkList.get(i);
 			if(i==0){
@@ -126,7 +130,7 @@ public class MSSQL_8_LE_DDLScript extends AbstractRDBDDLScript {
 		result.append("); \n\n");
 		
 		// table, column comments
-		List<String> srcCommentList = client.queryForList("getTableScript.comments", tableDAO.getName());				
+		List<String> srcCommentList = client.queryForList("getTableScript.comments", paramMap);				
 		for (int i=0; i<srcCommentList.size(); i++){
 			result.append( srcCommentList.get(i)+"\n");
 		}

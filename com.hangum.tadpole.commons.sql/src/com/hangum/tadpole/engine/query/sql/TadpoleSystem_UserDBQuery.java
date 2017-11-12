@@ -280,11 +280,21 @@ public class TadpoleSystem_UserDBQuery {
 		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
 		List<UserDBDAO> listUserDB = sqlClient.queryForList("userDB", mapParam);
 		
+		// group name filters
+		final String []strGroupNameFilters = GetAdminPreference.getViewGroupNameFilter();
+		
 		// set db access control
 		List<String> listGroupName = new ArrayList<String>();
 		for (UserDBDAO userDB : listUserDB) {
 			if(!listGroupName.contains(userDB.getGroup_name())) {
-				listGroupName.add(userDB.getGroup_name());
+				boolean isAdd = true;
+				for (String strGroupName : strGroupNameFilters) {
+					if(userDB.getGroup_name().startsWith(strGroupName)) {
+						isAdd = false;
+					}
+				}
+				
+				if(isAdd) listGroupName.add(userDB.getGroup_name());
 			}
 		}
 		

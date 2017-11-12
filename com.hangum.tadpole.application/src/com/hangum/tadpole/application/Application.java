@@ -92,10 +92,19 @@ public class Application implements EntryPoint {
 			UserInfoDataDAO userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SYSTEM_LOGIN_METHOD, txtLoginMethod);
 			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.SYSTEM_LOGIN_METHOD, userInfoDao);
 			
-			/** 뷰에 보여주어야할 필터 값을 가져온다 */
-			String strProductFilter = StringUtils.trim(prop.getProperty("tadpole.db.producttype.remove.filter", ""));
-			userInfoDao = TadpoleSystem_UserInfoData.updateAdminValue(AdminPreferenceDefine.SYSTEM_VIEW_PRODUCT_TYPE_FILTER, strProductFilter);
-			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.SYSTEM_VIEW_PRODUCT_TYPE_FILTER, userInfoDao);
+			/** 뷰에 보여주어야할 프러덕 필터 값을 가져온다 */
+			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.SYSTEM_VIEW_PRODUCT_TYPE_FILTER, 
+					new UserInfoDataDAO(PublicTadpoleDefine.systemAdminId, AdminPreferenceDefine.SYSTEM_VIEW_PRODUCT_TYPE_FILTER, 
+							StringUtils.trim(prop.getProperty("tadpole.db.producttype.remove.filter", ""))
+				)
+			);
+			
+			/** 뷰에 보여주어야할 그룹이름 필터 값을 가져온다 */
+			GetAdminPreference.updateAdminSessionData(AdminPreferenceDefine.SYSTEM_VIEW_GROUP_NAME_FILTER, 
+					new UserInfoDataDAO(PublicTadpoleDefine.systemAdminId, AdminPreferenceDefine.SYSTEM_VIEW_GROUP_NAME_FILTER,
+							StringUtils.trim(prop.getProperty("tadpole.db.groupname.remove.filter", ""))
+					)
+			);
 			
 			/** cert user info */
 			PublicTadpoleDefine.CERT_USER_INFO = StringUtils.trim(prop.getProperty("CERT_USER_INFO", ""));
