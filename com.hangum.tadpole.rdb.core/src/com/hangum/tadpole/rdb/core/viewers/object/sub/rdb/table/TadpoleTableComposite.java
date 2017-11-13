@@ -310,7 +310,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			@Override
 			public String getText(Object element) {
 				TableDAO table = (TableDAO) element;
-				if(getUserDB().getDBGroup() == DBGroupDefine.MSSQL_GROUP) return table.getFullName();
+
+        if(getUserDB().getDBGroup() == DBGroupDefine.MSSQL_GROUP) return table.getFullName();
 				return table.getName();
 			}
 		});
