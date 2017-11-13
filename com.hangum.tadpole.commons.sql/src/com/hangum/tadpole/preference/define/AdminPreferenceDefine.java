@@ -27,6 +27,10 @@ public class AdminPreferenceDefine {
 	public static final String SYSTEM_VIEW_PRODUCT_TYPE_FILTER = _PREFIX + "SYSTEM_VIEW_PRODUCT_TYPE_FILTER";
 	public static final String SYSTEM_VIEW_PRODUCT_TYPE_FILTER_VALUE = "";
 	
+	/** GROUP NAME FILTER */
+	public static final String SYSTEM_VIEW_GROUP_NAME_FILTER = _PREFIX + "SYSTEM_VIEW_GROUP_NAME_FILTER";
+	public static final String SYSTEM_VIEW_GROUP_NAME_FILTER_VALUE = "";
+	
 	/** system login method */
 	public static final String SYSTEM_LOGIN_METHOD = _PREFIX + "SYSTEM_LOGIN_METHOD";
 	public static final String SYSTEM_LOGIN_METHOD_VALUE = "original";

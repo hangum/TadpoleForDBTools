@@ -295,6 +295,18 @@ public class GetAdminPreference extends AbstractPreference {
 	}
 	
 	/**
+	 * 어드민이 지정한 프러럭타입 필터 값을 뺀다. 
+	 * 
+	 * @return
+	 */
+	public static String[] getViewGroupNameFilter() {
+		Map<String, UserInfoDataDAO> mapUserInfoData = TadpoleApplicationContextManager.getAdminSystemEnv();
+		String groupNameFilter =  getAdminValue(mapUserInfoData, AdminPreferenceDefine.SYSTEM_VIEW_GROUP_NAME_FILTER, AdminPreferenceDefine.SYSTEM_VIEW_GROUP_NAME_FILTER_VALUE);
+		
+		return StringUtils.split(groupNameFilter, ",");
+	}
+	
+	/**
 	 * update admin data
 	 * @param key
 	 * @param userInfoDao

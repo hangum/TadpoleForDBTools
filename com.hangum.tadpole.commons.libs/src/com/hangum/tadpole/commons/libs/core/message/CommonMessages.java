@@ -53,6 +53,7 @@ public class CommonMessages {
 	public String ModifyMessage;
 	public String Save;
 	public String Run;
+	public String General;
 	
 	public String Refresh;
 	public String Clear;
@@ -200,6 +201,8 @@ public class CommonMessages {
 	public String Manual;
 	
 	public String TadpoleAdministrator;
+	
+	public String StartTime; 
 
 	
 	public static CommonMessages get() {
