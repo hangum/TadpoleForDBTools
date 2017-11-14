@@ -41,6 +41,7 @@ import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
 import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
 import com.hangum.tadpole.rdb.erd.core.Messages;
 import com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditor;
 import com.hangum.tadpole.rdb.erd.core.relation.RelationUtil;
@@ -99,19 +100,18 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 	
 	@Override
 	protected void handleDrop() {
+		UserDBDAO tmpUserDBDAO = userDB;
 		String strDragSource = (String)getCurrentEvent().data;
-		try {
-			String[] arrayDragSourceData = StringUtils.splitByWholeSeparator(strDragSource, PublicTadpoleDefine.DELIMITER);
+		String[] arrayDragSourceData = StringUtils.splitByWholeSeparator(strDragSource, PublicTadpoleDefine.DELIMITER);
 
-			int sourceDBSeq = Integer.parseInt(arrayDragSourceData[0]);
-			if(userDB.getSeq() != sourceDBSeq) {
-				MessageDialog.openWarning(null, CommonMessages.get().Warning, Messages.get().TableTransferDropTargetListener_1); //$NON-NLS-1$
-				return;
+		final int sourceDBSeq = Integer.parseInt(arrayDragSourceData[0]);
+		if(userDB.getSeq() != sourceDBSeq) {
+			if(!MessageDialog.openConfirm(null, CommonMessages.get().Warning, Messages.get().TableTransferDropTargetListener_1)) return;
+			try {
+				tmpUserDBDAO = TadpoleSystem_UserDBQuery.getUserDBInstance(sourceDBSeq);
+			} catch(Exception e) {
+				logger.error("find userDB", e);
 			}
-		} catch(Exception e) {
-			logger.error("dragger error", e); //$NON-NLS-1$
-			MessageDialog.openError(null,CommonMessages.get().Error, "Draging exception : " + e.getMessage()); //$NON-NLS-1$
-			return;
 		}
 		
 		final int nextTableX = getDropLocation().x;
@@ -120,12 +120,13 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 		final String strFullData = StringUtils.substringAfter(strDragSource, PublicTadpoleDefine.DELIMITER);
 		final String [] arryTables = StringUtils.splitByWholeSeparator(strFullData, PublicTadpoleDefine.DELIMITER_DBL);
 		final Map<String, List<TableColumnDAO>> mapTable = new HashMap<>();
+		final UserDBDAO workUserDBDAO = tmpUserDBDAO;
 		
 		Job job = new Job("Painting model") {
 			@Override
 			public IStatus run(IProgressMonitor monitor) {
 				monitor.beginTask("Painting table object", IProgressMonitor.UNKNOWN);
-		
+				
 				try {
 					for (int i=0; i<arryTables.length; i++) {
 						String strTable = arryTables[i];
@@ -134,13 +135,15 @@ public class TableTransferDropTargetListener extends AbstractTransferDropTargetL
 						if(arryTable.length == 0) continue;
 						
 						String schemaName = arryTable[0];
+//						String tableName = isDiffentDB?toString().format("%s.%s", schemaName, arryTable[1]):arryTable[1];
 						String tableName = arryTable[1];
 						
 						TableDAO table = new TableDAO();
 						table.setSchema_name(schemaName);
 						table.setName(tableName);
 						table.setSysName(tableName);
-						mapTable.put(tableName, TDBDataHandler.getColumns(userDB, table));
+						
+						mapTable.put(tableName, TDBDataHandler.getColumns(workUserDBDAO, table));
 					}
 					
 				} catch(Exception e) {
