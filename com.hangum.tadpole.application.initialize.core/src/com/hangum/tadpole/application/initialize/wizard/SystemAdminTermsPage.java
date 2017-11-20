@@ -47,8 +47,6 @@ public class SystemAdminTermsPage extends WizardPage {
 	 */
 	public void createControl(Composite parent) {
 		Composite container = new Composite(parent, SWT.NULL);
-
-		setControl(container);
 		container.setLayout(new GridLayout(1, false));
 		
 		Text textTerms = new Text(container, SWT.BORDER | SWT.READ_ONLY | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
@@ -64,10 +62,17 @@ public class SystemAdminTermsPage extends WizardPage {
 			}
 		});
 		btnAggree.setText(Messages.get().SystemAdminTermsPage_3); //$NON-NLS-1$
-		
+
+		setControl(container);
 		setPageComplete(false);
 		
 		AnalyticCaller.track("SystemAdminTermsPage"); //$NON-NLS-1$
+	}
+	
+	@Override
+	public boolean isPageComplete() {
+		if(btnAggree.getSelection()) return true;
+		else return false;
 	}
 	
 	@Override
