@@ -159,13 +159,13 @@ public class Perspective implements IPerspectiveFactory {
 		boolean isAdmin = PermissionChecker.isUserAdmin(SessionManager.getRepresentRole());
     	if(isAdmin) {
 			if (id.equals(DBMgmtEditor.ID)) {
-				input = new DBMgntEditorInput(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN);
+				input = new DBMgntEditorInput(PublicTadpoleDefine.USER_ROLE_TYPE.USER);
 			} else if (id.equals(SQLAuditEditor.ID)) {
 				input = new SQLAuditEditorInput();
 			}
     	} else {
     		if (id.equals(DBMgmtEditor.ID)) {
-				input = new DBMgntEditorInput(PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN);
+				input = new DBMgntEditorInput(PublicTadpoleDefine.USER_ROLE_TYPE.USER);
 			} else if (id.equals(SQLAuditEditor.ID)) {
 				input = new SQLAuditEditorInput();
 			}
