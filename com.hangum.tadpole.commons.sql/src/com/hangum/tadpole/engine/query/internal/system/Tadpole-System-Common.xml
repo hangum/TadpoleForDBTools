@@ -75,6 +75,20 @@
 <!--
 	모든 사용자 리스트 정보. 
  -->
+<select id="getAllUserSearch" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO" parameterClass="java.util.HashMap">
+	SELECT * 
+	FROM tadpole_user 
+	where 
+			seq not in (-1)
+		AND approval_yn 			= #Approval#
+		AND is_email_certification 	= #UserConfirm#
+		AND delyn 					= #Del#
+	ORDER BY create_time DESC
+</select>
+
+<!--
+	모든 사용자 리스트 정보. 
+ -->
 <select id="getAllUser" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDAO">
 	SELECT * 
 	FROM tadpole_user 
