@@ -1,8 +1,8 @@
 {
 	"name" : "Tadpole DB Hub",
-	"majorVer" : "1.7.4",
-	"subVer"   : "Build(R0)",
-	"date"	: "2017.02.08",
-	"download_url" : "http://sourceforge.net/projects/tadpoledbhub/files/1.7.x/1.7.4/",
-	"info_url"	   : "https://tadpoledbhub.atlassian.net/wiki/display/TADPOLE/v1.7.4+Release+Note"
+	"majorVer" : "1.7.5",
+	"subVer"   : "Build(R2)",
+	"date"	: "2017.11.21",
+	"download_url" : "http://sourceforge.net/projects/tadpoledbhub/files/1.7.x/1.7.5/",
+	"info_url"	   : "https://tadpoledbhub.atlassian.net/wiki/display/TADPOLE/v1.7.5+Release+Note"
 }
