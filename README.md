@@ -84,7 +84,7 @@ Extension
 * Tadpole Spatial Data Manager (https://github.com/Gaia3D/SpatialDataManager)
 
 Download
-* package : https://sourceforge.net/projects/tadpoledbhub/files/1.7.x/1.7.4r13/
+* package : https://sourceforge.net/projects/tadpoledbhub/files/1.7.x/1.7.5/
 * docker hub : https://hub.docker.com/r/hyunjongcho/tadpoledbhub/
 
 License
@@ -117,7 +117,3 @@ Customer
 * LOEN ENTERTAINMENT(http://www.melon.com/)
 * 동아닷컴(http://www.donga.com/)
 * 두레시닝(주)(http://www.doore.co.kr/)
-
-Donation
-- Paypal(paypal.com) : hangum@gmail.com
-- Donor(https://github.com/hangum/TadpoleForDBTools/wiki/Donor-List)
