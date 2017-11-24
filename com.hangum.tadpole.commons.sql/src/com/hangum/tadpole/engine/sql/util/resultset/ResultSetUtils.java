@@ -92,7 +92,14 @@ public class ResultSetUtils {
 						tmpRow.put(intShowColIndex, SQLConvertCharUtil.toClient(userDB, sb.toString()));
 					} else if(java.sql.Types.BLOB == colType || java.sql.Types.STRUCT == colType) {
 						tmpRow.put(intShowColIndex, rs.getObject(intColIndex));
-					}else{
+						
+					} else if(java.sql.Types.FLOAT == colType) {
+						tmpRow.put(intShowColIndex, rs.getFloat(intColIndex));
+						
+					} else if(java.sql.Types.DOUBLE == colType) {
+						tmpRow.put(intShowColIndex, rs.getDouble(intColIndex));
+						
+					} else {
 						tmpRow.put(intShowColIndex, SQLConvertCharUtil.toClient(userDB, rs.getString(intColIndex)));
 					}
 				} catch(Exception e) {
