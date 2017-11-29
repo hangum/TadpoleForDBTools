@@ -42,8 +42,7 @@ public class SessionListEditorInput implements IEditorInput {
 	
 //	@Override
 //	public boolean equals(Object obj) {
-//		if( !(obj instanceof TajoSessionListEditorInput) ) return false;
-//		return ((TajoSessionListEditorInput)obj).getName().equals(getName());
+//		return false;
 //	}
 
 	@Override

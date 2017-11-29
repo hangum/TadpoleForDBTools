@@ -14,19 +14,11 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
-import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.QUERY_DML_TYPE;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
 import com.hangum.tadpole.engine.sql.parser.ddl.ParserDDL;
 import com.hangum.tadpole.engine.sql.parser.define.ParserDefine;
 import com.hangum.tadpole.engine.sql.parser.dto.QueryInfoDTO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
-
-import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.delete.Delete;
-import net.sf.jsqlparser.statement.insert.Insert;
-import net.sf.jsqlparser.statement.select.Select;
-import net.sf.jsqlparser.statement.update.Update;
 
 /**
  * 
@@ -46,9 +38,6 @@ public class BasicTDBSQLParser implements TDBSQLParser {
 	private static final String SQLITE_PATTERN_STATEMENT = "";
 	private static final String CUBRID_PATTERN_STATEMENT = "";
 
-	/** agens graph statement */
-	private static final String AGENSGRAPH_PATTERN_STATEMENT = "|^MATCH.*";
-	
 	private static final Pattern PATTERN_DML_BASIC = Pattern.compile(REGEXP_STATEMENT
 			+ MSSQL_PATTERN_STATEMENT
 			+ ORACLE_PATTERN_STATEMENT
@@ -56,7 +45,6 @@ public class BasicTDBSQLParser implements TDBSQLParser {
 			+ PGSQL_PATTERN_STATEMENT
 			+ SQLITE_PATTERN_STATEMENT
 			+ CUBRID_PATTERN_STATEMENT
-			+ AGENSGRAPH_PATTERN_STATEMENT
 			, ParserDefine.PATTERN_FLAG
 	);
 	

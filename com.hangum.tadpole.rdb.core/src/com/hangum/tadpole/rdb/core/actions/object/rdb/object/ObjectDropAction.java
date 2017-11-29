@@ -87,11 +87,7 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 						// 대.소문자 또는 특수문자를 포함하는 오브젝트 명을 사용하는 경우...
 						String strSQL = "drop table " + SQLUtil.getTableName(userDB, selTableDao);// dao.getSysName(); //$NON-NLS-1$
 						try {
-//							if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
-//								new TajoConnectionManager().executeUpdate(userDB, strSQL);
-//							} else {
-								executeSQL(userDB, strSQL);
-//							}
+							executeSQL(userDB, strSQL);
 						} catch(Exception e) {
 							logger.error("drop table", e);
 							exeMessage(Messages.get().ObjectDeleteAction_0, e);

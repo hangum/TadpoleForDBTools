@@ -207,15 +207,8 @@ public class ExtMakeContentAssistUtil extends MakeContentAssistUtil {
 	 * @throws Exception
 	 */
 	public List<TableDAO> getTableListOnlyTableName(final UserDBDAO userDB) throws Exception {
-		List<TableDAO> showTables = null;
-				
-//		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
-//			TajoConnectionManager manager = new TajoConnectionManager();
-//			showTables = manager.tableList(userDB);			
-//		} else {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showTables = sqlClient.queryForList("tableListOnlyName", userDB.getDb()); //$NON-NLS-1$			
-//		}
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+		List<TableDAO> showTables = sqlClient.queryForList("tableListOnlyName", userDB.getDb()); //$NON-NLS-1$			
 		
 		/** filter 정보가 있으면 처리합니다. */
 		return getTableAfterwork(showTables, userDB);

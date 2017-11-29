@@ -1,6 +1,6 @@
 {
 	"name": "Tadpole DB Hub",
-	"description": "DB collaboration tool(Altibase, Apache Hive, Apache Tajo, CUBRID, MariaDB, MySQL, Oracle, SQLite, MSSQL, PostgreSQL, MongoDB)",
+	"description": "DB collaboration tool(Altibase, Apache Hive, CUBRID, MariaDB, MySQL, Oracle, SQLite, MSSQL, PostgreSQL, MongoDB)",
 	"version": "1.7.2.0",
 	"manifest_version":2,
 	"icons": {

@@ -26,7 +26,6 @@ public class DBVariableDefine {
 	
 	public static String[] HIVE_VARIABLE = MYSQL_VARIABLES;
 	public static String[] HIVE2_VARIABLE = MYSQL_VARIABLES;
-	public static String[] TAJO_VARIABLE = MYSQL_VARIABLES;
 	public static String[] MONGO_VARIABLE = MYSQL_VARIABLES;
 	public static String[] ALTIBASE_VARIABLE = MYSQL_VARIABLES;
 }

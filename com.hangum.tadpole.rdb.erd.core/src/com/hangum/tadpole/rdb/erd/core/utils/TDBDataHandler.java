@@ -66,9 +66,6 @@ public class TDBDataHandler {
 			mapParam.put("table", strTableName);
 		}
 		
-//		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
-//			returnColumns = new TajoConnectionManager().tableColumnList(userDB, mapParam);			
-//		} else 
 		if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			if("".equals(mapParam.get("schema")) || null == mapParam.get("schema")) {
 				mapParam.put("schema", "public");

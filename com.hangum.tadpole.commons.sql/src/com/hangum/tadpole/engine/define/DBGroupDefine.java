@@ -26,7 +26,7 @@ public enum DBGroupDefine {
 	MSSQL_GROUP,
 	/* mysql, mariadb */
 	MYSQL_GROUP,
-	/* postgre, agens */
+	/* postgre */
 	POSTGRE_GROUP,
 	/* hive, hive2 */
 	HIVE_GROUP,
@@ -59,8 +59,6 @@ public enum DBGroupDefine {
 			return SQLITE_GROUP;
 		} else if(dbDefine == DBDefine.CUBRID_DEFAULT) {
 			return CUBRID_GROUP;
-//		} else if(dbDefine == DBDefine.TAJO_DEFAULT) {
-//			return TAJO_GROUP;
 		} else if(dbDefine == DBDefine.ALTIBASE_DEFAULT) {
 			return ALTIBASE_GROUP;
 		} else if(dbDefine == DBDefine.DYNAMODB_DEFAULT) {

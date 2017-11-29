@@ -756,9 +756,6 @@ public class ResultSetComposite extends Composite {
 		PreparedStatement preparedStatement = null;
 		
 		try {
-//			if(DBGroupDefine.TAJO_GROUP == getUserDB().getDBGroup()) {
-//				javaConn = ConnectionPoolManager.getDataSource(getUserDB()).getConnection();
-//			} else 
 			if(DBGroupDefine.DYNAMODB_GROUP == getUserDB().getDBGroup()) {
 				javaConn = TadpoleSQLExtManager.getInstance().getConnection(getUserDB());
 			} else {

@@ -66,6 +66,5 @@
 		they are here (com.domain.data...)
 	-->
 	<sqlMap resource="com/hangum/tadpole/engine/query/PostgreSQL.xml" />
-	<!-- <sqlMap resource="com/bitnine/agens/manager/engine/core/maps/AgensSQL_monitoring.xml" /> -->
 					 
 </sqlMapConfig>

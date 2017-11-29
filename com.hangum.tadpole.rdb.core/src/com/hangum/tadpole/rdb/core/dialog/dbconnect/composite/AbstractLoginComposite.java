@@ -335,9 +335,6 @@ public abstract class AbstractLoginComposite extends Composite {
 		try {
 			if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 				MongoConnectionManager.getInstance(userDB);
-				
-//			} else if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
-//				new TajoConnectionManager().connectionCheck(userDB);
 			} else if(userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT || userDB.getDBDefine() == DBDefine.DYNAMODB_DEFAULT) {
 				TadpoleSQLExtManager.getInstance().connectionCheck(userDB);
 			} else if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {

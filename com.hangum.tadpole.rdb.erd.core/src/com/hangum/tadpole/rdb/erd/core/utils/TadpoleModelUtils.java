@@ -182,9 +182,6 @@ public enum TadpoleModelUtils {
 	public List<TableDAO> getAllTables(final UserDBDAO userDB) throws Exception {
 		List<TableDAO> listAllTables = null;
 		
-//		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
-//			listAllTables = new TajoConnectionManager().tableList(userDB);
-//		} else 
 		if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
 			List<Map<String, String>> listTables = DynamoDBManager.getInstance().getTables(userDB.getUsers(), userDB.getPasswd(), userDB.getDb());
 			
@@ -219,9 +216,6 @@ public enum TadpoleModelUtils {
 	 */
 	public List<TableDAO> getTable(final UserDBDAO userDB, List<String> listTableName) throws Exception {
 		List<TableDAO> listAllTables = null;
-//		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
-//			listAllTables = new TajoConnectionManager().tableList(userDB);
-//		} else 
 		if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
 			List<Map<String, String>> listTables = DynamoDBManager.getInstance().getTables(userDB.getUsers(), userDB.getPasswd(), userDB.getDb());
 			

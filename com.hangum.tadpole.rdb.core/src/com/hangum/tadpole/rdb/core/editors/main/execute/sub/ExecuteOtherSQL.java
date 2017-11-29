@@ -102,30 +102,24 @@ public class ExecuteOtherSQL {
 		// 데이터 변경 수를 지정.
 		int intEChangeCnt = -1;
 		
-		// is tajo
-//		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
-//			new TajoConnectionManager().executeUpdate(userDB,reqQuery.getSql());
-//			return intEChangeCnt;
-//		} else { 
+		// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
+		if(TransactionManger.calledCommitOrRollback(reqQuery.getSql(), userEmail, userDB)) return intEChangeCnt;
 		
-			// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
-			if(TransactionManger.calledCommitOrRollback(reqQuery.getSql(), userEmail, userDB)) return intEChangeCnt;
-			
-			java.sql.Connection javaConn = null;
-			Statement statement = null;
-			PreparedStatement preparedStatement = null;
-			try {
-				if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
-					javaConn = TadpoleSQLExtManager.getInstance().getConnection(userDB);
+		java.sql.Connection javaConn = null;
+		Statement statement = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
+				javaConn = TadpoleSQLExtManager.getInstance().getConnection(userDB);
+			} else {
+				if(reqQuery.isAutoCommit()) {
+					javaConn = TadpoleSQLManager.getConnection(userDB);
 				} else {
-					if(reqQuery.isAutoCommit()) {
-						javaConn = TadpoleSQLManager.getConnection(userDB);
-					} else {
-						javaConn = TadpoleSQLTransactionManager.getInstance(userEmail, userDB);
-					}
+					javaConn = TadpoleSQLTransactionManager.getInstance(userEmail, userDB);
 				}
-				
-				// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다.
+			}
+			
+			// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다.
 //				if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 //					final String checkSQL = reqQuery.getSql().trim().toUpperCase();
 //					if(StringUtils.startsWithIgnoreCase(checkSQL, "CREATE TABLE")) { //$NON-NLS-1$
@@ -134,46 +128,45 @@ public class ExecuteOtherSQL {
 //						reqQuery.setSql(strTmpCreateStmt);
 //					}
 //				}
-				
-				final String strSQL = SQLConvertCharUtil.toServer(userDB, reqQuery.getSql());
-				if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.NONE) {
-					statement = javaConn.createStatement();
-					// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
-					if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) { 
-						statement.execute(strSQL);
+			
+			final String strSQL = SQLConvertCharUtil.toServer(userDB, reqQuery.getSql());
+			if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.NONE) {
+				statement = javaConn.createStatement();
+				// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
+				if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) { 
+					statement.execute(strSQL);
+				} else {
+					intEChangeCnt = statement.executeUpdate(strSQL);
+				}
+			} else if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.PREPARED_STATEMENT) {
+				preparedStatement = javaConn.prepareStatement(strSQL);
+				final Object[] statementParameter = reqQuery.getStatementParameter();
+				for (int i=1; i<=statementParameter.length; i++) {
+					if(statementParameter[i-1] instanceof String) {
+						preparedStatement.setObject(i, SQLConvertCharUtil.toServer(userDB, ""+ statementParameter[i-1]));
 					} else {
-						intEChangeCnt = statement.executeUpdate(strSQL);
-					}
-				} else if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.PREPARED_STATEMENT) {
-					preparedStatement = javaConn.prepareStatement(strSQL);
-					final Object[] statementParameter = reqQuery.getStatementParameter();
-					for (int i=1; i<=statementParameter.length; i++) {
-						if(statementParameter[i-1] instanceof String) {
-							preparedStatement.setObject(i, SQLConvertCharUtil.toServer(userDB, ""+ statementParameter[i-1]));
-						} else {
-							preparedStatement.setObject(i, statementParameter[i-1]);
-						}
-					}
-					
-					// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
-					if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) { 
-						preparedStatement.execute();
-					} else {
-						intEChangeCnt = preparedStatement.executeUpdate();
+						preparedStatement.setObject(i, statementParameter[i-1]);
 					}
 				}
 				
-				return intEChangeCnt;
-				
-			} finally {
-				try { if(statement != null) statement.close();} catch(Exception e) {}
-				try { if(preparedStatement != null) preparedStatement.close();} catch(Exception e) {}
-	
-				if(reqQuery.isAutoCommit()) {
-					try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
+				// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
+				if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup()) { 
+					preparedStatement.execute();
+				} else {
+					intEChangeCnt = preparedStatement.executeUpdate();
 				}
 			}
-//		}  	// end which db
+			
+			return intEChangeCnt;
+			
+		} finally {
+			try { if(statement != null) statement.close();} catch(Exception e) {}
+			try { if(preparedStatement != null) preparedStatement.close();} catch(Exception e) {}
+
+			if(reqQuery.isAutoCommit()) {
+				try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
+			}
+		}
 	}
 	
 }
