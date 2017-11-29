@@ -44,15 +44,12 @@ public enum DBDefine {
 	CUBRID_DEFAULT,
 	AMAZON_REDSHIFT_DEFAULT,
 	POSTGRE_DEFAULT,
-//	AGENSGRAPH_DEFAULT,
 	ALTIBASE_DEFAULT,
+	NETEZZA_DEFAULT,
 	
 	/** hive */
 	HIVE_DEFAULT,
 	HIVE2_DEFAULT,
-	
-	/** tajo */
-	TAJO_DEFAULT,
 	
 	/** NO SQL */
 	MONGODB_DEFAULT
@@ -90,12 +87,11 @@ public enum DBDefine {
 			case SQLite_DEFAULT:		return prefix + "SQLiteConfig.xml";
 			case CUBRID_DEFAULT:		return prefix + "CUBRIDConfig.xml";
 			case POSTGRE_DEFAULT:		return prefix + "POSTGREConfig.xml";
-//			case AGENSGRAPH_DEFAULT:	return prefix + "AgensGraphConfig.xml";
 			case HIVE_DEFAULT:			return prefix + "HIVEConfig.xml";
 			case HIVE2_DEFAULT:			return prefix + "HIVE2Config.xml";
-			case TAJO_DEFAULT:			return prefix  + "TAJOConfig.xml";
 			case ALTIBASE_DEFAULT:	    return prefix + "AltibaseConfig.xml";
 			case AMAZON_REDSHIFT_DEFAULT: return prefix + "AmazonRedshiftConfig.xml";
+			case NETEZZA_DEFAULT:		return prefix + "NetezzaConfig.xml";
 			default:
 				return "Doesn't define database configuration";
 		}
@@ -125,16 +121,15 @@ public enum DBDefine {
 		else if(type.equalsIgnoreCase("SQLite"))		return SQLite_DEFAULT;
 		else if(type.equalsIgnoreCase("Cubrid"))		return CUBRID_DEFAULT;
 		else if(type.equalsIgnoreCase("PostgreSQL"))	return POSTGRE_DEFAULT;
-//		else if(type.equalsIgnoreCase("AgensGraph"))	return DBDefine.AGENSGRAPH_DEFAULT;
 		
 		else if(type.equalsIgnoreCase("MongoDB"))		return MONGODB_DEFAULT;
 //		else if(type.equalsIgnoreCase("AmazonRDS")) 	return AMAZONRDS_DEFAULT;
 		else if(type.equalsIgnoreCase("Apache Hive")) 	return HIVE_DEFAULT;
 		else if(type.equalsIgnoreCase("Apache Hive2")) 	return HIVE2_DEFAULT;
 		
-		else if(type.equalsIgnoreCase("Apache Tajo")) 	return TAJO_DEFAULT;
 		else if(type.equalsIgnoreCase("Altibase"))       return ALTIBASE_DEFAULT;
 		else if(type.equalsIgnoreCase("RedShift"))       return AMAZON_REDSHIFT_DEFAULT;
+		else if(type.equalsIgnoreCase("Netezza"))       return NETEZZA_DEFAULT;
 		else return null;
 	}
 	
@@ -167,7 +162,7 @@ public enum DBDefine {
 			case POSTGRE_DEFAULT:	return "org.postgresql.Driver";
 			case HIVE_DEFAULT:		return "org.apache.hadoop.hive.jdbc.HiveDriver";
 			case HIVE2_DEFAULT:		return "org.apache.hive.jdbc.HiveDriver";
-			case TAJO_DEFAULT:		return "org.apache.tajo.jdbc.TajoDriver";
+			case NETEZZA_DEFAULT:	return "org.netezza.Driver";
 			
 			case ALTIBASE_DEFAULT:   return "com.amazon.redshift.jdbc.Driver";
 			case AMAZON_REDSHIFT_DEFAULT : return "";
@@ -214,13 +209,12 @@ public enum DBDefine {
 			case HIVE_DEFAULT:		return "jdbc:hive://%s:%s/%s";
 			case HIVE2_DEFAULT:		return "jdbc:hive2://%s:%s/%s";
 			
-			case TAJO_DEFAULT:		return "jdbc:tajo://%s:%s/%s";
-			
 			/* Altibase JDBC connection string: jdbc:Altibase://ipaddr.port/dbname */
 			case ALTIBASE_DEFAULT:   return "jdbc:Altibase://%s:%s/%s";
 
 			case AMAZON_REDSHIFT_DEFAULT : return "jdbc:redshift://%s:%s/%s";
 			
+			case NETEZZA_DEFAULT:	return "jdbc:netezza://%s/%s";
 			default:
 				return "undefine db";
 		}
@@ -252,9 +246,9 @@ public enum DBDefine {
 			case HIVE_DEFAULT: 			return "Apache Hive";
 			case HIVE2_DEFAULT: 			return "Apache Hive2";
 			
-			case TAJO_DEFAULT: 			return "Apache Tajo";
 			case ALTIBASE_DEFAULT:      return "Altibase";
 			case AMAZON_REDSHIFT_DEFAULT : return "RedShift";
+			case NETEZZA_DEFAULT:		return "Netezza";
 			default:
 				return "undefine db";
 		}
@@ -268,24 +262,24 @@ public enum DBDefine {
 		String strConnection = "TadpoleHub_None";
 		if(isTransaction) strConnection = "TadpoleHub_Tran";
 		
-		if(this == DBDefine.MYSQL_DEFAULT || this == DBDefine.MARIADB_DEFAULT) {
+		if(this == MYSQL_DEFAULT || this == MARIADB_DEFAULT) {
 			return String.format("SELECT '%s'", strConnection);
-		} else if(this == DBDefine.ORACLE_DEFAULT || this == DBDefine.TIBERO_DEFAULT) {
+		} else if(this == ORACLE_DEFAULT || this == TIBERO_DEFAULT) {
 			return String.format("SELECT '%s' FROM dual", strConnection);
-		} else if(this == DBDefine.MSSQL_DEFAULT || this == DBDefine.MSSQL_8_LE_DEFAULT) {
+		} else if(this == MSSQL_DEFAULT || this == MSSQL_8_LE_DEFAULT) {
 			return String.format("SELECT '%s'", strConnection);
-		} else if(this == DBDefine.SQLite_DEFAULT) {
+		} else if(this == SQLite_DEFAULT) {
 			return "SELECT name FROM sqlite_master where 1 = 0";
-		} else if(this == DBDefine.HIVE_DEFAULT || this == DBDefine.HIVE2_DEFAULT) {
+		} else if(this == HIVE_DEFAULT || this == HIVE2_DEFAULT) {
 			return "show databases";
-		} else if(this == DBDefine.POSTGRE_DEFAULT || this == DBDefine.AMAZON_REDSHIFT_DEFAULT) {
+		} else if(this == POSTGRE_DEFAULT || this == AMAZON_REDSHIFT_DEFAULT) {
 			return String.format("SELECT '%s'", strConnection);
-		} else if(this == DBDefine.CUBRID_DEFAULT) {
+		} else if(this == CUBRID_DEFAULT) {
 			return String.format("select '%s' from db_root", strConnection);
-		} else if(this == DBDefine.TAJO_DEFAULT) {
-			return "\\d";
-		} else if(this == DBDefine.ALTIBASE_DEFAULT) {
+		} else if(this == ALTIBASE_DEFAULT) {
 			return String.format("SELECT '%s'", strConnection);
+		} else if(this == NETEZZA_DEFAULT) {
+			return "SELECT version()";
 		} else {
 			return "SELECT 1";
 		}
@@ -314,8 +308,6 @@ public enum DBDefine {
 			extension += "pgsql"; //$NON-NLS-1$
 		} else if(this == CUBRID_DEFAULT) {
 			extension += "cubrid"; //$NON-NLS-1$
-		} else if(this == TAJO_DEFAULT) {
-			extension += "tajo"; //$NON-NLS-1$
 		} else if(this == ALTIBASE_DEFAULT) {
 			extension += "altibase";
 		} else if(this == TIBERO_DEFAULT) {
@@ -324,6 +316,8 @@ public enum DBDefine {
 			extension += "mongo";
 		} else if(this == AMAZON_REDSHIFT_DEFAULT) {
 			extension += "RedShift";
+		} else if(this == DBDefine.NETEZZA_DEFAULT) {
+			extension += "Netezza";
 		} else {
 			extension += "sql"; //$NON-NLS-1$
 		}
@@ -350,13 +344,13 @@ public enum DBDefine {
 		case CUBRID_DEFAULT:		return DBVariableDefine.CUBRID_VARIABLES;
 		case POSTGRE_DEFAULT:		
 		case AMAZON_REDSHIFT_DEFAULT:
+		case NETEZZA_DEFAULT:
 									return DBVariableDefine.PGSQL_VARIABLES;
 		
 		case MONGODB_DEFAULT :  	return DBVariableDefine.MONGO_VARIABLE;		
 		case HIVE_DEFAULT: 			return DBVariableDefine.HIVE_VARIABLE;
 		case HIVE2_DEFAULT: 		return DBVariableDefine.HIVE2_VARIABLE;
 		
-		case TAJO_DEFAULT: 			return DBVariableDefine.TAJO_VARIABLE;
 		case ALTIBASE_DEFAULT:      return DBVariableDefine.ALTIBASE_VARIABLE;
 		default:
 			return new String[]{};
@@ -409,7 +403,6 @@ public enum DBDefine {
 		List<DBDefine> listSupportDb = userDBValues();
 		
 //		listSupportDb.remove(AMAZONRDS_DEFAULT);
-		listSupportDb.remove(TAJO_DEFAULT);
 		listSupportDb.remove(HIVE_DEFAULT);
 		return listSupportDb;
 	}
@@ -424,7 +417,6 @@ public enum DBDefine {
 		supportDb.add(ALTIBASE_DEFAULT);
 		supportDb.add(HIVE_DEFAULT);
 //		supportDb.add(AMAZONRDS_DEFAULT);
-		supportDb.add(TAJO_DEFAULT);
 		
 		supportDb.add(CUBRID_DEFAULT);
 		supportDb.add(DYNAMODB_DEFAULT);
@@ -432,7 +424,8 @@ public enum DBDefine {
 		supportDb.add(MARIADB_DEFAULT);
 		supportDb.add(MONGODB_DEFAULT);
 		supportDb.add(MSSQL_DEFAULT);
-		supportDb.add(MYSQL_DEFAULT);		
+		supportDb.add(MYSQL_DEFAULT);
+		supportDb.add(NETEZZA_DEFAULT);
 		
 		supportDb.add(ORACLE_DEFAULT);
 		supportDb.add(TIBERO_DEFAULT);

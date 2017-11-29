@@ -22,8 +22,8 @@ public class SystemDefine {
 	
 	public static final String NAME = "Tadpole DB Hub";
 	public static final String MAJOR_VERSION = "1.7.5";
-	public static final String SUB_VERSION = "Build (r2)";
-	public static final String RELEASE_DATE = "2017.11.20";
+	public static final String SUB_VERSION = "Build (r3)";
+	public static final String RELEASE_DATE = "2017.11.28";
 	public static final String INFORMATION = "http://tadpolehub.com/";
 	
 	public static final String ADMIN_EMAIL = "hangum@tadpolehub.com";

@@ -38,13 +38,14 @@
             id="com.hangum.tadpole.preference.page.aws.amazon"
             name="%page.name.4">
       </page>
-      -->
+      
       <page
             category="com.hangum.tadpole.preference.page.general"
             class="com.hangum.tadpole.preference.ui.PerspectivePreferencePage"
             id="com.hangum.tadpole.preference.page.perspective"
             name="%page.name.5">
       </page>
+      -->
       <page
             class="com.hangum.tadpole.preference.ui.SecurityCredentialPreference"
             id="com.hangum.tadpole.preference.page.securityCredentials"

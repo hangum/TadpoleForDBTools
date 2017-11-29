@@ -30,7 +30,6 @@ import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.DATA_STATUS;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.libs.core.utils.ValidChecker;
-import com.hangum.tadpole.db.dynamodb.core.manager.DynamoDBManager;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLExtManager;
@@ -38,7 +37,6 @@ import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.ManagerListDTO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.sql.TadpoleSystem_UserDBQuery;
-import com.hangum.tadpole.hive.core.connections.HiveJDBC2Manager;
 import com.hangum.tadpole.mongodb.core.connection.MongoConnectionManager;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
@@ -48,7 +46,6 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.sub.others.dao.OthersConnect
 import com.hangum.tadpole.rdb.core.dialog.msg.TDBErroDialog;
 import com.hangum.tadpole.rdb.core.dialog.msg.TDBYesNoErroDialog;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -339,8 +336,8 @@ public abstract class AbstractLoginComposite extends Composite {
 			if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 				MongoConnectionManager.getInstance(userDB);
 				
-			} else if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
-				new TajoConnectionManager().connectionCheck(userDB);
+//			} else if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
+//				new TajoConnectionManager().connectionCheck(userDB);
 			} else if(userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT || userDB.getDBDefine() == DBDefine.DYNAMODB_DEFAULT) {
 				TadpoleSQLExtManager.getInstance().connectionCheck(userDB);
 			} else if(userDB.getDBDefine() == DBDefine.SQLite_DEFAULT) {

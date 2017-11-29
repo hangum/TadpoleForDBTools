@@ -29,7 +29,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLConvertCharUtil;
 import com.hangum.tadpole.engine.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
-import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 
 /**
  * Execute ddl, insert, update, delete etc..
@@ -104,10 +103,10 @@ public class ExecuteOtherSQL {
 		int intEChangeCnt = -1;
 		
 		// is tajo
-		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
-			new TajoConnectionManager().executeUpdate(userDB,reqQuery.getSql());
-			return intEChangeCnt;
-		} else { 
+//		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
+//			new TajoConnectionManager().executeUpdate(userDB,reqQuery.getSql());
+//			return intEChangeCnt;
+//		} else { 
 		
 			// commit나 rollback 명령을 만나면 수행하고 리턴합니다.
 			if(TransactionManger.calledCommitOrRollback(reqQuery.getSql(), userEmail, userDB)) return intEChangeCnt;
@@ -174,7 +173,7 @@ public class ExecuteOtherSQL {
 					try { if(javaConn != null) javaConn.close(); } catch(Exception e){}
 				}
 			}
-		}  	// end which db
+//		}  	// end which db
 	}
 	
 }

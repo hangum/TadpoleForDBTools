@@ -28,7 +28,6 @@ import com.hangum.tadpole.engine.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.editors.main.utils.plan.CubridExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.editors.main.utils.plan.OracleExecutePlanUtils;
 import com.hangum.tadpole.rdb.core.editors.main.utils.plan.TiberoExecutePlanUtils;
-import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 
 /**
  * Query plan을 관리합니다.
@@ -61,10 +60,10 @@ public class ExecuteQueryPlan {
 		java.sql.Statement stmt = null;
 		
 		try {
-			if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
-				TajoConnectionManager manager = new TajoConnectionManager();
-				rsDAO = manager.executeQueryPlan(userDB, reqQuery.getSql(), reqQuery.getSqlStatementType(), reqQuery.getStatementParameter());
-			} else {
+//			if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
+//				TajoConnectionManager manager = new TajoConnectionManager();
+//				rsDAO = manager.executeQueryPlan(userDB, reqQuery.getSql(), reqQuery.getSqlStatementType(), reqQuery.getStatementParameter());
+//			} else {
 				
 				javaConn = TadpoleSQLManager.getConnection(userDB);
 								
@@ -186,7 +185,7 @@ public class ExecuteQueryPlan {
 					// getMoreResults 가 지원되지 않거나 오류 발생시 로그만 남기고 다음 처리 절차를 진행하도록한다.
 					logger.error("Execute Plan" + e);
 				}
-			}
+//			}
 			
 			return rsDAO;
 			

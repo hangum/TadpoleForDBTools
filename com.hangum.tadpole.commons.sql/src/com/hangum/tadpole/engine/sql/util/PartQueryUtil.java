@@ -28,7 +28,6 @@ import com.hangum.tadpole.engine.sql.template.OracleDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.PostgreDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.RedShiftDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.SQLiteDMLTemplate;
-import com.hangum.tadpole.engine.sql.template.TAJODMLTemplate;
 import com.hangum.tadpole.engine.sql.template.TiberoDMLTemplate;
 
 import net.sf.jsqlparser.expression.Alias;
@@ -182,8 +181,6 @@ public class PartQueryUtil {
 			resultQuery = query;
 		} else if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) {
 			resultQuery = HIVEDMLTemplate.TMP_EXPLAIN_EXTENDED + query;
-		} else if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
-			resultQuery = TAJODMLTemplate.TMP_EXPLAIN_EXTENDED + query;
 		} else if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			if(userDB.getDBDefine() == DBDefine.AMAZON_REDSHIFT_DEFAULT) {
 				resultQuery = RedShiftDMLTemplate.TMP_EXPLAIN_EXTENDED + query;

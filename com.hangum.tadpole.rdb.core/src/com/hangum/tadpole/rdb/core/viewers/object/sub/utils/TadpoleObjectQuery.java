@@ -37,7 +37,6 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.security.DBAccessCtlManager;
 import com.hangum.tadpole.engine.sql.util.ExecuteDDLCommand;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
-import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -165,14 +164,15 @@ public class TadpoleObjectQuery {
 	public static List<TableDAO> getTableList(final UserDBDAO userDB) throws Exception {
 		List<TableDAO> showTables = null;
 		
-		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
-			showTables = new TajoConnectionManager().tableList(userDB);
-
-			// sql keyword를 설정합니다.
-			if(TadpoleSQLManager.getDbMetadata(userDB) == null) {
-				TadpoleSQLManager.initializeConnection(TadpoleSQLManager.getKey(userDB), userDB, TajoConnectionManager.getInstance(userDB).getMetaData());
-			}
-		} else if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
+//		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
+//			showTables = new TajoConnectionManager().tableList(userDB);
+//
+//			// sql keyword를 설정합니다.
+//			if(TadpoleSQLManager.getDbMetadata(userDB) == null) {
+//				TadpoleSQLManager.initializeConnection(TadpoleSQLManager.getKey(userDB), userDB, TajoConnectionManager.getInstance(userDB).getMetaData());
+//			}
+//		} else 
+		if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
 			List<Map<String, String>> listTables = DynamoDBManager.getInstance().getTables(userDB.getUsers(), userDB.getPasswd(), userDB.getDb());
 			
 			showTables = new ArrayList<>();
@@ -280,9 +280,10 @@ public class TadpoleObjectQuery {
 			mapParam.put("table", strTableName);
 		}
 		
-		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
-			returnColumns = new TajoConnectionManager().tableColumnList(userDB, mapParam);			
-		} else if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
+//		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
+//			returnColumns = new TajoConnectionManager().tableColumnList(userDB, mapParam);			
+//		} else 
+		if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			if("".equals(mapParam.get("schema")) || null == mapParam.get("schema")) {
 				mapParam.put("schema", "public");
 			}
@@ -379,16 +380,17 @@ public class TadpoleObjectQuery {
 		TableDAO tableDao = null;
 		List<TableDAO> showTables = new ArrayList<TableDAO>();
 		
-		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
-			List<TableDAO> tmpShowTables = new TajoConnectionManager().tableList(userDB);
-			
-			for(TableDAO dao : tmpShowTables) {
-				if(dao.getName().equals(tableDAO.getName())) {
-					showTables.add(dao);
-					break;
-				}
-			}
-		} else if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) {
+//		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
+//			List<TableDAO> tmpShowTables = new TajoConnectionManager().tableList(userDB);
+//			
+//			for(TableDAO dao : tmpShowTables) {
+//				if(dao.getName().equals(tableDAO.getName())) {
+//					showTables.add(dao);
+//					break;
+//				}
+//			}
+//		} else 
+		if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
 			List<TableDAO> tmpShowTables = sqlClient.queryForList("tableList", userDB.getDb()); //$NON-NLS-1$
 			

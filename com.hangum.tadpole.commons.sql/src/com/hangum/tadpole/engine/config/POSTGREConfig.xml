@@ -67,6 +67,5 @@
 	-->
 	<sqlMap resource="com/hangum/tadpole/engine/query/PostgreSQL_ext.xml" />
 	<sqlMap resource="com/hangum/tadpole/engine/query/PostgreSQL.xml" />
-	<!-- <sqlMap resource="com/bitnine/agens/manager/engine/core/maps/AgensSQL_monitoring.xml" /> -->
 					 
 </sqlMapConfig>

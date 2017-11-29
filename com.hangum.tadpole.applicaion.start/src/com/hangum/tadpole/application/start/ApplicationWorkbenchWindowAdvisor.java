@@ -184,8 +184,14 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 			}
 			SessionManager.setUserAllPreferenceData(mapUserInfoData);
 			
-			if ("".equals(SessionManager.getPerspective())) { //$NON-NLS-1$
-				SessionManager.setPerspective(Perspective.DEFAULT);
+//			final String strRepresentRole = SessionManager.getRepresentRole();
+//			if(strRepresentRole.equals(PublicTadpoleDefine.USER_ROLE_TYPE.API_USER.name())) {
+//				SessionManager.setPerspective(Perspective.APIUSER);
+//			} else {
+//				SessionManager.setPerspective(Perspective.DEFAULT);
+//			}
+//			if ("".equals(SessionManager.getPerspective())) { //$NON-NLS-1$
+//				SessionManager.setPerspective(Perspective.DEFAULT);
 			
 //					// user 사용자는 default perspective를 사용합니다.
 //					if(PublicTadpoleDefine.USER_TYPE.USER.toString().equals(SessionManager.getRepresentRole())) {
@@ -201,7 +207,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 //							}
 //							SessionManager.setPerspective(persp);
 //					}
-			}
+//			}
 			
 			initSession();
 			

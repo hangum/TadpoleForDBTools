@@ -46,7 +46,6 @@ import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.actions.object.AbstractObjectSelectAction;
 import com.hangum.tadpole.rdb.core.util.GrantCheckerUtils;
-import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 
 /**
  * Object Explorer에서 사용하는 공통 action
@@ -88,11 +87,11 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 						// 대.소문자 또는 특수문자를 포함하는 오브젝트 명을 사용하는 경우...
 						String strSQL = "drop table " + SQLUtil.getTableName(userDB, selTableDao);// dao.getSysName(); //$NON-NLS-1$
 						try {
-							if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
-								new TajoConnectionManager().executeUpdate(userDB, strSQL);
-							} else {
+//							if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
+//								new TajoConnectionManager().executeUpdate(userDB, strSQL);
+//							} else {
 								executeSQL(userDB, strSQL);
-							}
+//							}
 						} catch(Exception e) {
 							logger.error("drop table", e);
 							exeMessage(Messages.get().ObjectDeleteAction_0, e);

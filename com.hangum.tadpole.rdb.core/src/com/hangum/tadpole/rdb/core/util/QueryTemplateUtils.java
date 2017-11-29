@@ -13,7 +13,6 @@ package com.hangum.tadpole.rdb.core.util;
 import org.apache.commons.lang.StringUtils;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.template.AltibaseDMLTemplate;
@@ -24,7 +23,6 @@ import com.hangum.tadpole.engine.sql.template.MySQLDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.OracleDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.PostgreDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.SQLiteDMLTemplate;
-import com.hangum.tadpole.engine.sql.template.TAJODMLTemplate;
 
 /**
  * db에 다른 템플릿 쿼리를 생성합니다.
@@ -132,8 +130,6 @@ public class QueryTemplateUtils {
 			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
 				defaultStr =  HIVEDMLTemplate.TMP_CREATE_VIEW_STMT;
 			}
-		} else if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
-			defaultStr =  TAJODMLTemplate.TMP_CREATE_TABLE_STMT;
 		} else if(DBGroupDefine.MSSQL_GROUP == userDB.getDBGroup()) {
 		
 			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {

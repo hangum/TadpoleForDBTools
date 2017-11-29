@@ -30,7 +30,6 @@ import com.hangum.tadpole.engine.query.dao.sqlite.SQLiteForeignKeyListDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.security.DBAccessCtlManager;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
-import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -67,9 +66,10 @@ public class TDBDataHandler {
 			mapParam.put("table", strTableName);
 		}
 		
-		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
-			returnColumns = new TajoConnectionManager().tableColumnList(userDB, mapParam);			
-		} else if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
+//		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
+//			returnColumns = new TajoConnectionManager().tableColumnList(userDB, mapParam);			
+//		} else 
+		if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
 			if("".equals(mapParam.get("schema")) || null == mapParam.get("schema")) {
 				mapParam.put("schema", "public");
 			}

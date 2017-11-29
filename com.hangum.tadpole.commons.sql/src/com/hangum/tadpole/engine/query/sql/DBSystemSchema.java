@@ -77,7 +77,7 @@ public class DBSystemSchema {
 	 * @throws SQLException
 	 */
 	public static List<TableDAO> getViewList(final UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
-		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup() || DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) return new ArrayList<TableDAO>();
+		if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) return new ArrayList<TableDAO>();
 		
 		List<TableDAO> listTblView = new ArrayList<TableDAO>();
 		
@@ -192,7 +192,7 @@ public class DBSystemSchema {
 	 * @throws SQLException
 	 */
 	public static List<ProcedureFunctionDAO> getFunctionList(final UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
-		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup() || DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup())  {
+		if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup())  {
 			return new ArrayList<ProcedureFunctionDAO>();
 		}
 		
@@ -231,7 +231,7 @@ public class DBSystemSchema {
 	 * @throws SQLException
 	 */
 	public static List<ProcedureFunctionDAO> getProcedure(final UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
-		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup() || DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup())  {
+		if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.SQLITE_GROUP == userDB.getDBGroup())  {
 			return new ArrayList<ProcedureFunctionDAO>();
 		}
 		
@@ -264,7 +264,7 @@ public class DBSystemSchema {
 	public static List<TriggerDAO> getTrigger(final UserDBDAO userDB, String strObjectName) throws TadpoleSQLManagerException, SQLException {
 		List<TriggerDAO> triggerList = null;
 		
-		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup() || DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) { 
+		if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) { 
 			triggerList = new ArrayList<TriggerDAO>();
 		}else {
 		
@@ -306,7 +306,7 @@ public class DBSystemSchema {
 	 * @throws SQLException
 	 */
 	public static List<TriggerDAO> getAllTrigger(UserDBDAO userDB) throws TadpoleSQLManagerException, SQLException {
-		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup() || DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) { 
+		if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) { 
 			return new ArrayList<TriggerDAO>();
 		}
 		

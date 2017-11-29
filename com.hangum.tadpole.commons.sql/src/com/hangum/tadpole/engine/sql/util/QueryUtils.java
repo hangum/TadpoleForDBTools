@@ -89,25 +89,20 @@ public class QueryUtils {
 	) throws SQLException, Exception 
 	{
 		
-		// is tajo
-		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
-			logger.error("Not support TAJO.");
-		} else { 
+		java.sql.Connection javaConn = null;
+		PreparedStatement prepareStatement = null;
+		try {
+			javaConn = TadpoleSQLManager.getConnection(userDB);
+			prepareStatement = javaConn.prepareStatement(strQuery);
 			
-			java.sql.Connection javaConn = null;
-			PreparedStatement prepareStatement = null;
-			try {
-				javaConn = TadpoleSQLManager.getConnection(userDB);
-				prepareStatement = javaConn.prepareStatement(strQuery);
-				
-				// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다.
-				if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
-					final String checkSQL = strQuery.trim().toUpperCase();
-					if(StringUtils.startsWithIgnoreCase(checkSQL, "CREATE TABLE")) { //$NON-NLS-1$
-						strQuery = StringUtils.replaceOnce(strQuery, "(", " ("); //$NON-NLS-1$ //$NON-NLS-2$
-					}
+			// TODO mysql일 경우 https://github.com/hangum/TadpoleForDBTools/issues/3 와 같은 문제가 있어 create table 테이블명 다음의 '(' 다음에 공백을 넣어주도록 합니다.
+			if(DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
+				final String checkSQL = strQuery.trim().toUpperCase();
+				if(StringUtils.startsWithIgnoreCase(checkSQL, "CREATE TABLE")) { //$NON-NLS-1$
+					strQuery = StringUtils.replaceOnce(strQuery, "(", " ("); //$NON-NLS-1$ //$NON-NLS-2$
 				}
-				
+			}
+			
 //				// hive는 executeUpdate()를 지원하지 않아서. 13.08.19-hangum
 //				if(userDB.getDBDefine() == DBDefine.HIVE_DEFAULT | 
 //					userDB.getDBDefine() == DBDefine.HIVE2_DEFAULT 
@@ -115,20 +110,17 @@ public class QueryUtils {
 //					return prepareStatement.execute(strQuery);
 //				} else {
 
-				for(int i=0; i<listParam.size(); i++) {
-					Object objParam = listParam.get(i);
-					prepareStatement.setObject(i+1, objParam);
-				}
-				
-				return prepareStatement.executeUpdate();
-				
-			} finally {
-				try { if(prepareStatement != null) prepareStatement.close();} catch(Exception e) {}
-				try { if(javaConn != null) javaConn.close();} catch(Exception e) {}
+			for(int i=0; i<listParam.size(); i++) {
+				Object objParam = listParam.get(i);
+				prepareStatement.setObject(i+1, objParam);
 			}
-		}  	// end which db
-		
-		return false;
+			
+			return prepareStatement.executeUpdate();
+			
+		} finally {
+			try { if(prepareStatement != null) prepareStatement.close();} catch(Exception e) {}
+			try { if(javaConn != null) javaConn.close();} catch(Exception e) {}
+		}
 	}
 	
 	/**
