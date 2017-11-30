@@ -214,7 +214,7 @@ public enum DBDefine {
 
 			case AMAZON_REDSHIFT_DEFAULT : return "jdbc:redshift://%s:%s/%s";
 			
-			case NETEZZA_DEFAULT:	return "jdbc:netezza://%s/%s";
+			case NETEZZA_DEFAULT:	return "jdbc:netezza://%s:%s/%s";
 			default:
 				return "undefine db";
 		}
