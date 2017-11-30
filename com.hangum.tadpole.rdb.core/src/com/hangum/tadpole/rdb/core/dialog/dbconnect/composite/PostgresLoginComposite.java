@@ -198,6 +198,9 @@ public class PostgresLoginComposite extends MySQLLoginComposite {
 			if(DBDefine.AMAZON_REDSHIFT_DEFAULT == getSelectDB()) {
 				textPort.setText("5439"); //$NON-NLS-1$
 				textJDBCOptions.setText("&loginTimeout=30&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory"); //&socketTimeout=30
+			} else if(DBDefine.NETEZZA_DEFAULT == getSelectDB()) {
+				textPort.setText("5480"); //$NON-NLS-1$
+				textJDBCOptions.setText("");
 			} else {
 				textPort.setText("5432"); //$NON-NLS-1$
 				textJDBCOptions.setText("&loginTimeout=30"); //&socketTimeout=30
