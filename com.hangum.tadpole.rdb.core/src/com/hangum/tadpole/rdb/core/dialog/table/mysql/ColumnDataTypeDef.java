@@ -294,7 +294,6 @@ public class ColumnDataTypeDef {
 		case SQLite_DEFAULT:
 		case TADPOLE_SYSTEM_DEFAULT:
 		case TADPOLE_SYSTEM_MYSQL_DEFAULT:
-		case TAJO_DEFAULT:
 		default:
 			for (String name : defaultNameMap.values()) {
 				result += name + ",";
@@ -408,8 +407,6 @@ public class ColumnDataTypeDef {
 			case TADPOLE_SYSTEM_DEFAULT:
 				return (String) defaultNameMap.get(dataType);
 			case TADPOLE_SYSTEM_MYSQL_DEFAULT:
-				return (String) defaultNameMap.get(dataType);
-			case TAJO_DEFAULT:
 				return (String) defaultNameMap.get(dataType);
 			default:
 				return (String) defaultNameMap.get(dataType);

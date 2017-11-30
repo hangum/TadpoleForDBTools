@@ -523,22 +523,22 @@ public class SessionManager {
 		}
 	}
 	
-	public static String getPerspective() {
-		UserInfoDataDAO userInfo = SessionManager.getUserInfo(NAME.PERSPECTIVE.name(), "default");
-		return userInfo.getValue0();
-	}
+//	public static String getPerspective() {
+//		UserInfoDataDAO userInfo = SessionManager.getUserInfo(NAME.PERSPECTIVE.name(), "default");
+//		return userInfo.getValue0();
+//	}
 	
-	public static void setPerspective(String persp) { 
-		// db update 
-		try {
-			TadpoleSystem_UserInfoData.updateUserInfoData(NAME.PERSPECTIVE.name(), persp);
-			// session update
-			SessionManager.setUserInfo(NAME.PERSPECTIVE.name(), persp);
-			SessionManager.resetPerspective();
-		} catch (Exception e) {
-			logger.error("Error change perspective", e);
-		}
-	}
+//	public static void setPerspective(String persp) { 
+//		// db update 
+//		try {
+//			TadpoleSystem_UserInfoData.updateUserInfoData(NAME.PERSPECTIVE.name(), persp);
+//			// session update
+//			SessionManager.setUserInfo(NAME.PERSPECTIVE.name(), persp);
+//			SessionManager.resetPerspective();
+//		} catch (Exception e) {
+//			logger.error("Error change perspective", e);
+//		}
+//	}
 	
 	public static void resetPerspective() {
 		IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();

@@ -26,14 +26,12 @@ public enum DBGroupDefine {
 	MSSQL_GROUP,
 	/* mysql, mariadb */
 	MYSQL_GROUP,
-	/* postgre, agens */
+	/* postgre */
 	POSTGRE_GROUP,
 	/* hive, hive2 */
 	HIVE_GROUP,
 	/* sqlite */
 	SQLITE_GROUP,
-	/* tajo */
-	TAJO_GROUP,
 	/* mongodb */
 	MONGODB_GROUP,
 	/* cubrid */
@@ -53,7 +51,7 @@ public enum DBGroupDefine {
 			return MSSQL_GROUP;
 		} else if(dbDefine == DBDefine.MYSQL_DEFAULT || dbDefine == DBDefine.MARIADB_DEFAULT) {
 			return MYSQL_GROUP;
-		} else if(dbDefine == DBDefine.POSTGRE_DEFAULT || dbDefine == DBDefine.AMAZON_REDSHIFT_DEFAULT) { 
+		} else if(dbDefine == DBDefine.POSTGRE_DEFAULT || dbDefine == DBDefine.AMAZON_REDSHIFT_DEFAULT || dbDefine == DBDefine.NETEZZA_DEFAULT) { 
 			return POSTGRE_GROUP;
 		} else if(dbDefine == DBDefine.HIVE_DEFAULT || dbDefine == DBDefine.HIVE2_DEFAULT) {
 			return HIVE_GROUP;
@@ -61,8 +59,6 @@ public enum DBGroupDefine {
 			return SQLITE_GROUP;
 		} else if(dbDefine == DBDefine.CUBRID_DEFAULT) {
 			return CUBRID_GROUP;
-		} else if(dbDefine == DBDefine.TAJO_DEFAULT) {
-			return TAJO_GROUP;
 		} else if(dbDefine == DBDefine.ALTIBASE_DEFAULT) {
 			return ALTIBASE_GROUP;
 		} else if(dbDefine == DBDefine.DYNAMODB_DEFAULT) {

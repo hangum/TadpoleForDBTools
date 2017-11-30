@@ -27,11 +27,11 @@ import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MSSQLLoginComposit
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MariaDBLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MongoDBLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.MySQLLoginComposite;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.NetezzaLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.OracleLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.PostgresLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.RedShiftLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.SQLiteLoginComposite;
-import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.TajoLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.TiberoLoginComposite;
 
 /**
@@ -91,8 +91,6 @@ public class DBConnectionUtils {
 //			loginComposite = new AWSRDSLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if(dbDefine == DBDefine.HIVE_DEFAULT || dbDefine == DBDefine.HIVE2_DEFAULT) {
 			loginComposite = new HiveLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
-		} else if(dbDefine == DBDefine.TAJO_DEFAULT) {
-			loginComposite = new TajoLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if(dbDefine == DBDefine.TIBERO_DEFAULT) {
 			loginComposite = new TiberoLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if(dbDefine == DBDefine.ALTIBASE_DEFAULT) {
@@ -101,7 +99,9 @@ public class DBConnectionUtils {
 			loginComposite = new RedShiftLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if(dbDefine == DBDefine.DYNAMODB_DEFAULT) {
 			loginComposite = new AWSDynamoLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
-		} 
+		} else if(dbDefine == DBDefine.NETEZZA_DEFAULT) {
+			loginComposite = new NetezzaLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
+		}
 		
 		loginComposite.setDataActionStatus(dataStatus);
 		

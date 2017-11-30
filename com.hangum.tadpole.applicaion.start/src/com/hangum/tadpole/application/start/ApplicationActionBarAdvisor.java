@@ -108,9 +108,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IAction userManuelAction;
     private IAction newVersionCheckAction;
     
-    // agens monitor
-//    private IAction agensMonitorAction;
-    
     private IAction billAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
@@ -163,10 +160,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     	
     	monitoringRealTimeAction = new MonitoringRealTimeAction(window);
     	register(monitoringRealTimeAction);
-    	
-    	//
-//    	agensMonitorAction = new AgensManagerOpenAction(window);
-//    	register(agensMonitorAction);
     	
     	jDBCDriverManagerAction = new JDBCDriverManagerAction(window);
     	register(jDBCDriverManagerAction);
@@ -318,9 +311,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         if("YES".equals(GetAdminPreference.getSupportMonitoring())) {
         	toolbar.add(monitoringRealTimeAction);
         }
-//        toolbar.add(agensMonitorAction);
-//        toolbar.add(new Separator());
-        
 //        toolbar.add(deleteResourceAction);
 //        toolbar.add(new Separator());
         

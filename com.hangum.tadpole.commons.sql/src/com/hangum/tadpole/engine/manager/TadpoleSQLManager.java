@@ -249,7 +249,6 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 				tadpoleMetaData = new TadpoleMetaData(strIdentifierQuoteString, TadpoleMetaData.STORES_FIELD_TYPE.BLANK);
 				break;
 			case POSTGRE_DEFAULT:		
-			case TAJO_DEFAULT: 			
 				tadpoleMetaData = new TadpoleMetaData(strIdentifierQuoteString, TadpoleMetaData.STORES_FIELD_TYPE.UPPERCASE_BLANK);
 				break;
 			default:

@@ -749,7 +749,7 @@ public class MainEditor extends EditorExtension {
 	 * initialize editor
 	 */
 	private void initEditor() {
-		if (DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
+		if (DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) {
 			tiAutoCommit.setEnabled(false);
 		}
 

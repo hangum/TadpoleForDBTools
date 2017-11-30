@@ -240,7 +240,7 @@ public abstract class BasicDBInfo implements ConnectionInterfact {
 	 * 
 	 * @throws Exception
 	 */
-	public QueryExecuteResultDTO select( UserDBDAO userDB, String requestQuery, Object[] statementParameter, int limitCount) throws Exception {
+	public QueryExecuteResultDTO select(UserDBDAO userDB, String requestQuery, Object[] statementParameter, int limitCount) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("\t * Query is [ " + requestQuery );
 		
 		PreparedStatement pstmt = null;
@@ -259,7 +259,7 @@ public abstract class BasicDBInfo implements ConnectionInterfact {
 			
 			return new QueryExecuteResultDTO(userDB, requestQuery, true, rs, limitCount);
 		} catch(Exception e) {
-			logger.error("Tajo select", e);
+			logger.error(e);
 			throw e;
 			
 		} finally {

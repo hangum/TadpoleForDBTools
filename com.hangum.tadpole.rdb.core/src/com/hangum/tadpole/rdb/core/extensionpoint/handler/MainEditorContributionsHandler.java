@@ -43,8 +43,7 @@ public class MainEditorContributionsHandler {
 		
 		final DBDefine selectDBDefine = userDB.getDBDefine();
 		if(selectDBDefine == DBDefine.HIVE_DEFAULT 		|| 
-				selectDBDefine == DBDefine.HIVE2_DEFAULT 	|| 
-				selectDBDefine == DBDefine.TAJO_DEFAULT 	
+				selectDBDefine == DBDefine.HIVE2_DEFAULT 
 		) {
 			logger.info("Tadpole extension not support this db type ==> " +selectDBDefine.getDBToString());
 		} else {

@@ -144,15 +144,10 @@ public class OthersConnectionBigDataGroup extends AbstractOthersConnection {
 		List<ExternalBrowserInfoDAO> listBrowser = new ArrayList<ExternalBrowserInfoDAO>();
 		
 		ExternalBrowserInfoDAO extBrowserDAO = new ExternalBrowserInfoDAO();
-		if(getSelectDB() == DBDefine.TAJO_DEFAULT) {
-			extBrowserDAO.setName("TAJO");
-			extBrowserDAO.setUrl(String.format("http://%s:26080/", getStrIp()));
-			extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.name());
-		} else {
 			extBrowserDAO.setName("Hive");
 			extBrowserDAO.setUrl(String.format("http://%s:9999/hwi", getStrIp()));
 			extBrowserDAO.setIs_used(PublicTadpoleDefine.YES_NO.YES.name());
-		}
+//		}
 		listBrowser.add(extBrowserDAO);
 		
 		// name node

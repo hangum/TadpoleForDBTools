@@ -71,7 +71,6 @@ public class RelationUtil {
 				calRelation(userDB, mapDBTables, db, CubridTableRelation.makeCubridRelation(userDB, refTableNames));
 			
 			} else if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || 
-					DBGroupDefine.TAJO_GROUP == userDB.getDBGroup() ||
 					DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()
 			) {
 				// ignore relation code
@@ -100,7 +99,6 @@ public class RelationUtil {
 			} else if(DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup()) {
 				calRelation(userDB, mapDBTables, db, CubridTableRelation.makeCubridRelation(userDB));
 			} else if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || 
-					DBGroupDefine.TAJO_GROUP == userDB.getDBGroup() ||
 					DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()
 			) {
 				// ignore relation code

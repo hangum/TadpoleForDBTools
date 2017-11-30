@@ -32,7 +32,6 @@ import com.hangum.tadpole.rdb.model.Column;
 import com.hangum.tadpole.rdb.model.DB;
 import com.hangum.tadpole.rdb.model.RdbFactory;
 import com.hangum.tadpole.rdb.model.Table;
-import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -183,9 +182,7 @@ public enum TadpoleModelUtils {
 	public List<TableDAO> getAllTables(final UserDBDAO userDB) throws Exception {
 		List<TableDAO> listAllTables = null;
 		
-		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
-			listAllTables = new TajoConnectionManager().tableList(userDB);
-		} else if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
+		if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
 			List<Map<String, String>> listTables = DynamoDBManager.getInstance().getTables(userDB.getUsers(), userDB.getPasswd(), userDB.getDb());
 			
 			listAllTables = new ArrayList<>();
@@ -219,9 +216,7 @@ public enum TadpoleModelUtils {
 	 */
 	public List<TableDAO> getTable(final UserDBDAO userDB, List<String> listTableName) throws Exception {
 		List<TableDAO> listAllTables = null;
-		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
-			listAllTables = new TajoConnectionManager().tableList(userDB);
-		} else if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
+		if(DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()) {
 			List<Map<String, String>> listTables = DynamoDBManager.getInstance().getTables(userDB.getUsers(), userDB.getPasswd(), userDB.getDb());
 			
 			listAllTables = new ArrayList<>();

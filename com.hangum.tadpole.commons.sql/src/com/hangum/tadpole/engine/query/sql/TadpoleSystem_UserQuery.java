@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.swt.widgets.Combo;
 
 import com.hangum.tadpole.commons.exception.TadpoleAuthorityException;
 import com.hangum.tadpole.commons.exception.TadpoleRuntimeException;
@@ -63,7 +64,25 @@ public class TadpoleSystem_UserQuery {
 	/**
 	 * 모든 유효한 유저 목록을 가져옵니다.
 	 * 
-	 * @param delyn
+	 * @param strApproval
+	 * @param strUserConfirm
+	 * @param strDel
+	 * @return
+	 * @throws TadpoleSQLManagerException, SQLException
+	 */
+	public static List<UserDAO> getAllUser(String strApproval, String strUserConfirm, String strDel) throws TadpoleSQLManagerException, SQLException {
+		Map<String, String> mapSearch = new HashMap<String, String>();
+		mapSearch.put("Approval", strApproval);
+		mapSearch.put("UserConfirm", strUserConfirm);
+		mapSearch.put("Del", strDel);
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		return sqlClient.queryForList("getAllUserSearch", mapSearch); //$NON-NLS-1$
+	}
+	
+	/**
+	 * 모든 유효한 유저 목록을 가져옵니다.
+	 * 
 	 * @return
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */
@@ -97,7 +116,7 @@ public class TadpoleSystem_UserQuery {
 	 * @throws SQLException
 	 */
 	public static UserDAO newLDAPUser(String userName, String email, String external_id, String useOPT) throws TadpoleSQLManagerException, SQLException, Exception {
-		return newUser(PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(), email, "LDAP", "YES", "TadpoleLDAPLogin", PublicTadpoleDefine.USER_ROLE_TYPE.ADMIN.toString(),
+		return newUser(PublicTadpoleDefine.INPUT_TYPE.NORMAL.toString(), email, "LDAP", "YES", "TadpoleLDAPLogin", PublicTadpoleDefine.USER_ROLE_TYPE.USER.toString(),
 				userName, "KO", "Asia/Seoul", "YES", useOPT, "", "*", external_id, new Timestamp(System.currentTimeMillis()));
 	}
 	
@@ -487,7 +506,23 @@ public class TadpoleSystem_UserQuery {
 	}
 	
 	/**
-	 * 유저의 패스워드 번경
+	 * 시스템 어드민이 유저의 패스워드 변경
+	 * @param user
+	 * @throws TadpoleSQLManagerException, SQLException
+	 */
+	public static void updateSystemAdminUserPassword(UserDAO user) throws TadpoleSQLManagerException, SQLException, Exception {
+		user.setPasswd(SHA256Utils.getSHA256(user.getPasswd()));
+		
+		// 10년전으로 패스워드 수정하였다고 기록한다. 
+		// 그러면 강제로 패스워드 바꾸었다고 뜰거니까? ㅠㅠ --;;
+		user.setChanged_passwd_time(new Timestamp(DateUtil.beforeMonthToMillsMonth(12 * 10)));
+		
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+		sqlClient.update("updateUserPassword", user); //$NON-NLS-1$
+	}
+	
+	/**
+	 * 유저의 패스워드 변경
 	 * @param user
 	 * @throws TadpoleSQLManagerException, SQLException
 	 */

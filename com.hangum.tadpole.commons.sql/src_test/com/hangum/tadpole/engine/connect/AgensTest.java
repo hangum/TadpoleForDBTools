@@ -16,7 +16,7 @@ import java.sql.DriverManager;
 public class AgensTest extends AbstractDriverInfo {
 	public static void main(String[] args) throws Exception {
 
-		String url = "jdbc:agensgraph://27.117.163.21:9907/agens";
+		String url = "jdbc:agensgraph://xx.xx.xx.xx:9907/agens";
 		String usr = "agens";
 		String pwd = "agens";
 

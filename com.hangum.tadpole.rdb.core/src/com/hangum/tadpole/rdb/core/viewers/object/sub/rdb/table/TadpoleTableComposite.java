@@ -438,7 +438,6 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				createIndexes();
 				createTrigger();
 			} else if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() ||
-					DBGroupDefine.TAJO_GROUP == userDB.getDBGroup() ||
 					DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()
 			) {
 				// do not show them
@@ -558,7 +557,7 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 		// menu
 		final MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
 		final DBGroupDefine dbGroup = getUserDB().getDBGroup();
-		if(DBGroupDefine.HIVE_GROUP == dbGroup || DBGroupDefine.TAJO_GROUP == dbGroup ) {
+		if(DBGroupDefine.HIVE_GROUP == dbGroup) {
 			if(PermissionChecker.isShow(getUserRoleType(), getUserDB())) {
 				
 				if(!isDDLLock()) {

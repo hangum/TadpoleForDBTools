@@ -22,7 +22,6 @@ import org.apache.log4j.Logger;
 import com.hangum.tadpole.db.metadata.MakeContentAssistUtil;
 import com.hangum.tadpole.db.metadata.TadpoleMetaData;
 import com.hangum.tadpole.db.metadata.constants.SQLConstants;
-import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
@@ -30,7 +29,6 @@ import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TadpoleObjectQuery;
-import com.hangum.tadpole.tajo.core.connections.TajoConnectionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 
 /**
@@ -209,15 +207,8 @@ public class ExtMakeContentAssistUtil extends MakeContentAssistUtil {
 	 * @throws Exception
 	 */
 	public List<TableDAO> getTableListOnlyTableName(final UserDBDAO userDB) throws Exception {
-		List<TableDAO> showTables = null;
-				
-		if(DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
-			TajoConnectionManager manager = new TajoConnectionManager();
-			showTables = manager.tableList(userDB);			
-		} else {
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
-			showTables = sqlClient.queryForList("tableListOnlyName", userDB.getDb()); //$NON-NLS-1$			
-		}
+		SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);
+		List<TableDAO> showTables = sqlClient.queryForList("tableListOnlyName", userDB.getDb()); //$NON-NLS-1$			
 		
 		/** filter 정보가 있으면 처리합니다. */
 		return getTableAfterwork(showTables, userDB);

@@ -93,7 +93,6 @@ import com.hangum.tadpole.rdb.core.extensionpoint.definition.IMainEditorExtensio
 import com.hangum.tadpole.rdb.core.util.GrantCheckerUtils;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
 import com.hangum.tadpole.session.manager.SessionManager;
-import com.hangum.tadpole.tajo.core.connections.manager.ConnectionPoolManager;
 import com.swtdesigner.ResourceManager;
 
 /**
@@ -297,7 +296,6 @@ public class ResultSetComposite extends Composite {
 		if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) return true;
 		final DBGroupDefine dbGroup = getUserDB().getDBGroup();
 		if(DBGroupDefine.HIVE_GROUP == dbGroup 
-				|| DBGroupDefine.TAJO_GROUP == dbGroup
 				|| DBGroupDefine.CUBRID_GROUP == dbGroup) return true; 
 		
 		final Shell runShell = btnStopQuery.getShell();
@@ -758,9 +756,7 @@ public class ResultSetComposite extends Composite {
 		PreparedStatement preparedStatement = null;
 		
 		try {
-			if(DBGroupDefine.TAJO_GROUP == getUserDB().getDBGroup()) {
-				javaConn = ConnectionPoolManager.getDataSource(getUserDB()).getConnection();
-			} else if(DBGroupDefine.DYNAMODB_GROUP == getUserDB().getDBGroup()) {
+			if(DBGroupDefine.DYNAMODB_GROUP == getUserDB().getDBGroup()) {
 				javaConn = TadpoleSQLExtManager.getInstance().getConnection(getUserDB());
 			} else {
 				if(reqQuery.isAutoCommit()) {

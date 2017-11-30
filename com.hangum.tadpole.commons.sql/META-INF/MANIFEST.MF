@@ -52,7 +52,6 @@ Export-Package:
  com.hangum.tadpole.engine.permission,
  com.hangum.tadpole.engine.procedure,
  com.hangum.tadpole.engine.query.dao,
- com.hangum.tadpole.engine.query.dao.agens,
  com.hangum.tadpole.engine.query.dao.gateway,
  com.hangum.tadpole.engine.query.dao.mongodb,
  com.hangum.tadpole.engine.query.dao.mysql,

@@ -72,16 +72,6 @@ public class SessionListAction implements IViewActionDelegate {
 				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
 				ExceptionDetailsErrorDialog.openError(null, CommonMessages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 			}
-//		} else if(userDB.getDBDefine() == DBDefine.TAJO_DEFAULT) {
-//			try {
-//				TajoSessionListEditorInput sleInput = new TajoSessionListEditorInput(userDB);
-//				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(sleInput, TajoSessionListEditor.ID);
-//			} catch (PartInitException e) {
-//				logger.error("open session list", e); //$NON-NLS-1$
-//				
-//				Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
-//				ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
-//			}
 		} else {
 			MessageDialog.openWarning(null, CommonMessages.get().Information, Messages.get().NotSupportDatabase);
 		}

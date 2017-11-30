@@ -27,7 +27,7 @@ public class TadpoleMetaData {
 	 *	mysql, maria, ms sql, sqlite
 	 * 공백이 있을 경우 묶는다.(대소문자 상관없음)
 	 *
-	 *	pg sql, tajo
+	 *	pg sql
 	 * 대문자 이거나 중간에 공백이 있으면 묶는다.
 	 * 
 	 *	oracle

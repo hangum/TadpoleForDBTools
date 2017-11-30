@@ -172,7 +172,7 @@ public class PublicTadpoleDefine {
 	public static enum TADPOLE_SUPPORT_BROWSERIP {FIREFOX, CHROME, OPERA};
 	
 	/** 테드폴 사용자 역활 타입을 지정합니다 */
-	public enum USER_ROLE_TYPE {SYSTEM_ADMIN, OBSERVER, ADMIN};
+	public enum USER_ROLE_TYPE {SYSTEM_ADMIN, OBSERVER, USER, API_USER};
 	
 	/** 
 	 * This variable is user_role_table. 

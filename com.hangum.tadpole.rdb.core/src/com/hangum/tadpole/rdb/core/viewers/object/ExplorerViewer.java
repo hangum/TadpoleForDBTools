@@ -541,8 +541,8 @@ public class ExplorerViewer extends ViewPart {
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 
-		// tajo, hive, hive2
-		} else if (DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() || DBGroupDefine.TAJO_GROUP == userDB.getDBGroup()) {
+		// hive, hive2
+		} else if (DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) {
 			createTable();
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
