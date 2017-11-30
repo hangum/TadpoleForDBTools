@@ -358,7 +358,7 @@ public class ManagerViewer extends ViewPart {
 				try {
 					// pgsql은 익스텐스 을 보여준다.
 					if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
-						if(userDB.getDBDefine() != DBDefine.AMAZON_REDSHIFT_DEFAULT) PostgresqlConnectionEXT.connectionext(userDB);
+						if(userDB.getDBDefine() != DBDefine.AMAZON_REDSHIFT_DEFAULT && userDB.getDBDefine() != DBDefine.NETEZZA_DEFAULT ) PostgresqlConnectionEXT.connectionext(userDB);
 					}
 				} catch(Exception e) {
 					logger.error("pg_extension", e);

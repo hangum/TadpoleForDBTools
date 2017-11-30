@@ -285,6 +285,12 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 						} else {
 							return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables.png"); //$NON-NLS-1$;
 						}
+					}else if(StringUtils.contains(table.getTable_type(), "VERSION")){
+						return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/table_version.png"); //$NON-NLS-1$
+					}else if(StringUtils.contains(table.getTable_type(), "BASE")){
+						return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/base_table_set.png"); //$NON-NLS-1$
+					}else if(StringUtils.contains(table.getTable_type(), "EXTERNAL")){
+						return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/external_table.png"); //$NON-NLS-1$
 					}else if(StringUtils.contains(table.getTable_type(), "PARTITION")){
 						return ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/objectExplorer/tables_partition.png"); //$NON-NLS-1$
 					}else if(StringUtils.equalsIgnoreCase(table.getTable_type(), "IOT")){
@@ -310,7 +316,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 			@Override
 			public String getText(Object element) {
 				TableDAO table = (TableDAO) element;
-				if(getUserDB().getDBGroup() == DBGroupDefine.MSSQL_GROUP) return table.getFullName();
+
+        if(getUserDB().getDBGroup() == DBGroupDefine.MSSQL_GROUP) return table.getFullName();
 				return table.getName();
 			}
 		});

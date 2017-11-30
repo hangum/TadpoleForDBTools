@@ -34,31 +34,26 @@
  -->
 <select id="getSchemas" resultClass="java.util.HashMap">
 SELECT
-	3 as nstype,
-	schema,
-	schemaid as oid,
-	owner as namespaceowner,
-	'' as nspacl,
-	'' as description,
-	'' as cancreate
+	3 as "nstype",
+	schema as "schema",
+	schemaid as "oid",
+	owner as "namespaceowner",
+	'' as "nspacl",
+	'' as "description",
+	'' as "cancreate"
 FROM
 	_v_schema
 ORDER BY
 	schema
 </select>
 
-<!-- 
-	table 이름
-	테이블 코멘트 부분 처리를 못해서... 
-	AND relname ~ '^(emp)$' 부분에 AND relname ~ '^(a.table_name)$' 가 들어가야 합니다. 
- -->
  <select id="tableListOnlyName" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
 SELECT
 	table_schema||'.' || table_name as "name"
 FROM
 	tables
 WHERE
-	table_type IN ('TABLE', 'EXTERNAL TABLE')
+	table_type IN ('TABLE', 'EXTERNAL TABLE', 'BASE TABLE SET',  'TABLE VERSION', 'MANAGEMENT TABLE',  'SYSTEM TABLE' )
 	AND table_schema = #schema_name#
 ORDER BY
 	table_name
@@ -67,12 +62,13 @@ ORDER BY
 SELECT
 	schema as "schema_name" 
 	,objname as "realname" 
-	,objname as "name" , 
-	description as "comment"
+	,objname as "name"  
+	,description as "comment"
+	,objtype as "table_type"
 FROM
 	_v_object_data
-WHERE
-	objtype IN ('TABLE', 'EXTERNAL TABLE')
+WHERE 1=1
+	AND objtype IN ('TABLE', 'EXTERNAL TABLE', 'BASE TABLE SET',  'TABLE VERSION', 'MANAGEMENT TABLE',  'SYSTEM TABLE' )
 	AND schema = #schema_name#
 ORDER BY
 	objname
@@ -175,8 +171,8 @@ SELECT
 	v.table_name , v.table_schema as schema_name
 FROM
 	VIEWS v
-WHERE
-	table_schema NOT IN ('DEFINITION_SCHEMA', 'INFORMATION_SCHEMA')
+WHERE 1=1
+	/*and table_schema NOT IN ('DEFINITION_SCHEMA', 'INFORMATION_SCHEMA')*/
 	AND table_schema = #schema_name#
 ORDER BY
 	table_name
@@ -207,8 +203,8 @@ SELECT
 	, v.sysindexname as "index_name"
 FROM _V_SYS_INDEX v
 	inner join _V_TABLE t on v.tablename = t.tablename
-WHERE 
-	    t.schema not in ('DEFINITION_SCHEMA', 'INFORMATION_SCHEMA')
+WHERE 1=1
+	/* and t.schema not in ('DEFINITION_SCHEMA', 'INFORMATION_SCHEMA') */
     and lower(t.tablename) = lower(#table_name#) 
 </select>
 <!-- 
@@ -265,7 +261,8 @@ select
 	, '' as definer
 	, (case when numargs > 0 then arguments else 'none' end) || ', ' || returns as comment
 from _v_procedure p
-where p.schema not in ('DEFINITION_SCHEMA', 'INFORMATION_SCHEMA')
+where 1=1
+  /*and p.schema not in ('DEFINITION_SCHEMA', 'INFORMATION_SCHEMA')*/
   and p.schema = #schema_name#
 </select>
 
@@ -295,7 +292,8 @@ select
 	, '' as definer
 	, (case when numargs > 0 then arguments else 'none' end) || ', ' || returns as comment
 from _v_procedure p
-where p.schema not in ('DEFINITION_SCHEMA', 'INFORMATION_SCHEMA')
+where 1=1
+  /*and p.schema not in ('DEFINITION_SCHEMA', 'INFORMATION_SCHEMA')*/
   and p.schema = #schema_name#
 </select>
 
@@ -352,10 +350,10 @@ from _V_TRIGGER t
  -->
 <select id="triggerListInTable" resultClass="java.util.HashMap" parameterClass="java.lang.String">
 select 
-	   '' as table_name
-	 , t.trigger as trigger_name
-    ,'' as Disable_Statement
-    ,'' as Enable_Statement
+	  '' as "table_name"
+	, t.trigger as "trigger_name"
+    , '' as "disable_statement"
+    , '' as "enable_statement"
 from _V_TRIGGER t
 
 </select>
@@ -365,8 +363,8 @@ from _V_TRIGGER t
  -->
 <select id="primarykeyListInTable" resultClass="java.util.HashMap" parameterClass="java.lang.String">
 SELECT
-	 c.column_name 
-	, n.attnum as column_order
+	 c.column_name as "column_name" 
+	, n.attnum as "column_order"
 FROM _v_sys_columns c 
 	INNER JOIN _v_relation_column r	ON r.name =c.table_name	AND c.column_name =r.attname
 	inner JOIN (
@@ -394,10 +392,10 @@ ORDER BY n.attnum
 <select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
 select 
 	  t.tablename as "name"
-	, t.relhasindex as has_index	 
-	, '' as is_shared
-	, t.RELHASPKEY as has_pk
-	, '' as has_subclass
+	, t.relhasindex as "has_index"	 
+	, '' as "is_shared"
+	, t.RELHASPKEY as "has_pk"
+	, '' as "has_subclass"
 	, t.DESCRIPTION as "comment"
 from _v_table t
 where t.objtype in ('TABLE', 'EXTERNAL TABLE')
@@ -429,7 +427,7 @@ FROM _v_table t
 			INNER JOIN _v_table_constraint t ON t.constraintname = v.objname
 			INNER JOIN _t_const_relattr x ON v.objid = x.conid ) n ON n.tableid = c.objid AND n.attnum = r.attnum
 WHERE 1=1
- and t.objtype in ('EXTERNAL TABLE', 'TABLE')
+ and t.objtype in ('TABLE', 'EXTERNAL TABLE', 'BASE TABLE SET',  'TABLE VERSION', 'MANAGEMENT TABLE',  'SYSTEM TABLE')
 ORDER BY t.objid, c.ordinal_position
 </select>
 
@@ -438,23 +436,23 @@ ORDER BY t.objid, c.ordinal_position
  -->
 <select id="getTableScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
 SELECT
-	  t.OWNER as owner
-	, t.tablename as table_name
-	, t.description as table_comment
-	, c.column_name as column_name 
-	, r.description as column_comment
-	, c.type_name as data_type
-	, '' as data_type_mod
-	, '' as data_type_owner
-	, c.ordinal_position as attnum
-	, '' as max_attnum
-	, '' as char_used
-	, c.decimal_digits as DATA_PRECISION
-	, c.column_size as DATA_SCALE
-	, c.column_size as DATA_LENGTH
-	, r.coldefault as data_default 
-	, n.constype as key
-	, n.conseq as conseq
+	  t.OWNER as "owner"
+	, t.tablename as "table_name"
+	, t.description as "table_comment"
+	, c.column_name as "column_name" 
+	, r.description as "column_comment"
+	, c.type_name as "data_type"
+	, '' as "data_type_mod"
+	, '' as "data_type_owner"
+	, c.ordinal_position as "attnum"
+	, '' as "max_attnum"
+	, '' as "char_used"
+	, cast(c.decimal_digits as integer) as "data_precision"
+	, cast(c.column_size as integer) as "data_scale"
+	, cast(c.column_size as integer) as "data_length"
+	, r.coldefault as "data_default" 
+	, n.constype as "key"
+	, n.conseq as "conseq"
 FROM _v_table t
 	inner join _v_sys_columns c on t.objid = c.objid
 	INNER JOIN _v_relation_column r	ON r.name =c.table_name	AND c.column_name =r.attname
@@ -466,7 +464,7 @@ FROM _v_table t
 			INNER JOIN _v_table_constraint t ON t.constraintname = v.objname
 			INNER JOIN _t_const_relattr x ON v.objid = x.conid ) n ON n.tableid = c.objid AND n.attnum = r.attnum
 WHERE 1=1
- and t.objtype in ('EXTERNAL TABLE', 'TABLE')
+ and t.objtype in ('TABLE', 'EXTERNAL TABLE', 'BASE TABLE SET',  'TABLE VERSION', 'MANAGEMENT TABLE',  'SYSTEM TABLE')
  and t.tablename = #table_name#
 ORDER BY t.objid, c.ordinal_position
 </select>
@@ -476,9 +474,9 @@ ORDER BY t.objid, c.ordinal_position
  -->
 <select id="getTableScript.pk" resultClass="java.util.HashMap" parameterClass="java.lang.String">
 SELECT
-	  n.constraint_name
-	, c.column_name  
-	, n.conseq
+	  n.constraint_name as "constraint_name"
+	, c.column_name as "column_name" 
+	, n.conseq as "conseq"
 FROM _v_sys_columns c 
 	INNER JOIN _v_relation_column r	ON r.name =c.table_name	AND c.column_name =r.attname
 	INNER JOIN (
@@ -499,8 +497,8 @@ ORDER BY n.conseq
  
 <select id="getTableScript.comments" resultClass="java.lang.String" parameterClass="java.util.HashMap">
 select 
-	'comment on table ' || r.tablename || ' is ''' || r.description || '''' as comment_text
-	, 0 as orderseq
+	'comment on table ' || r.tablename || ' is ''' || r.description || '''' as "comment_text"
+	, 0 as "orderseq"
 from _v_table r
 where r.schema = #schema#
   and r.tablename = #object_name#
@@ -510,7 +508,7 @@ select
 	, r.attnum
 from _v_relation_column r
 where r.schema = #schema#
- and r.type in ('TABLE', 'EXTERNAL TABLE') 
+ and r.type in ('TABLE', 'EXTERNAL TABLE', 'BASE TABLE SET',  'TABLE VERSION', 'MANAGEMENT TABLE',  'SYSTEM TABLE') 
  and r.name = #object_name#
 order by orderseq
 </select>
@@ -520,7 +518,7 @@ order by orderseq
  -->
 <select id="getTableScript.trigger" resultClass="java.lang.String" parameterClass="java.lang.String">
 select 
-    'Not support trigger.' as source_text
+    '/*Not support trigger.*/' as source_text
 from _v_dual
 </select>
 
@@ -532,11 +530,11 @@ from _v_dual
  
 <select id="getFunctionScript" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
  SELECT   
- 	'Not support generate ddl.' as procedure_name
- 	, '' as parameter_types
- 	, '' as return_types
- 	, '' as source_text
- 	, '' as arg_names
+ 	'Not support generate ddl.' as "procedure_name"
+ 	, '' as "parameter_types"
+ 	, '' as "return_types"
+ 	, '' as "source_text"
+ 	, '' as "arg_names"
  FROM _v_dual
 </select>
 
@@ -546,11 +544,11 @@ from _v_dual
  
 <select id="getProcedureScript" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
 select
-	p.procedure as procedure_name
-	, p.arguments as parameter_types
-	, p.result as return_types
-	, p.proceduresource as source_text
-	, '' as arg_names  
+	p.procedure as "procedure_name"
+	, p.arguments as "parameter_types"
+	, p.result as "return_types"
+	, p.proceduresource as "source_text"
+	, '' as "arg_names"  
 from _v_procedure p
  WHERE schema = #schema#   
  and procedure = #object_name#
@@ -561,18 +559,18 @@ from _v_procedure p
  -->        
 <select id="getProcedureInParamter"  resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.util.HashMap">
 select
-	p.procedure as name
-	, p.arguments as arguments
-	, p.arguments as rdbtype
-	, p.result as return_type
-	, p.proceduresource as source
+	p.procedure as "name"
+	, p.arguments as "arguments"
+	, p.arguments as "rdbtype"
+	, p.result as "return_type"
+	, p.proceduresource as "source"
 from _v_procedure p
  WHERE schema = #schema#   
  and procedure = #object_name#
 </select>
 
 <select id="getProcedureScript.type" resultClass="java.lang.String" parameterClass="java.lang.Object">
-select typname as type_name
+select typname as "type_name"
 from pg_catalog.pg_type
 where oid = #oid#;
 </select>
@@ -583,7 +581,7 @@ where oid = #oid#;
  --> 
 <select id="getTriggerScript" resultClass="java.lang.String" parameterClass="java.lang.String">
 select
- 'Not support trigger.' as source_text
+ '/*Not support trigger.*/' as "source_text"
 from _v_dual
 </select>
 
@@ -592,7 +590,7 @@ from _v_dual
  -->
 <select id="getIndexScript" resultClass="java.lang.String" parameterClass="java.lang.String">
 select
- 'Not support index.' as indexdef
+ '/*Not support index.*/' as "indexdef"
 from _v_dual
 </select>
 
@@ -604,7 +602,7 @@ select
 	'CREATE OR REPLACE VIEW ' || v.database||'.'||v.schema||'.'||v.viewname || ' AS ' AS SOURCE_TEXT
 from _v_view v
 where 1=1 
-  and v.schema not in ('DEFINITION_SCHEMA', 'INFORMATION_SCHEMA')
+  /*and v.schema not in ('DEFINITION_SCHEMA', 'INFORMATION_SCHEMA')*/
   and v.viewname = #view_name#
 </select> 
  
@@ -613,7 +611,7 @@ select
 	v.definition as definition 
 from _v_view v
 where 1=1 
-  and v.schema not in ('DEFINITION_SCHEMA', 'INFORMATION_SCHEMA')
+  /*and v.schema not in ('DEFINITION_SCHEMA', 'INFORMATION_SCHEMA')*/
   and v.viewname = #view_name#
 </select>
 
