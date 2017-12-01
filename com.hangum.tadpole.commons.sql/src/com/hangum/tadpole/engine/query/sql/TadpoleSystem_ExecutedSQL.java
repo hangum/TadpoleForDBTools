@@ -24,7 +24,6 @@ import org.apache.log4j.Logger;
 
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
-import com.hangum.tadpole.commons.libs.core.dao.LicenseDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
@@ -84,8 +83,7 @@ public class TadpoleSystem_ExecutedSQL {
 	 * @throws SQLException
 	 */
 	public static List<RequestResultDAO> getExecuteQueryHistoryDetail(String strEmail, String strType, String dbSeq, long startTime, long endTime, int duringExecute, String strSearch, int _indexStart, int _indexEnd) throws TadpoleSQLManagerException, SQLException {
-		LicenseDAO licenseDAO = LicenseValidator.getLicense();
-		if(!licenseDAO.isValidate()) {
+		if(!LicenseValidator.getLicense().isValidate()) {
 			return new ArrayList<RequestResultDAO>();
 		}
 		

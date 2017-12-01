@@ -43,7 +43,6 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.dialogs.message.TadpoleImageViewDialog;
-import com.hangum.tadpole.commons.libs.core.dao.LicenseDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
@@ -605,8 +604,7 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 						if(logger.isDebugEnabled()) logger.debug("==> old count is " + oldTadpoleResultSet.getData().size() );
 						/** 쿼리 결과를 저장합니다 */
 						if(PublicTadpoleDefine.YES_NO.YES.name().equals(rsDAO.getUserDB().getIs_result_save())) {
-							LicenseDAO licenseDAO = LicenseValidator.getLicense();
-							if(licenseDAO.isValidate()) {
+							if(LicenseValidator.getLicense().isValidate()) {
 								TadpoleSystem_ExecutedSQL.insertResourceResultData(longHistorySeq, new Timestamp(System.currentTimeMillis()), CSVExpoter.makeContent(false, rsDAO, ',', "UTF-8"));
 							}
 						} 
