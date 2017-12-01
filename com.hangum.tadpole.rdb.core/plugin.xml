@@ -862,7 +862,7 @@
          <visibility>
             <objectState
                   name="db_type"
-                  value="DynamoDB">
+                  value="DynamoDB,Netezza">
             </objectState>
          </visibility>
       </objectContribution>     
