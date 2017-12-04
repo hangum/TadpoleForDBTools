@@ -12,7 +12,6 @@ package com.hangum.tadpole.rdb.core.actions.object.rdb.object;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.rap.rwt.application.Application;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;

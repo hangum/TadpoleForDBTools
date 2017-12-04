@@ -13,6 +13,7 @@ package com.hangum.tadpole.rdb.core.util;
 import org.apache.commons.lang.StringUtils;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.template.AltibaseDMLTemplate;
@@ -20,6 +21,7 @@ import com.hangum.tadpole.engine.sql.template.CubridDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.HIVEDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.MSSQLDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.MySQLDMLTemplate;
+import com.hangum.tadpole.engine.sql.template.NetezzaDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.OracleDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.PostgreDMLTemplate;
 import com.hangum.tadpole.engine.sql.template.SQLiteDMLTemplate;
@@ -111,18 +113,34 @@ public class QueryTemplateUtils {
 				defaultStr =  CubridDMLTemplate.TMP_CREATE_TRIGGER_STMT;
 			}
 		} else if(DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()) {
-			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
-				defaultStr =  PostgreDMLTemplate.TMP_CREATE_TABLE_STMT;
-			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
-				defaultStr =  PostgreDMLTemplate.TMP_CREATE_VIEW_STMT;
-			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.INDEXES) {
-				defaultStr =  PostgreDMLTemplate.TMP_CREATE_INDEX_STMT;
-			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
-				defaultStr =  PostgreDMLTemplate.TMP_CREATE_PROCEDURE_STMT;
-			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {
-				defaultStr =  PostgreDMLTemplate.TMP_CREATE_FUNCTION_STMT;
-			} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
-				defaultStr =  PostgreDMLTemplate.TMP_CREATE_TRIGGER_STMT;
+			if(DBDefine.NETEZZA_DEFAULT == userDB.getDBDefine()) {
+				if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
+					defaultStr =  NetezzaDMLTemplate.TMP_CREATE_TABLE_STMT;
+				} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
+					defaultStr =  NetezzaDMLTemplate.TMP_CREATE_VIEW_STMT;
+				} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.INDEXES) {
+					defaultStr =  NetezzaDMLTemplate.TMP_CREATE_INDEX_STMT;
+				} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
+					defaultStr =  NetezzaDMLTemplate.TMP_CREATE_PROCEDURE_STMT;
+				} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {
+					defaultStr =  NetezzaDMLTemplate.TMP_CREATE_FUNCTION_STMT;
+				} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
+					defaultStr =  NetezzaDMLTemplate.TMP_CREATE_TRIGGER_STMT;
+				}
+			} else {
+				if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {
+					defaultStr =  PostgreDMLTemplate.TMP_CREATE_TABLE_STMT;
+				} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.VIEWS) {
+					defaultStr =  PostgreDMLTemplate.TMP_CREATE_VIEW_STMT;
+				} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.INDEXES) {
+					defaultStr =  PostgreDMLTemplate.TMP_CREATE_INDEX_STMT;
+				} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.PROCEDURES) {
+					defaultStr =  PostgreDMLTemplate.TMP_CREATE_PROCEDURE_STMT;
+				} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {
+					defaultStr =  PostgreDMLTemplate.TMP_CREATE_FUNCTION_STMT;
+				} else if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TRIGGERS) {
+					defaultStr =  PostgreDMLTemplate.TMP_CREATE_TRIGGER_STMT;
+				}
 			}
 		} else if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup()) {
 			if(initAction == PublicTadpoleDefine.OBJECT_TYPE.TABLES) {

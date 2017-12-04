@@ -52,7 +52,6 @@ import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
-import com.hangum.tadpole.commons.libs.core.dao.LicenseDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_STATEMENT_TYPE;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
@@ -203,7 +202,7 @@ public class ResultSetComposite extends Composite {
 			}
 		});
 		btnAddVertical.setToolTipText(Messages.get().ChangeRotation);
-		btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/layouts_split_horizontal.png"));
+		btnAddVertical.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/layouts_split_vertical.png"));
 		
 		Label lblTemp = new Label(compHead, SWT.NONE);
 		lblTemp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -214,7 +213,7 @@ public class ResultSetComposite extends Composite {
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
 		
-		sashFormResult = new SashForm(scrolledComposite, SWT.VERTICAL);
+		sashFormResult = new SashForm(scrolledComposite, SWT.HORIZONTAL);
 		sashFormResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		scrolledComposite.setContent(sashFormResult);
@@ -1152,8 +1151,7 @@ public class ResultSetComposite extends Composite {
 	 * @param reqQuery
 	 */
 	private void saveSchemaHistory(final RequestQuery reqQuery) {
-		LicenseDAO licenseDAO = LicenseValidator.getLicense();
-		if(licenseDAO.isValidate()) {
+		if(LicenseValidator.getLicense().isValidate()) {
 			if(reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.CREATE ||
 					reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.DROP ||
 					reqQuery.getQueryStatus() == PublicTadpoleDefine.QUERY_DDL_STATUS.ALTER

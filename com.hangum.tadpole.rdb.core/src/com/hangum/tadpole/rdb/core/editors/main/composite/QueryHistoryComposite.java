@@ -34,7 +34,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
-import com.hangum.tadpole.commons.libs.core.dao.LicenseDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
@@ -193,8 +192,7 @@ public class QueryHistoryComposite extends Composite {
 	public long saveExecutedSQLData(RequestResultDAO reqResultDAO, QueryExecuteResultDTO rsDAO) {
 		long longHistorySeq = -1;
 		
-		LicenseDAO licenseDAO = LicenseValidator.getLicense();
-		if(licenseDAO.isValidate()) {
+		if(LicenseValidator.getLicense().isValidate()) {
 			try {
 				
 				String strExecuteResultData = "";
