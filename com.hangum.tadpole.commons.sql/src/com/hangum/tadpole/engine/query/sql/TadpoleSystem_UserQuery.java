@@ -22,12 +22,12 @@ import java.util.Map;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.swt.widgets.Combo;
 
 import com.hangum.tadpole.commons.exception.TadpoleAuthorityException;
 import com.hangum.tadpole.commons.exception.TadpoleRuntimeException;
 import com.hangum.tadpole.commons.exception.TadpoleSQLManagerException;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
 import com.hangum.tadpole.commons.libs.core.utils.SHA256Utils;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.DateUtil;
@@ -372,17 +372,20 @@ public class TadpoleSystem_UserQuery {
 	 * @param strReason
 	 */
 	public static void saveLoginHistory(int userSeq, String strIP, String strYesNo, String strReason) {
-		try {
-			UserLoginHistoryDAO historyDao = new UserLoginHistoryDAO();
-			historyDao.setLogin_ip(strIP);
-			historyDao.setUser_seq(userSeq);
-			historyDao.setSucces_yn(strYesNo);
-			historyDao.setFail_reason(strReason);
-			
-			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
-			sqlClient.insert("saveLoginHistory", historyDao);
-		} catch(Exception e) {
-			logger.error("save login history", e);
+		
+		if(LicenseValidator.getLicense().isValidate()) {
+			try {
+				UserLoginHistoryDAO historyDao = new UserLoginHistoryDAO();
+				historyDao.setLogin_ip(strIP);
+				historyDao.setUser_seq(userSeq);
+				historyDao.setSucces_yn(strYesNo);
+				historyDao.setFail_reason(strReason);
+				
+				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(TadpoleSystemInitializer.getUserDB());
+				sqlClient.insert("saveLoginHistory", historyDao);
+			} catch(Exception e) {
+				logger.error("save login history", e);
+			}
 		}
 	}
 	

@@ -19,8 +19,8 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
-import com.hangum.tadpole.manager.core.editor.restfulapi.RESTFulAPIManagerEditor;
 import com.hangum.tadpole.manager.core.editor.restfulapi.RESTFulAPIManagerEditorInput;
+import com.hangum.tadpole.manager.core.editor.restfulapi.manager.APIHubManagerEditor;
 //import com.hangum.tadpole.notes.core.views.list.NoteListViewPart;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.ExplorerViewer;
@@ -63,10 +63,9 @@ public class Perspective implements IPerspectiveFactory {
 		RESTFulAPIManagerEditorInput input = new RESTFulAPIManagerEditorInput();
 		
 		try {
-			page.openEditor(input, RESTFulAPIManagerEditor.ID, false);
+			page.openEditor(input, APIHubManagerEditor.ID, false);
 		} catch(Exception e) {
 			logger.error(e);
-			
 		}
 	}
 

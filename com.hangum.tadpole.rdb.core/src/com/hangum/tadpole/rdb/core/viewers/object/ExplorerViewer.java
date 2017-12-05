@@ -622,7 +622,7 @@ public class ExplorerViewer extends ViewPart {
 				DBGroupDefine.CUBRID_GROUP == userDB.getDBGroup() ||
 				DBGroupDefine.POSTGRE_GROUP == userDB.getDBGroup()
 		) {
-			if(DBDefine.AMAZON_REDSHIFT_DEFAULT == userDB.getDBDefine()) {
+			if(DBDefine.AMAZON_REDSHIFT_DEFAULT == userDB.getDBDefine() || DBDefine.NETEZZA_DEFAULT == userDB.getDBDefine()) {
 				createTable();
 				createView();
 				
@@ -633,6 +633,7 @@ public class ExplorerViewer extends ViewPart {
 						tableComposite.getTriggerComposite().getTableViewer(),
 						viewComposite.getTableViewer()
 					};
+				
 			} else {
 				createTable();
 				createView();
