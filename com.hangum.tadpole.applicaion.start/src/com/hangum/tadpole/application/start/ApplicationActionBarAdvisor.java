@@ -38,6 +38,7 @@ import com.hangum.tadpole.commons.admin.core.actions.AdminSystemSettingAction;
 import com.hangum.tadpole.commons.admin.core.actions.AdminUserAction;
 import com.hangum.tadpole.commons.admin.core.actions.JDBCDriverManagerAction;
 import com.hangum.tadpole.commons.admin.core.actions.SendMessageAction;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.manager.core.actions.global.AdminTransactionConnectionManagerAction;
@@ -256,14 +257,18 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 			fileMenu.add(exitAction);
 //		}
 		
-		// Manage
+		// Manage menu
 		manageMenu.add(restFulAPIAction);
-		manageMenu.add(transactionConnectionAction);
-		manageMenu.add(resourceManageAction);
-		manageMenu.add(dbMgmtAction);
 		
-		manageMenu.add(executedSQLAction);
-		manageMenu.add(schemaHistoryAction);
+		// 일반 유저는 모두 표시해 준다.
+		if(!PublicTadpoleDefine.USER_ROLE_TYPE.API_USER.name().equals(SessionManager.getRepresentRole())) {
+			manageMenu.add(transactionConnectionAction);
+			manageMenu.add(resourceManageAction);
+			manageMenu.add(dbMgmtAction);
+			
+			manageMenu.add(executedSQLAction);
+			manageMenu.add(schemaHistoryAction);
+		}
 //		manageMenu.add(openCompareAction);
 		
 		if(isAdmin) {

@@ -67,6 +67,8 @@ public class Perspective implements IPerspectiveFactory {
 		} catch(Exception e) {
 			logger.error(e);
 		}
+		
+		
 	}
 
 	/**

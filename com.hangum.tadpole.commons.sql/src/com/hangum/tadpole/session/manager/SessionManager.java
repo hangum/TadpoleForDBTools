@@ -309,7 +309,7 @@ public class SessionManager {
 	}
 	
 	public static boolean isSystemAdmin() {
-		return PublicTadpoleDefine.DB_USER_ROLE_TYPE.SYSTEM_ADMIN.name().equals(getRepresentRole()) ? true : false;
+		return PublicTadpoleDefine.USER_ROLE_TYPE.SYSTEM_ADMIN.name().equals(getRepresentRole()) ? true : false;
 	}
 
 	/**
