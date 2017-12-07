@@ -10,11 +10,14 @@
  ******************************************************************************/
 package com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.util.NumberFormatUtils;
 import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.resultset.TadpoleResultSet;
@@ -33,9 +36,9 @@ import com.hangum.tadpole.rdb.core.editors.main.composite.tail.ResultTailComposi
 public abstract class AbstractResultDetailComposite extends Composite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(AbstractResultDetailComposite.class);
-	public enum RESULT_COMP_TYPE {Table, Text, JSON};
 	
 	protected RequestQuery reqQuery;
+	/** table 타입으로 데이터를 출력할때 */
 	protected QueryExecuteResultDTO rsDAO;
 	
 	protected Event eventTableSelect;
@@ -68,10 +71,10 @@ public abstract class AbstractResultDetailComposite extends Composite {
 	public abstract void initUI();
 	
 	/** implements result type */
-	public abstract RESULT_COMP_TYPE getResultType();
+	public abstract PublicTadpoleDefine.RESULT_COMP_TYPE getResultType();
 	
 	/**
-	 * print ui
+	 * print ui (Table)
 	 * @param rsDAO 
 	 * @param reqQuery 
 	 * @param isMakePing 
@@ -84,6 +87,15 @@ public abstract class AbstractResultDetailComposite extends Composite {
 		compositeTail.setBtnPint(isMakePing);
 		
 		this.longHistorySeq = longHistorySeq;
+	}
+	
+	/**
+	 * print ui(Text)
+	 * @param reqQuery
+	 * @param listRSDao
+	 */
+	public void printUI(RequestQuery reqQuery, List<QueryExecuteResultDTO> listRSDao) {
+		this.reqQuery = reqQuery;
 	}
 	
 	public void endQuery() {

@@ -40,6 +40,7 @@ import com.swtdesigner.SWTResourceManager;
 public abstract class AbstractTailComposite extends Composite {
 	/**  Logger for this class. */
 	private static final Logger logger = Logger.getLogger(AbstractTailComposite.class);
+	private boolean isViewDownloadBtn;
 	private Composite compositeParent;
 	protected Composite compositeDownloadAMsg;
 	
@@ -47,7 +48,14 @@ public abstract class AbstractTailComposite extends Composite {
 	protected Button btnPin;
 	protected Button btnViewQuery;
 	
-	public AbstractTailComposite(UserDBDAO userDB, Composite compositeBtn, int style) {
+	/**
+	 * 
+	 * @param userDB UserDBDAO
+	 * @param compositeBtn 버튼 그룹 콤포짖 
+	 * @param style SWT.Widget#Style
+	 * @param isViewDownloadBtn download 버튼 보여주는 유무 
+	 */
+	public AbstractTailComposite(UserDBDAO userDB, Composite compositeBtn, int style, boolean isViewDownloadBtn) {
 		super(compositeBtn, style);
 		setLayout(new GridLayout(1, false));
 		
@@ -93,21 +101,23 @@ public abstract class AbstractTailComposite extends Composite {
 		});
 		btnViewQuery.setText(Messages.get().ViewQuery);
 		
-		Button btnSQLResultDownload = new Button(compositeDownloadAMsg, SWT.NONE);
-		btnSQLResultDownload.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, false, false, 1, 1));
-		btnSQLResultDownload.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if(getRSDao() == null || getRSDao().getDataList() == null) return;
+		if(isViewDownloadBtn) {
+			Button btnSQLResultDownload = new Button(compositeDownloadAMsg, SWT.NONE);
+			btnSQLResultDownload.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, false, false, 1, 1));
+			btnSQLResultDownload.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if(getRSDao() == null || getRSDao().getDataList() == null) return;
+					
+					// result set download
+					ResultSetDownloadDialog dialog = new ResultSetDownloadDialog(getShell(), getRequestQuery(), findTableName(), getRSDao());
+					dialog.open();
+				}
 				
-				// result set download
-				ResultSetDownloadDialog dialog = new ResultSetDownloadDialog(getShell(), getRequestQuery(), findTableName(), getRSDao());
-				dialog.open();
-			}
-			
-		});
-		btnSQLResultDownload.setText(Messages.get().Download);
-		btnSQLResultDownload.setEnabled("YES".equals(userDB.getIs_resource_download()));
+			});
+			btnSQLResultDownload.setText(Messages.get().Download);
+			btnSQLResultDownload.setEnabled("YES".equals(userDB.getIs_resource_download()));
+		}
 		
 		Label label = new Label(compositeDownloadAMsg, SWT.NONE);
 		label.setText("");

@@ -53,6 +53,7 @@ import org.eclipse.ui.PlatformUI;
 import com.hangum.tadpole.ace.editor.core.texteditor.function.EditorFunctionService;
 import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.RESULT_COMP_TYPE;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_STATEMENT_TYPE;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.SQL_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
@@ -83,6 +84,7 @@ import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.composite.plandetail.mysql.MySQLExtensionViewDialog;
 import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.AbstractResultDetailComposite;
 import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.ResultTableComposite;
+import com.hangum.tadpole.rdb.core.editors.main.composite.resultdetail.ResultTextComposite;
 import com.hangum.tadpole.rdb.core.editors.main.execute.TransactionManger;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteBatchSQL;
 import com.hangum.tadpole.rdb.core.editors.main.execute.sub.ExecuteOtherSQL;
@@ -240,34 +242,44 @@ public class ResultSetComposite extends Composite {
 			}
 		}
 		
-		// 화면 결과를 출력한다.
-		try {
-			int index = 0;
-			for (QueryExecuteResultDTO rsDAO : listRSDao) {
-				long longHistorySeq = listLongHistorySeq.get(index);
-				index++;
-				boolean isMakePing = listRSDao.size()==1?false:true;
-				RequestQuery reqNewQuery = (RequestQuery)reqQuery.clone();
-				reqNewQuery.setSql(rsDAO.getReqQuery());
-				
-				if(compositeResult != null && !compositeResult.getCompositeTail().getBtnPinSelection()) {
-					compositeResult.printUI(reqNewQuery, rsDAO, isMakePing, longHistorySeq);
-				} else {
-					compositeResult = new ResultTableComposite(sashFormResult, SWT.BORDER, this);
-					compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
-					compositeResult.printUI(reqNewQuery, rsDAO, isMakePing, longHistorySeq);
-				}
-				
-//				/** 쿼리 결과를 저장합니다 */
-//				if(PublicTadpoleDefine.YES_NO.YES.name().equals(rsDAO.getUserDB().getIs_result_save())) {
-//					QueryResultSaved.saveQueryResult(""+longHistorySeq, rsDAO);
-//				}
-			}
-			
-			resultSashLayout();
-		} catch(CloneNotSupportedException e) {
-			logger.error("show execute result", e);
+		if(compositeResult != null && !compositeResult.getCompositeTail().getBtnPinSelection()) {
+			compositeResult.dispose();
 		}
+		
+		if(RESULT_COMP_TYPE.Text == rdbResultComposite.getMainEditor().getResultViewType()) {
+			if(compositeResult != null && !compositeResult.getCompositeTail().getBtnPinSelection()) {
+				compositeResult.printUI(reqQuery, listRSDao);				
+			} else {
+				compositeResult = new ResultTextComposite(sashFormResult, SWT.BORDER, this);
+				compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
+				compositeResult.printUI(reqQuery, listRSDao);
+			}
+		} else {
+			// 화면 결과를 출력한다.
+			try {
+				int index = 0;
+				for (QueryExecuteResultDTO rsDAO : listRSDao) {
+					long longHistorySeq = listLongHistorySeq.get(index);
+					index++;
+					boolean isMakePing = listRSDao.size()==1?false:true;
+					RequestQuery reqNewQuery = (RequestQuery)reqQuery.clone();
+					reqNewQuery.setSql(rsDAO.getReqQuery());
+					
+					if(compositeResult != null && !compositeResult.getCompositeTail().getBtnPinSelection()) {
+						compositeResult.printUI(reqNewQuery, rsDAO, isMakePing, longHistorySeq);
+					} else {
+						compositeResult = new ResultTableComposite(sashFormResult, SWT.BORDER, this);
+						compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
+						compositeResult.printUI(reqNewQuery, rsDAO, isMakePing, longHistorySeq);
+					}
+					
+				}
+			} catch(CloneNotSupportedException e) {
+				logger.error("show execute result", e);
+			}
+		}
+		
+		resultSashLayout();
 	}
 	
 	/**

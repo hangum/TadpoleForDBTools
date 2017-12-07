@@ -332,9 +332,9 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 			}
 		});
 		btnColumnDetail.setText(Messages.get().ResultSetComposite_btnColumnDetail_text);
-		btnColumnDetail.setEnabled("YES".equals(userDB.getIs_resource_download()));
+		btnColumnDetail.setEnabled(PublicTadpoleDefine.YES_NO.YES.name().equals(userDB.getIs_resource_download()));
 		
-		compositeTail = new ResultTailComposite(rdbResultComposite.getUserDB(), this, compositeBtn, SWT.NONE);
+		compositeTail = new ResultTailComposite(rdbResultComposite.getUserDB(), this, compositeBtn, SWT.NONE, true);
 		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 2));
 		GridLayout gl_compositeResult = new GridLayout(1, false);
 		gl_compositeResult.verticalSpacing = 2;
@@ -705,8 +705,8 @@ public class ResultTableComposite extends AbstractResultDetailComposite {
 	}
 
 	@Override
-	public RESULT_COMP_TYPE getResultType() {
-		return RESULT_COMP_TYPE.Table;
+	public PublicTadpoleDefine.RESULT_COMP_TYPE getResultType() {
+		return PublicTadpoleDefine.RESULT_COMP_TYPE.Table;
 	}
 	
 }

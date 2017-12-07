@@ -723,6 +723,8 @@ public class Messages {
 	public String ConfirmCommit;
 
 	public String ConfirmRollback;
+
+	public String TextResultView;
 	
 	
 	

@@ -55,6 +55,7 @@ import com.hangum.tadpole.commons.google.analytics.AnalyticCaller;
 import com.hangum.tadpole.commons.libs.core.define.DefineExternalPlguin;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine.RESULT_COMP_TYPE;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.ApplicationArgumentUtils;
 import com.hangum.tadpole.commons.util.RequestInfoUtils;
@@ -120,7 +121,8 @@ public class MainEditor extends EditorExtension {
 	private String strLastContent = "";
 	
 	/** toolbar auto commit */
-	private ToolItem tiAutoCommit = null, tiAutoCommitCommit = null, tiAutoCommitRollback = null;
+	private ToolItem tiAutoCommit = null, tiAutoCommitCommit = null, tiAutoCommitRollback = null, tltmTextResultView = null;
+	private PublicTadpoleDefine.RESULT_COMP_TYPE resultViewType = RESULT_COMP_TYPE.Table;
 
 	/** result tab */
 	protected ResultMainComposite resultMainComposite;
@@ -417,6 +419,26 @@ public class MainEditor extends EditorExtension {
 		});
 		new ToolItem(toolBar, SWT.SEPARATOR);
 		
+		// 결과를 텍스트로 출력할 것인지 여부
+		tltmTextResultView = new ToolItem(toolBar, SWT.CHECK);
+//				tltmTextResultView.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/textNote.png")); //$NON-NLS-1$
+		tltmTextResultView.setText("Text");
+		tltmTextResultView.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(tltmTextResultView.getSelection()) {
+					resultViewType = RESULT_COMP_TYPE.Text;
+					tltmTextResultView.setSelection(true);
+				} else {
+					resultViewType = RESULT_COMP_TYPE.Table;
+					tltmTextResultView.setSelection(false);
+				}
+			}
+		});
+		tltmTextResultView.setToolTipText(Messages.get().TextResultView);
+		tltmTextResultView.setEnabled(PublicTadpoleDefine.YES_NO.YES.name().equals(getUserDB().getIs_resource_download()));
+		new ToolItem(toolBar, SWT.SEPARATOR);
+		
 		ToolItem tltmExecute = new ToolItem(toolBar, SWT.NONE);
 		tltmExecute.setToolTipText(String.format(Messages.get().MainEditor_tltmExecute_toolTipText_1, STR_SHORT_CUT_PREFIX));
 		tltmExecute.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/play.png")); //$NON-NLS-1$
@@ -572,7 +594,7 @@ public class MainEditor extends EditorExtension {
 		});
 		tltmAPI.setToolTipText(Messages.get().MainEditor_51);
 		new ToolItem(toolBar, SWT.SEPARATOR);
-			
+		
 		ToolItem tltmHelp = new ToolItem(toolBar, SWT.NONE);
 		tltmHelp.setImage(ResourceManager.getPluginImage(Activator.PLUGIN_ID, "resources/icons/editor/about.png")); //$NON-NLS-1$
 		tltmHelp.addSelectionListener(new SelectionAdapter() {
@@ -585,7 +607,6 @@ public class MainEditor extends EditorExtension {
 			}
 		});
 		tltmHelp.setToolTipText(String.format(Messages.get().MainEditor_27, STR_SHORT_CUT_PREFIX));
-		new ToolItem(toolBar, SWT.SEPARATOR);
 	    ////// tool bar end ///////////////////////////////////////////////////////////////////////////////////
 		
 	    ////// orion editor start /////////////////////////////////////////////////////////////////////////////
@@ -1191,6 +1212,14 @@ public class MainEditor extends EditorExtension {
 	
 	public SashForm getSashFormExtension() {
 		return sashFormExtension;
+	}
+	
+	/**
+	 * 화면에서 보여줄 타입
+	 * @return
+	 */
+	public PublicTadpoleDefine.RESULT_COMP_TYPE getResultViewType() {
+		return resultViewType;
 	}
 
 }
