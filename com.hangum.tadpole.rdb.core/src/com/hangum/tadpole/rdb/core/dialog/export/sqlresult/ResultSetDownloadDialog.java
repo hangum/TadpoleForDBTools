@@ -39,16 +39,12 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.hangum.tadpole.commons.dialogs.message.dao.RequestResultDAO;
-import com.hangum.tadpole.commons.libs.core.dao.LicenseDAO;
 import com.hangum.tadpole.commons.libs.core.define.PublicTadpoleDefine;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
-import com.hangum.tadpole.commons.libs.core.utils.LicenseValidator;
 import com.hangum.tadpole.commons.util.GlobalImageUtils;
 import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
-import com.hangum.tadpole.engine.query.sql.TadpoleSystem_ExecutedSQL;
 import com.hangum.tadpole.engine.sql.util.SQLConvertCharUtil;
 import com.hangum.tadpole.engine.sql.util.export.AllDataExporter;
 import com.hangum.tadpole.engine.sql.util.export.CSVExpoter;

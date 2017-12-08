@@ -40,8 +40,8 @@ public class ResultTailComposite extends AbstractTailComposite {
 	 * @param style
 	 * @param isMakePing 
 	 */
-	public ResultTailComposite(UserDBDAO userDB, Composite reqAbstractResult, Composite compositeBtn, int style) {
-		super(userDB, compositeBtn, style);
+	public ResultTailComposite(UserDBDAO userDB, Composite reqAbstractResult, Composite compositeBtn, int style, boolean isViewDownloadBtn) {
+		super(userDB, compositeBtn, style, isViewDownloadBtn);
 		setLayout(new GridLayout(1, false));
 		
 		abstractResultComp = (AbstractResultDetailComposite)reqAbstractResult;
