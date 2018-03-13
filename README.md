@@ -9,5 +9,6 @@
 
 올챙이를 사용하시는 여러분들이 저의 힘이 되어 주십사 부탁드립니다.
 
-관련하여 궁금하신 부분/이슈/버그 등이 있다면 조현종(hangum@tadpolehub.com) 으로 문의 주십시오.  
+엔터프라이즈 버전(Tadpole DB Hub, Tadpole API Hub, Tadpole History Hub, Tadpole Shared Hub) 판매는 여전히 하고 있습니다.
+관련하여 궁금하신 있다면 조현종(hangum@tadpolehub.com) 으로 문의 주십시오.  
 테드폴허브 조현종
