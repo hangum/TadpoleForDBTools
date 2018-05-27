@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tadpole Basic login
+Bundle-SymbolicName: com.hangum.tadpole.login.basic.core
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.hangum.tadpole.login.basic.core.Activator
+Bundle-Vendor: tadpolehub.com
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.rap.ui;bundle-version="3.1.0",
+ com.hangum.tadpole.login.core;bundle-version="1.0.0",
+ com.hangum.tadpole.commons.libs;bundle-version="2.0.0",
+ com.hangum.tadpole.commons.utils;bundle-version="2.0.0",
+ com.hangum.tadpole.engine;bundle-version="1.0.0",
+ com.tadpole.common.define.core;bundle-version="1.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Import-Package: javax.servlet;version="2.5.0",
+ javax.servlet.http;version="2.5.0"
+Export-Package: com.hangum.tadpole.login.core.dialog

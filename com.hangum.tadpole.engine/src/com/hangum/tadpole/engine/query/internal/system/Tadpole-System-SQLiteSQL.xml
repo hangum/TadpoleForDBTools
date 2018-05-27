@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright (c) 2013 hangum.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Lesser Public License v2.1
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      hangum - initial API and implementation
+      
+      sqlite timestamp
+      http://mybatis-user.963551.n3.nabble.com/TypeHandler-for-sqlite-Date-td4025669.html
+-->
+<!-- 
+	
+ -->
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Tadpole-System-SQLiteSQL">
+    
+	<select id="userDbResourceTree" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO" parameterClass="java.util.Map">
+		SELECT  b.name || '(' || b.email || ')' as usernames, 
+				 a.resource_seq as resource_seq
+			    ,a.resource_types as resource_types
+			    ,a.user_seq as user_seq
+			    ,a.db_seq as db_seq
+			    ,a.name as name
+			    ,a.shared_type as shared_type
+			    ,a.restapi_yesno as restapi_yesno
+			    ,a.restapi_uri as restapi_uri
+			    ,a.restapi_key as restapi_key
+			    ,a.description as description
+			    ,a.create_time as sqliteCreate_time
+			    ,a.delyn as delyn
+		FROM user_db_resource a,
+			tadpole_user b
+		WHERE
+			a.user_seq = b.seq AND
+			a.db_seq = #seq#  AND
+			a.resource_types in ('ERD', 'SQL', 'OBJECT') AND
+			a.filter_yn = 'NO' AND
+			a.delYn = 'NO'		
+		ORDER BY a.resource_types, a.name
+	</select>
+	
+	<select id="getResouceDataHistory" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBResourceDataDAO" parameterClass="java.lang.Long">
+		SELECT b.name || '(' || b.email || ')' as usernames, 
+				 a.seq as seq
+			    ,a.user_seq as user_seq
+			    ,a.group_seq as group_seq
+			    ,a.user_db_resource_seq as user_db_resource_seq
+			    ,a.datas as datas
+			    ,a.delyn as delyn
+			    ,a.create_time as sqliteCreate_time
+		FROM user_db_resource_data a,
+		    tadpole_user b
+		WHERE
+		        a.user_seq = b.seq
+			AND	user_db_resource_seq = #resource_seq#
+		order by a.seq
+	</select>
+
+	<!--
+		============================================================================================================================ 
+		user table이 있는 지 여부에 따라 시스템 테이블의 존재 유무를 가린다.
+		============================================================================================================================
+	 -->
+	<!-- <select id="isUserTable" resultClass="java.lang.String">
+		SELECT name 
+		FROM sqlite_master
+		WHERE 
+			type = 'table' and 
+			name = 'tadpole_system'  
+	</select> -->
+	
+	<!--  UserGroup의 DB 리스트 -->
+	<!--  AND b.terms_of_use_starttime <= #thisTime# AND b.terms_of_use_endtime >= #thisTime# -->
+	<select id="userGroupDB" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.util.Map">
+	<![CDATA[
+		select a.*, b.seq role_seq, b.ROLE_ID role_id, b.access_ip, b.is_resource_download,
+			b.terms_of_use_starttime, b.terms_of_use_endtime, 
+			c.ext1, c.ext2, c.ext3, c.ext4, c.ext5, c.ext6, c.ext7, c.ext8, c.ext9, c.ext10
+		from tadpole_db a, tadpole_user_db_role b, user_db_ext c
+		where 
+				a.group_name = #group_name#
+			AND	a.seq = b.db_seq
+			AND a.seq = c.seq
+			AND b.user_seq = #user_seq#
+		    AND a.delyn = 'NO'
+		    AND b.delyn = 'NO'
+		    AND a.is_visible = 'YES'
+        ORDER BY display_name, operation_type, dbms_type
+	]]>	
+	</select>
+	
+	<!--  UserDB의 리스트 -->
+	<!--  AND b.terms_of_use_starttime <= #thisTime# AND b.terms_of_use_endtime >= #thisTime# -->
+	<select id="userDB" resultClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO" parameterClass="java.util.Map">
+	<![CDATA[
+		select a.*, b.seq role_seq, b.ROLE_ID role_id, 
+			b.terms_of_use_starttime, b.terms_of_use_endtime,
+			c.ext1, c.ext2, c.ext3, c.ext4, c.ext5, c.ext6, c.ext7, c.ext8, c.ext9, c.ext10
+		from tadpole_db a, tadpole_user_db_role b, user_db_ext c
+		where 
+				a.seq = b.db_seq
+			AND a.seq = c.seq
+			AND b.user_seq = #user_seq#
+		    AND a.delyn = 'NO'
+		    AND b.delyn = 'NO'
+		    AND a.is_visible = 'YES'
+        ORDER BY group_name
+	]]>	
+	</select>
+
+	<!-- 
+	find login history
+	 -->
+	<select id="getLoginHistory" resultClass="com.hangum.tadpole.engine.query.dao.system.UserLoginHistoryDAO" 
+														parameterClass="java.util.Map">
+	<![CDATA[
+		SELECT b.seq, b.user_seq, b.login_ip, b.connet_time sqliteConnet_time, b.disconnect_time sqliteDisconnect_time, b.succes_yn, b.fail_reason
+		FROM tadpole_user a,
+		    login_history b
+		WHERE
+		    	a.email = #email#
+		    AND a.seq = b.user_seq
+		    AND b.succes_yn = #succes_yn#
+		    AND strftime('%Y-%m-%d %H:%M:%S', b.connet_time) BETWEEN #startTime# AND #endTime#
+		ORDER BY b.connet_time DESC
+		LIMIT 1000
+	]]>
+	</select>	
+</sqlMap>

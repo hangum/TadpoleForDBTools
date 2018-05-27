@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright (c) 2013 hangum.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Lesser Public License v2.1
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      hangum - initial API and implementation
+-->
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!--
+	mysql Summary
+	 
+	@author hangum	
+ --> 
+<sqlMap namespace="MySQL_summary">
+
+	<!-- 
+		show full processlit
+	 -->
+	<select id="processlist" resultClass="java.util.HashMap">
+		SHOW FULL PROCESSLIST
+	</select>
+
+	<!-- 
+		schema summary
+	 -->
+	<select id="schemaSummary" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+		SELECT   round(SUM(data_length+index_length)/1024/1024, 2)  AS 'Total(MB)',
+		         round(SUM(data_length)/1024/1024, 2)               AS 'Data(MB)',
+		         round(SUM(index_length)/1024/1024, 2)              AS 'Index(MB)',
+		         COUNT(*)                                           AS 'Tables'
+		FROM     information_schema.tables
+		WHERE    table_schema = #schemaName#
+	</select>
+	
+	<!-- 
+		engine Summary
+	 -->
+	<select id="engineSummary" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+		SELECT   engine                     AS 'Engine',
+		         table_collation            AS 'Collation',
+		         COUNT(*)                   AS 'Tables'
+		FROM     information_schema.tables
+		WHERE    table_schema = #schemaName#
+		GROUP BY engine, table_collation
+	</select>
+	
+	<!-- 
+		table summary
+	 -->
+	<select id="tableSummary" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+		SELECT   table_name                                     AS 'Name',
+		         engine                                         AS 'Engine',
+		         row_format                                     AS 'Format', 
+		         table_rows                                     AS 'Row', 
+		         avg_row_length                                 AS 'Average Row',
+		         round((data_length+index_length)/1024/1024, 2) AS 'Total(MB)', 
+		         round((data_length)/1024/1024, 2)              AS 'Data(MB)', 
+		         round((index_length)/1024/1024, 2)             AS 'Index(MB)'
+		FROM     information_schema.tables 
+		WHERE    table_schema   = #schemaName#
+		    AND  table_type     = 'BASE TABLE'
+		ORDER BY 'Total(MB)' DESC
+	</select> 
+	
+	<!-- 
+		blob/text column list
+	 -->
+	<select id="blobTextList" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+		SELECT  table_name      AS 'Table Name',
+		        column_name     AS 'Column Name',
+		        data_type       AS 'Data Type' 
+		FROM    information_schema.columns 
+		WHERE   table_schema = #schemaName#
+		    AND data_type LIKE '%TEXT' 
+		    OR data_type LIKE '%BLOB'
+		ORDER BY table_name
+	</select>
+	
+	<!-- 
+		large text column list
+	 -->
+	<select id="largeTextList" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+	<![CDATA[
+		SELECT  table_name                  AS 'Table Name',
+		        column_name                 AS 'Column Name',
+		        character_maximum_length    AS 'Character lenght' 
+		FROM    information_schema.columns 
+		WHERE   table_schema                = #schemaName#
+		    AND data_type                   = 'varchar' 
+		    AND character_maximum_length    > 2000 
+		ORDER BY table_name
+	]]>
+	</select>
+
+	<!-- 
+		large integer
+	 -->
+	<select id="largeIntegerList" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+		SELECT  table_name                  AS 'Table Name',
+		        column_name                 AS 'Column Name',
+		        data_type                   AS 'Data Type',
+		        extra                       As 'Extra' 
+		FROM    information_schema.columns 
+		WHERE   table_schema    = #schemaName#
+		    AND data_type       = 'bigint' 
+		    AND extra           LIKE '%auto_increment%' 
+	</select>
+</sqlMap>

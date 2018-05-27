@@ -1,0 +1,713 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright (c) 2013 hangum.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Lesser Public License v2.1
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+-->
+
+<!-- 
+  Initialized by sun.han - March 2016.
+-->
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Altibase_query">
+
+<!--
+	Connection test
+ -->
+<select id="connectionCheck" resultClass="java.lang.String" parameterClass="java.lang.String">
+	SELECT 1; 
+</select>
+
+<!--
+	Check the database version
+ -->
+<select id="findDBInfo" resultClass="com.hangum.tadpole.engine.query.dao.DBInfoDAO">
+<![CDATA[
+	SELECT product_version AS productversion, 
+	       product_version AS productleve, 
+	       product_time AS edition
+	FROM v$$version
+]]>
+</select>
+
+<!-- 
+	Get all table names
+ -->
+<select id="tableListOnlyName" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
+<![CDATA[
+    SELECT /*+index(tbl, sys_tables_index1) ordered*/ user.user_name || '.' || tbl.table_name AS "name"
+    FROM system_.sys_tables_ tbl, system_.sys_users_ user 
+    WHERE tbl.table_type = 'T'
+      AND tbl.user_id = user.user_id
+      AND tbl.user_id != 1
+]]>
+</select>
+
+<!-- 
+	Get all table names and comments
+ -->
+<select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
+<![CDATA[
+    SELECT tbl.name      AS "name", 
+           comm.comments AS "comment" 
+    FROM (SELECT /*+index(tbl, sys_tables_index1) ordered*/ 
+                 user.user_name, tbl.table_name,
+                 user.user_name || '.' || tbl.table_name AS name
+          FROM system_.sys_tables_ tbl, system_.sys_users_ user
+          WHERE tbl.table_type = 'T'
+            AND tbl.user_id = user.user_id
+            AND tbl.user_id != 1) tbl 
+          left outer join system_.sys_comments_ comm 
+             on tbl.user_name = comm.user_name and tbl.table_name = comm.table_name and comm.column_name is null
+]]>
+</select>
+
+<!-- 
+	Get the name of a particular table
+ -->
+<select id="table" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.util.Map">
+<![CDATA[
+    SELECT tbl.name      AS "name", 
+           comm.comments AS "comment" 
+    FROM (SELECT /*+index(tbl, sys_tables_index1) ordered*/ user.user_name, tbl.table_name,
+                 user.user_name || '.' || tbl.table_name AS name
+          FROM system_.sys_tables_ tbl, system_.sys_users_ user
+          WHERE user.user_name = '$user_name$'
+            AND tbl.table_name = '$table_name$'
+            AND tbl.user_id = user.user_id) tbl 
+          left outer join system_.sys_comments_ comm 
+             on tbl.user_name = comm.user_name and tbl.table_name = comm.table_name and comm.column_name is null
+]]>
+</select>
+
+<!-- 
+	특정 table의 table이나 view 컬럼 정보
+	
+	컬럼 설명
+	Field			: 컬럼 명
+	Type			: 컬럼 타입
+	Null			: Null 유무 (예: YES,NO)
+	Key				: primary key, foreign key(예: PK, FK)
+	Default		: 기본값
+	Extra			: 특수컬럼(예: auto_increment)
+	Comment
+ -->
+<select id="tableColumnList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO" parameterClass="java.util.Map">
+<![CDATA[
+    SELECT col.column_name AS "field",
+           datatype.type_name || decode(datatype.create_param, 
+                                        'precision,scale', '('||col.precision||','||col.scale||')',
+                                        'precision', '('||col.precision||')',
+                                        '') AS "type", 
+           decode(col.is_nullable, 'F', 'NO', 'YES') AS "null", 
+           const.key AS "key",
+           col.default_val AS "default",
+           ''              AS "extra", 
+	   comm.comments   AS "comment"
+    FROM (SELECT /*+index(col, sys_columns_index2) ordered*/ user.user_id, tbl.table_id, col.column_id,
+                 user.user_name, tbl.table_name, col.column_name, col.data_type, col.precision, col.scale, col.is_nullable, col.default_val, col.column_order
+          FROM system_.sys_tables_ tbl, system_.sys_users_ user, system_.sys_columns_ col
+          WHERE user.user_name = #user#
+            AND tbl.table_name = #table#
+            AND tbl.user_id = user.user_id
+            AND tbl.table_id = col.table_id) col 
+         left outer join x$$datatype datatype on col.data_type = datatype.data_type
+         left outer join (select a.user_id, 
+                                 a.table_id, 
+                                 b.column_id, 
+                                 case2(count(a.constraint_type) > 1, 'MUL', group_concat(decode(a.constraint_type, 0, 'FK', 1, 'UNIQUE', 3, 'PK', 4, 'NULL', ''))) AS key
+                          from system_.sys_constraints_ a, 
+                               system_.sys_constraint_columns_ b
+                          where a.constraint_id = b.constraint_id
+                            and a.user_id != 1
+                          group by a.user_id, a.table_id, b.column_id) const on col.column_id = const.column_id
+         left outer join system_.sys_comments_ comm on col.user_name = comm.user_name and col.table_name = comm.table_name and col.column_name = comm.column_name
+    ORDER BY col.column_order
+]]>
+</select>
+
+<!-- 
+	테이블간의 관계 목록 정보를 얻습니다.
+	ERD 그릴때 관계 목록을 보여주기 위한 목적입니다.
+ -->
+<select id="referencedTableList"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" parameterClass="java.lang.String">
+<![CDATA[
+	SELECT /*+index(const, sys_constraints_index7) index(const_col, sys_constraint_columns_index1) ordered*/
+	       const.constraint_name AS "constraint_name",
+	       user.user_name || '.' || tbl.table_name AS "table_name",
+	       col.column_name AS "column_name",
+	       ref_user.user_name || '.' || ref_tbl.table_name AS "referenced_table_name",
+	       ref_col.column_name AS "referenced_column_name" 
+	FROM system_.sys_constraints_ const, system_.sys_users_ user, system_.sys_constraint_columns_ const_col, system_.sys_columns_ col, 
+	     system_.sys_tables_ tbl, system_.sys_tables_ ref_tbl, system_.sys_users_ ref_user, system_.sys_index_columns_ idx_col, system_.sys_columns_ ref_col
+	WHERE const.constraint_type = 0
+	  AND const.user_id = user.user_id
+	  AND const.constraint_id = const_col.constraint_id
+	  AND const.table_id = tbl.table_id
+	  AND const_col.column_id = col.column_id
+	  AND const.referenced_table_id = ref_tbl.table_id
+	  AND ref_tbl.user_id = ref_user.user_id
+	  AND const.referenced_index_id = idx_col.index_id
+	  AND const_col.constraint_col_order = idx_col.index_col_order
+	  AND idx_col.column_id = ref_col.column_id
+]]>
+</select>
+
+<!-- 
+	모든 관계 테이블 목록을 가져옵니다.
+ -->
+<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" >
+<![CDATA[
+	SELECT /*+index(const, sys_constraints_index7) index(const_col, sys_constraint_columns_index1) ordered*/
+	       const.constraint_name AS "constraint_name",
+	       user.user_name || '.' || tbl.table_name AS "table_name",
+	       col.column_name AS "column_name",
+	       ref_user.user_name || '.' || ref_tbl.table_name AS "referenced_table_name",
+	       ref_col.column_name AS "referenced_column_name" 
+	FROM system_.sys_constraints_ const, system_.sys_users_ user, system_.sys_constraint_columns_ const_col, system_.sys_columns_ col, 
+	     system_.sys_tables_ tbl, system_.sys_tables_ ref_tbl, system_.sys_users_ ref_user, system_.sys_index_columns_ idx_col, system_.sys_columns_ ref_col
+	WHERE const.constraint_type = 0
+	  AND const.user_id = user.user_id
+	  AND const.constraint_id = const_col.constraint_id
+	  AND const.table_id = tbl.table_id
+	  AND const_col.column_id = col.column_id
+	  AND const.referenced_table_id = ref_tbl.table_id
+	  AND ref_tbl.user_id = ref_user.user_id
+	  AND const.referenced_index_id = idx_col.index_id
+	  AND const_col.constraint_col_order = idx_col.index_col_order
+	  AND idx_col.column_id = ref_col.column_id
+]]>
+</select>
+	
+<!-- 
+	view 정보
+ -->
+<select id="viewList" resultClass="java.lang.String" parameterClass="java.lang.String">
+<![CDATA[
+    SELECT /*+index(tbl, sys_tables_index1) ordered*/ user.user_name || '.' || tbl.table_name AS "name"
+    FROM system_.sys_tables_ tbl, system_.sys_users_ user 
+    WHERE tbl.table_type = 'V'
+      AND tbl.user_id = user.user_id
+      AND tbl.user_id != 1
+]]>
+</select>
+	
+<!-- 
+	index 정보, SHOW INDEX FROM $tableName$
+ -->
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
+ <![CDATA[
+    SELECT /*+index(tbl, sys_tables_index1) ordered*/ user.user_name || '.' || tbl.table_name AS "table_name",
+           idx.index_name AS "index_name",
+           decode(idx.index_type, 1, 'BTREE', 2, 'RTREE', '') AS "index_type"
+    FROM system_.sys_tables_ tbl, system_.sys_users_ user, system_.sys_indices_ idx
+    WHERE tbl.table_type = 'T'
+      AND tbl.table_name = #table_name#
+      AND tbl.user_id = user.user_id
+      AND tbl.user_id != 1
+      AND tbl.table_id = idx.table_id
+]]>
+</select>
+
+<!-- 
+	index의 디테일 정보
+ -->
+ <select id="indexDetailList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
+ <![CDATA[
+	SELECT 
+		'def' AS "TABLE_CATALOG", 
+		db.db_name AS "TABLE_SCHEMA",
+		tbl.table_name AS "TABLE_NAME", 
+		DECODE(idx.is_unique, 'F', 0, 'T', 1) AS "NON_UNIQUE", 
+		db.db_name AS "INDEX_SCHEMA",
+		idx.index_name AS "INDEX_NAME", 
+		idxcol.index_col_order AS "SEQ_IN_INDEX", 
+		col.column_name AS "COLUMN_NAME", 
+		idxcol.sort_order AS "COLLATION", 
+		'' AS "CARDINALITY",
+		'' AS "SUB_PART", 
+		'' AS "PACKED", 
+		DECODE(col.is_nullable, 'F', 'NO', 'YES') AS "NULLABLE", 
+		DECODE(idx.index_type, 1, 'BTREE', 2, 'RTREE') AS "INDEX_TYPE", 
+		'' AS "COMMENT"
+	FROM 
+	    system_.sys_users_ user,
+	    system_.sys_tables_ tbl,
+	    system_.sys_indices_ idx,
+	    system_.sys_index_columns_ idxcol,
+	    system_.sys_columns_ col,
+            x$$membase db
+    WHERE
+          idxcol.index_id = idx.index_id
+      AND idxcol.column_id = col.column_id
+      AND tbl.table_id = idx.table_id
+      AND user.user_id = tbl.user_id
+      AND idx.index_name = #index_name#
+      AND db.space_id = 0
+]]>
+</select>
+ 
+<!--
+ tableConstraintsList 테이블에 정의된 제약조건 목록을 조회한다.
+ -->
+<select id="tableConstraintsList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO" parameterClass="java.util.Map">
+select *
+from information_schema.table_constraints
+where table_schema = #table_schema#
+and table_name = #table_name#
+</select>
+
+<!-- 
+	procedure list
+ -->
+<select id="procedureList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+<![CDATA[
+	SELECT /*+index(proc, sys_procedures_index1) ordered*/ 
+             db.db_name AS "Db", 
+	     proc.proc_name AS "name", 
+	     'PROCEDURE' AS "Type",
+	     user.user_name AS "Definer",  
+	     TO_CHAR(proc.last_ddl_time, 'DD-MM-YYYY HH24:MI:SS') AS "Modified",
+	     TO_CHAR(proc.created, 'DD-MM-YYYY HH24:MI:SS') AS "Created",
+	     '' AS "Security_type",
+	     DECODE(proc.status,0, 'VALID', 'INVALID') AS "status",
+	     '' AS "character_set_client",
+	     '' AS "collation_connection", 
+	     db.nls_characterset AS "Database Collation"
+	FROM system_.sys_procedures_ proc,
+	     system_.sys_users_ user,
+             x$$membase db
+	WHERE proc.object_type = 0 
+          AND proc.user_id = user.user_id 
+	  AND user.user_id != 1
+          AND db.space_id = 0
+]]>
+</select>
+
+<!-- 
+	function list
+ -->
+<select id="functionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+<![CDATA[
+	SELECT /*+index(proc, sys_procedures_index1) ordered*/ 
+             db.db_name AS "Db", 
+	     proc.proc_name AS "name", 
+	     'PROCEDURE' AS "Type",
+	     user.user_name AS "Definer",  
+	     TO_CHAR(proc.last_ddl_time, 'DD-MM-YYYY HH24:MI:SS') AS "Modified",
+	     TO_CHAR(proc.created, 'DD-MM-YYYY HH24:MI:SS') AS "Created",
+	     '' AS "Security_type",
+	     DECODE(proc.status,0, 'VALID', 'INVALID') AS "status",
+	     '' AS "character_set_client",
+	     '' AS "collation_connection", 
+	     db.nls_characterset AS "Database Collation"
+	FROM system_.sys_procedures_ proc,
+	     system_.sys_users_ user,
+             x$$membase db
+	WHERE proc.object_type = 1 
+          AND proc.user_id = user.user_id 
+	  AND user.user_id != 1
+          AND db.space_id = 0
+]]>
+</select>
+
+<!-- 
+	show triggers
+ -->
+ <select id="triggerAllList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+	SELECT trig.trigger_name AS "trigger", 
+	       DECODE(trig.event_type,1,'INSERT',2,'DELETE',3,'UPDATE') AS "event", 
+	       tbl.table_name AS "table_name",
+	       '' AS "statement", 
+	       DECODE(trig.event_time, 1,'BEFORE','AFTER') AS "timing",
+	       TO_CHAR(trig.created, 'DD-MM-YYYY HH24:MI:SS') AS "created", 
+	       DECODE(trig.granularity,1,'FOR EACH ROW',2,'FOR EACH STATEMENT')  AS "sql_mode", 
+	       user.user_name AS "definer", 
+	       '' AS "character_set_client",
+	       '' AS "collation_connection",
+	       db.db_name AS "database",
+	       db.nls_characterset AS "collection",
+	       DECODE(trig.is_enable,0,'DISABLE','ENABLE')  AS "status"
+	FROM system_.sys_users_ user,
+	     system_.sys_triggers_ trig,
+	     system_.sys_tables_ tbl,
+             x$$membase db
+	WHERE user.user_id = trig.user_id
+	  AND trig.table_id = tbl.table_id
+          AND db.space_id = 0
+</select>
+<!-- 
+	#table_name# 아규먼트가 없으면 해당 스키마의 모든 트리거 목록을 조회하도록 한다.
+ -->
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
+	SELECT trig.trigger_name AS "trigger", 
+	       DECODE(trig.event_type,1,'INSERT',2,'DELETE',3,'UPDATE') AS "event", 
+	       tbl.table_name AS "table_name",
+	       '' AS "statement", 
+	       DECODE(trig.event_time, 1,'BEFORE','AFTER') AS "timing",
+	       TO_CHAR(trig.created, 'DD-MM-YYYY HH24:MI:SS') AS "created", 
+	       DECODE(trig.granularity,1,'FOR EACH ROW',2,'FOR EACH STATEMENT')  AS "sql_mode", 
+	       user.user_name AS "definer", 
+	       '' AS "character_set_client",
+	       '' AS "collation_connection",
+	       db.db_name AS "database",
+	       db.nls_characterset AS "collection",
+	       DECODE(trig.is_enable,0,'DISABLE','ENABLE')  AS "status"
+	FROM system_.sys_users_ user,
+	     system_.sys_triggers_ trig,
+	     system_.sys_tables_ tbl,
+             x$$membase db
+	WHERE user.user_id = trig.user_id
+	  AND trig.table_id = tbl.table_id
+      AND db.space_id = 0
+<isNotEmpty property="table_name">
+      AND tbl.table_name = #table_name#
+</isNotEmpty>      
+</select>
+
+<!-- 
+	SESSION LIST
+ -->
+<select id="sessionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.SessionListDAO">
+	SELECT /*+ordered*/
+	    TO_CHAR(sess.id) AS "id",
+	    user.user_name AS "user",
+	    sess.comm_name AS "host",
+	    db.db_name AS "db", 
+	    sess.client_app_info AS "command",
+	    decode(sess.login_time, 0, '-', to_char(to_date('1970010101', 'YYYYMMDDHH') + sess.login_time / (1*24*60*60), 'DD-MM-YYYY HH24:MI:SS')) AS "time", 
+	    sess.task_state AS "state", 
+	    SUBSTR(stmt.query, 1, 1000) AS "info"
+	FROM x$$session sess, 
+             x$$statement stmt,
+             system_.sys_users_ user,
+             x$$membase db
+	WHERE sess.current_stmt_id = stmt.id
+          AND sess.id = stmt.session_id
+          AND user.user_id = sess.db_userid
+          AND db.space_id = 0
+</select>
+
+<!-- 
+	process kill
+ -->
+<select id="killProcess" parameterClass="java.util.HashMap" remapResults="true">
+	ALTER DATABASE $dbname$ SESSION CLOSE $session_id$
+</select>
+
+<!-- 
+	트리거 목록을 리턴한다.
+ -->
+<select id="triggerListInTable" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+<![CDATA[
+	SELECT 
+	    tbl.table_name AS "table_name",
+	    trig.trigger_name AS "trigger_name",
+	    'ALTER TRIGGER ' || trig.trigger_name || ' DISABLE'  AS "disable_statement",
+	    'ALTER TRIGGER ' || trig.trigger_name || ' ENABLE' AS "enable_statement"
+	FROM system_.sys_users_ user, 
+	     system_.sys_tables_ tbl,
+	     system_.sys_triggers_ trig
+	WHERE user.user_id = tbl.user_id
+	  AND tbl.table_id = trig.table_id
+	  AND tbl.table_name = '$table_name$'
+]]>
+</select>
+
+<!-- 
+	table명을 받아서 pk 컬럼 목록을 리턴한다.
+ -->
+<select id="primarykeyListInTable" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+	SELECT /*+index(ccol, sys_constraint_columns_index1)*/
+	    col.column_name AS "column_name",
+	    col.column_order AS "column_order"
+	FROM system_.sys_users_ user, 
+	     system_.sys_tables_ tbl,
+	     system_.sys_constraints_ const, 
+	     system_.sys_constraint_columns_ ccol,
+	     system_.sys_columns_ col
+	WHERE user.user_id = const.user_id 
+	  AND tbl.table_id = const.table_id
+	  AND const.constraint_type = 3 /* PRI */
+	  AND const.constraint_id = ccol.constraint_id
+	  AND ccol.column_id = col.column_id
+	  AND user.user_name = '$user_name$'
+	  AND tbl.table_name = '$table_name$'
+</select>
+
+
+<!-- 
+	table information
+ -->
+<select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+<![CDATA[
+SELECT 
+    	tbl.table_name AS "TABLE_NAME",
+    	tbl.user_name  AS "OWNER", 
+    	tbl.table_rows AS "TABLE_ROWS",
+    	tbl.tbs_name        AS "TABLESPACE_NAME", 
+    	comm.comments       AS "TABLE_COMMENT",
+    	db.nls_characterset AS "CHARACTER_SET",
+    	TO_CHAR(tbl.created, 'DD-MM-YYYY HH24:MI:SS') AS "CREATED",
+    	tbl.sizeofmb AS "SIZEOFMB"
+FROM (SELECT /*+index(tbl, sys_tables_index1) ordered*/
+             tbl.table_id,
+             user.user_name,
+    	     tbl.table_name,
+             info.fixed_used_mem/info.mem_slot_size AS table_rows,
+             tbl.created,
+             round((mem.fixed_used_mem+mem.var_used_mem)/1024/1024,2) AS sizeofmb,
+             tbl.tbs_name AS tbs_name
+	FROM system_.sys_tables_ tbl,
+             x$$table_info info,
+             v$$memtbl_info mem,
+             system_.sys_users_ user
+	WHERE tbl.user_id = user.user_id
+  	  AND tbl.table_oid = info.table_oid
+  	  AND tbl.table_oid = mem.table_oid
+       UNION ALL
+       SELECT /*+index(tbl, sys_tables_index1) ordered*/
+             tbl.table_id,
+             user.user_name,
+    	     tbl.table_name,
+             info.disk_page_cnt AS table_rows,
+             tbl.created,
+             round(disk.disk_page_cnt*8/1024,2) AS sizeofmb,
+             tbl.tbs_name AS tbs_name
+	FROM system_.sys_tables_ tbl,
+             x$$table_info info,
+             v$$disktbl_info disk,
+             system_.sys_users_ user
+	WHERE tbl.user_id = user.user_id
+  	  AND tbl.table_oid = info.table_oid
+  	  AND tbl.table_oid = disk.table_oid) tbl
+      LEFT OUTER JOIN system_.sys_comments_ comm ON (comm.column_name is null AND tbl.user_name = comm.user_name and tbl.table_name = comm.table_name), 
+      x$$membase db
+WHERE db.space_id = 0
+]]> 
+</select>
+
+<!-- 
+	RDB Information - Column summary page
+ -->
+<select id="columnInformation" resultClass="com.hangum.tadpole.engine.query.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
+<![CDATA[
+    SELECT col.user_name || '.' || col.table_name AS "TABLE_NAME",
+           tblcomm.comments AS "TABLE_COMMENT", 
+           col.column_name AS "COLUMN_NAME",
+           comm.comments   AS "COLUMN_COMMENT",
+           decode(col.is_nullable, 'F', 'NO', 'YES') AS "NULLABLE",        
+           const.key AS "PK",           
+           datatype.type_name || decode(datatype.create_param, 
+                                        'precision,scale', '('||col.precision||','||col.scale||')',
+                                        'precision', '('||col.precision||')',
+                                        '') AS "DATA_TYPE", 
+           col.default_val AS "DATA_DEFAULT",
+           decode(datatype.create_param, 
+                  'precision,scale', col.precision,
+                  'precision', col.precision,
+                  null) AS "DATA_PRECISION", 
+           decode(datatype.create_param, 
+                  'precision,scale', col.scale,
+                  null) AS "DATA_SCALE"
+    FROM (SELECT /*+index(tbl, sys_tables_index1) index(col, sys_columns_index2) ordered*/ user.user_id, tbl.table_id, col.column_id,
+                 user.user_name, tbl.table_name, col.column_name, col.data_type, col.precision, col.scale, col.is_nullable, col.default_val
+          FROM system_.sys_tables_ tbl, system_.sys_users_ user, system_.sys_columns_ col
+          WHERE tbl.user_id = user.user_id
+            AND tbl.table_id = col.table_id
+            AND user.user_id != 1) col 
+         left outer join x$$datatype datatype on col.data_type = datatype.data_type
+         left outer join (select a.user_id, a.table_id, b.column_id, group_concat(decode(a.constraint_type, 0, 'FK', 1, 'UNIQUE', 3, 'PK', 4, 'NULL', ''), ', ') AS key
+                          from system_.sys_constraints_ a, 
+                               system_.sys_constraint_columns_ b
+                          where a.constraint_id = b.constraint_id
+                            and a.user_id != 1
+                          group by a.user_id, a.table_id, b.column_id) const on col.column_id = const.column_id
+         left outer join system_.sys_comments_ tblcomm on col.user_name = tblcomm.user_name and col.table_name = tblcomm.table_name and tblcomm.column_name is null
+         left outer join system_.sys_comments_ comm on col.user_name = comm.user_name and col.table_name = comm.table_name and col.column_name = comm.column_name
+]]>
+</select>
+
+<!-- 
+	Table DDL Script
+ -->
+<select id="getTableScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+<!-- 
+Altibase does not provide any DDL scripts for tables with a query. - March 2016    
+-->
+
+</select>
+
+<!-- 
+	View DDL Script
+ -->
+<select id="getViewScript" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" remapResults="true">
+	SELECT /*+index(v, sys_tables_index1) ordered*/ min(user.user_name) || '.' || v.table_name AS "View", 
+	       group_concat(vparse.parse) AS "Create View", 
+	       ''           AS "caracter_set_client", 
+	       ''           AS "collation_connection" 
+	FROM   system_.sys_tables_ v, 
+               system_.sys_view_parse_ vparse,
+               system_.sys_users_ user
+	WHERE  USER.user_id = v.user_id 
+	       AND v.table_type = 'V' 
+	       AND v.table_id = vparse.view_id 
+	       AND USER.user_name = '$object_definer$' 
+	       AND v.table_name = '$object_name$'
+        GROUP BY v.table_name
+</select>
+
+<!-- 
+	Function DDL Script
+ -->
+<select id="getFunctionScript" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" remapResults="true">
+	SELECT /*+index(proc, sys_procedures_index1) ordered*/ min(user.user_name) || '.' || proc.proc_name AS "Function", 
+	       ''             AS "sql_mode", 
+	       group_concat(parse.parse) AS "Create Function", 
+	       ''             AS "character_set_client", 
+	       ''             AS "collation_connection",
+               min(db.nls_characterset) AS "Database Collation" 
+	FROM system_.sys_procedures_ proc,
+             system_.sys_users_ user,
+             system_.sys_proc_parse_ parse,
+             x$$membase db
+	WHERE proc.proc_oid = parse.proc_oid 
+          AND proc.user_id = user.user_id
+          AND proc.object_type = 1
+          AND db.space_id = 0
+          AND user.user_name = '$object_definer$' 
+          AND proc.proc_name = '$object_name$' 
+        GROUP BY proc.proc_name
+</select>
+
+<!-- 
+	Procedure DDL Script
+ -->
+<select id="getProcedureScript" resultClass="java.util.HashMap" parameterClass="java.util.HashMap" remapResults="true">
+	SELECT /*+index(proc, sys_procedures_index1) ordered*/ min(user.user_name) || '.' || proc.proc_name AS "Procedure", 
+	       ''             AS "sql_mode", 
+	       group_concat(parse.parse) AS "Create Procedure", 
+	       ''             AS "character_set_client", 
+	       ''             AS "collation_connection",
+               min(db.nls_characterset) AS "Database Collation" 
+	FROM system_.sys_procedures_ proc,
+             system_.sys_users_ user,
+             system_.sys_proc_parse_ parse,
+             x$$membase db
+	WHERE proc.proc_oid = parse.proc_oid 
+          AND proc.user_id = user.user_id
+          AND proc.object_type = 0
+          AND db.space_id = 0
+          AND user.user_name = '$object_definer$' 
+          AND proc.proc_name = '$object_name$' 
+        GROUP BY proc.proc_name
+</select>
+
+
+<!-- 
+	Trigger DDL Script
+ -->
+<select id="getTriggerScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+<![CDATA[
+	SELECT /*+index(trigstr, sys_trigger_strings_oid_seqno_idx) ordered*/ 
+	       trig.trigger_name                              AS "Trigger", 
+	       ''                                             AS "sql_mode", 
+	       group_concat(trigstr.substring)                AS "SQL Original Statement", 
+	       ''                                             AS "character_set_client", 
+	       ''                                             AS "collation_connection", 
+ 	       min(db.nls_characterset)                       AS "Database Collation", 
+	       To_char(min(trig.created), 'DD-MM-YYYY HH24:MI:SS') AS "Created" 
+	FROM   system_.sys_triggers_ trig, 
+               system_.sys_trigger_strings_ trigstr,
+               x$$membase db
+	WHERE  trig.trigger_oid = trigstr.trigger_oid 
+	   AND trig.trigger_name = '$object_name$' 
+           AND db.space_id = 0
+	GROUP BY trigger_name
+]]>
+</select>
+
+<select id="getProcedureInParamter" resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.util.HashMap">
+<![CDATA[
+	SELECT /*+index(proc, sys_procedures_index1) ordered*/
+               param.para_order                     AS "order", 
+	       param.para_name                      AS "name", 
+	       datatype.type_name                   AS "rdbtype", 
+	       decode(param.inout_type, 0, 'IN', 
+	                                1, 'OUT', 
+	                                2, 'INOUT') AS "type", 
+	       param.precision                      AS "data_length", 
+               datatype.type_name || decode(datatype.create_param, 
+                                            'precision,scale', '('||param.precision||','||param.scale||')',
+                                            'precision', '('||param.precision||')',
+                                            '') AS "dtd_identifier", 
+               decode(datatype.create_param, 
+                      'precision,scale', param.precision,
+                      'precision', param.precision,
+                      null) AS "numeric_precision", 
+               decode(datatype.create_param, 
+                      'precision,scale', param.scale,
+                      null) AS "numeric_scale", 
+	       param.default_val            AS "value" 
+	FROM   system_.sys_procedures_ proc, 
+               system_.sys_users_ user, 
+	       system_.sys_proc_paras_ param left outer join x$datatype datatype on param.data_type = datatype.data_type 
+	WHERE  USER.user_id = PROC.user_id 
+	       AND PROC.proc_oid = param.proc_oid 
+	       AND (param.inout_type = 0 OR param.inout_type = 2)
+	       AND USER.user_name = '$user_name$' 
+	       AND PROC.proc_name = '$proc_name$'
+]]>
+</select> 
+   
+<select id="getProcedureOutParamter" resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
+<![CDATA[
+	SELECT /*+index(proc, sys_procedures_index1) ordered*/
+           param.para_order                     AS "order", 
+	       param.para_name                      AS "name", 
+	       datatype.type_name                   AS "rdbtype", 
+	       decode(param.inout_type, 0, 'IN', 
+	                                1, 'OUT', 
+	                                2, 'INOUT') AS "type", 
+	       param.precision                      AS "data_length", 
+               datatype.type_name || decode(datatype.create_param, 
+                                            'precision,scale', '('||param.precision||','||param.scale||')',
+                                            'precision', '('||param.precision||')',
+                                            '') AS "dtd_identifier", 
+               decode(datatype.create_param, 
+                      'precision,scale', param.precision,
+                      'precision', param.precision,
+                      null) AS "numeric_precision", 
+               decode(datatype.create_param, 
+                      'precision,scale', param.scale,
+                      null) AS "numeric_scale", 
+	       param.default_val            AS "value" 
+	FROM   system_.sys_procedures_ proc, 
+               system_.sys_users_ user, 
+	       system_.sys_proc_paras_ param left outer join x$datatype datatype on param.data_type = datatype.data_type 
+	WHERE  USER.user_id = PROC.user_id 
+	       AND PROC.proc_oid = param.proc_oid 
+	       AND (param.inout_type = 1 OR param.inout_type = 2)
+	       AND USER.user_name = '$user_name$' 
+	       AND PROC.proc_name = '$proc_name$'
+]]>
+</select>    
+
+<select id="getProperties" resultClass="java.util.HashMap">
+<![CDATA[
+	SELECT name AS "PROPERTY_NAME", value1 AS "VALUE" FROM v$$property ORDER BY name
+]]>
+</select>  
+
+<select id="setProperty" parameterClass="java.util.HashMap" resultClass="java.lang.String">
+<![CDATA[
+	ALTER #property_type# SET #property_name# = #property_value#
+]]>
+</select>
+</sqlMap>

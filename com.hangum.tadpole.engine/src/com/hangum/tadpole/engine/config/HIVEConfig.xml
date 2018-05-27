@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright (c) 2013 hangum.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Lesser Public License v2.1
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      hangum - initial API and implementation
+-->
+<!DOCTYPE sqlMapConfig      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<!--  set setting options -->
+	<!-- properties resource="com/hangum/tadpole/engine/config/commons/setting.propertis"/-->
+	
+	<transactionManager type="JDBC">
+		<dataSource type="DBCP">
+			<property name="JDBC.Driver" value="org.apache.hadoop.hive.jdbc.HiveDriver" />
+			<property name="JDBC.ConnectionURL" value="${JDBC.ConnectionURL}" />
+			<property name="JDBC.Username" value="${JDBC.Username}" />
+			<property name="JDBC.Password" value="${JDBC.Password}" />
+
+			<!--OPTIONAL PROPERTIES BELOW -->
+			<property name="Pool.MaximumActiveConnections" value="50" />
+			<property name="Pool.MaximumIdleConnections" value="5" />
+			<property name="Pool.MaximumWait" value="1000" />
+				<!--
+				Use of the validation query can be problematic. If you have
+				difficulty, try without it.
+			-->
+			<property name="Pool.ValidationQuery" value="show databases" />
+			<property name="Pool.LogAbandoned" value="true" />
+			<property name="Pool.RemoveAbandoned" value="true" />
+			<property name="Pool.RemoveAbandonedTimeout" value="50000" />
+
+		</dataSource>
+	</transactionManager>
+
+	<sqlMap resource="com/hangum/tadpole/engine/query/HIVESQL.xml" />
+</sqlMapConfig>

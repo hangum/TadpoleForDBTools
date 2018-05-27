@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.rap.gef.feature"
+      label="%featureName"
+      version="0.1.0.20170612-1850"
+      provider-name="%providerName">
+
+   <description url="http://eclipse.org/rap/incubator">
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <plugin
+         id="org.eclipse.rap.draw2d"
+         download-size="580"
+         install-size="1082"
+         version="0.1.0.20170612-1850"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.rap.draw2d.source"
+         download-size="497"
+         install-size="1521"
+         version="0.1.0.20170612-1850"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.rap.draw2d.compatibility"
+         download-size="51"
+         install-size="88"
+         version="0.1.0.20151228-1339"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.rap.draw2d.compatibility.source"
+         download-size="53"
+         install-size="185"
+         version="0.1.0.20151228-1339"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.rap.gef"
+         download-size="917"
+         install-size="1595"
+         version="0.1.0.20161013-1425"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.rap.gef.source"
+         download-size="782"
+         install-size="2017"
+         version="0.1.0.20161013-1425"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.rap.zest.core"
+         download-size="135"
+         install-size="264"
+         version="0.1.0.20151228-1320"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.rap.zest.core.source"
+         download-size="99"
+         install-size="331"
+         version="0.1.0.20151228-1320"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.rap.zest.layouts"
+         download-size="96"
+         install-size="180"
+         version="0.1.0.20151228-1320"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.rap.zest.layouts.source"
+         download-size="77"
+         install-size="239"
+         version="0.1.0.20151228-1320"
+         unpack="false"/>
+
+</feature>

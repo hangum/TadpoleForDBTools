@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright (c) 2013 hangum.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Lesser Public License v2.1
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      hangum - initial API and implementation
+-->
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- 
+	
+	MSSQL 8.0 보다 작거나 같은 경우의 쿼리를 작성합니다.
+	
+	@author hangum	
+ -->
+<sqlMap namespace="MsSQL_8_LE_query">
+
+<!--
+	database connection test 
+ -->
+<select id="connectionCheck" resultClass="java.lang.String" parameterClass="java.lang.String">
+SELECT getdate()  
+</select>
+
+<!-- 
+	table 오직 테이블 이름만.
+ -->
+<select id="tableListOnlyName" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
+	select o.name
+		from sysobjects o
+		    left join sysproperties c on o.id = c.id	     
+	    	and c.type = '3' and c.name = 'MS_Description'	
+		where o.xtype = 'U' 
+		order by o.name
+</select>
+
+<select id="allObjects" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+    Select 
+          user as "OBJECT_OWNER"
+        , O.name as "OBJECT_NAME"
+        , O.type as "OBJECT_TYPE"
+     from sysobjects O
+    where 1=1
+<isNotEmpty property="schema_name">
+	  and o.uid = user_id(#schema_name#)
+</isNotEmpty>    
+<isEmpty property="schema_name">
+	  and o.uid = user_id(user)
+</isEmpty>    
+      and o.type in ('U','V','F','K')
+	  and name in (#object_name#, upper(#object_name#))
+</select>
+<!-- 
+	table 이름
+	
+	select substring(convert(varchar(100), SERVERPROPERTY('ProductVersion')), 1, charindex('.', convert(varchar(100), SERVERPROPERTY('ProductVersion')) )-1) as version
+ -->
+<select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
+	select o.name, c.value as comment 
+		from sysobjects o
+		    left join sysproperties c on o.id = c.id	     
+	    	and c.type = '3' and c.name = 'MS_Description'	
+		where o.xtype = 'U' 
+		order by o.name
+</select>
+
+<!-- 
+	table 이름
+ -->
+<select id="table" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.util.HashMap">
+	select o.name, c.value as comment 
+	from sysobjects o
+	    left join sysproperties c on o.id = c.id	     
+    	and c.type = '3' and c.name = 'MS_Description'	
+	where o.xtype = 'U' 
+		AND o.name = #name#
+	order by o.name
+</select>
+
+<!-- 
+	table, view의 컬럼 정보
+ -->
+<select id="tableColumnList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
+<!-- 
+	column comment
+	   fisusr이라는 사용자 소유의 t_users테이블에 user_id컬럼에 comment를 지정할때. 
+	   exec sp_addextendedproperty 'column_comment', '사용자 아이디', 'user', fisusr, 'table', 't_users', 'column', 'user_id';
+	   
+	       천번째 인수인 caption이라는 문자열은 extendedproperty의 name속성이다.
+	   and t.name = 'column_comment'    
+ -->
+SELECT  b.name field, 
+        c.name + case when c.xtype in (106,108,62,165,173,231,167,175) then
+            case when c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' else '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')' end else '' end as type,
+        (CASE WHEN b.isnullable = 0  then 'NO' ELSE 'YES' END) as "NULL", 
+        case when d.keyno > 0 and f.keyno > 0 then 'MUL'
+		     WHEN d.keyno > 0 and f.keyno is null then 'PK'
+			 when d.keyno is null and f.keyno > 0 then 'FK' else null end as [key],
+        t.value as comment
+FROM sysobjects a INNER JOIN syscolumns b ON (a.id = b.id)
+	INNER JOIN systypes c ON (b.xusertype = c.xusertype)
+	LEFT JOIN dbo.sysindexkeys d ON (b.id =d.id and b.colid = d.colid and indid =1)
+	LEFT JOIN dbo.sysforeignkeys f ON a.id = f.fkeyid and b.colid = f.fkey 
+    left join sysproperties t on a.id = t.id and b.colid = t.smallid and t.type = '4' and t.name = 'MS_Description'    	
+WHERE 
+		a.name = #table#
+ORDER BY a.id, b.colid
+</select>
+
+<!-- 
+	테이블간의 관계 목록 정보를 얻습니다.
+	erd 그릴때 관계 목록을 보여주기 위한 목적입니다.
+ -->
+<select id="referencedTableList"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" parameterClass="java.lang.String">
+  SELECT X.TABLE_NAME
+       ,X.CONSTRAINT_NAME
+       , (MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 1 THEN X.COLUMN_NAME ELSE '' END) + MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 2 THEN ',' + X.COLUMN_NAME ELSE '' END)) AS COLUMN_NAME
+       ,X.REFERENCED_TABLE_NAME
+       , (MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 1 THEN X.REFERENCED_COLUMN_NAME ELSE '' END) + MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 2 THEN ',' + X.REFERENCED_COLUMN_NAME ELSE '' END)) AS REFERENCED_COLUMN_NAME
+   FROM (SELECT B.CONSTRAINT_COLUMN_ID
+               ,E.NAME AS TABLE_NAME
+               ,C.NAME AS CONSTRAINT_NAME
+               ,D.NAME AS COLUMN_NAME
+               ,B.REFERENCED_COLUMN_ID
+               ,G.NAME AS REFERENCED_TABLE_NAME
+               ,F.NAME AS REFERENCED_COLUMN_NAME
+           FROM SYS.FOREIGN_KEYS A
+                INNER JOIN SYS.FOREIGN_KEY_COLUMNS B
+                   ON A.OBJECT_ID = B.CONSTRAINT_OBJECT_ID
+                INNER JOIN SYS.OBJECTS C
+                   ON A.OBJECT_ID = C.OBJECT_ID
+                INNER JOIN SYS.SYSCOLUMNS D
+                   ON B.PARENT_OBJECT_ID = D.ID AND B.PARENT_COLUMN_ID = D.COLID
+                INNER JOIN SYS.SYSOBJECTS E
+                   ON B.PARENT_OBJECT_ID = E.ID
+                INNER JOIN SYS.SYSCOLUMNS F
+                   ON B.REFERENCED_OBJECT_ID = F.ID AND B.REFERENCED_COLUMN_ID = F.COLID
+                INNER JOIN SYS.SYSOBJECTS G
+                   ON B.REFERENCED_OBJECT_ID = G.ID) X
+WHERE X.TABLE_NAME in ( #table# )                     
+GROUP BY X.TABLE_NAME, X.CONSTRAINT_NAME, X.REFERENCED_TABLE_NAME
+</select>
+
+<!-- 
+	모든 erd 보기
+ -->
+<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" >
+SELECT X.TABLE_NAME
+       ,X.CONSTRAINT_NAME
+       , (MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 1 THEN X.COLUMN_NAME ELSE '' END) + MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 2 THEN ',' + X.COLUMN_NAME ELSE '' END)) AS COLUMN_NAME
+       ,X.REFERENCED_TABLE_NAME
+       , (MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 1 THEN X.REFERENCED_COLUMN_NAME ELSE '' END) + MAX (CASE WHEN X.CONSTRAINT_COLUMN_ID = 2 THEN ',' + X.REFERENCED_COLUMN_NAME ELSE '' END)) AS REFERENCED_COLUMN_NAME
+   FROM (SELECT B.CONSTRAINT_COLUMN_ID
+               ,E.NAME AS TABLE_NAME
+               ,C.NAME AS CONSTRAINT_NAME
+               ,D.NAME AS COLUMN_NAME
+               ,B.REFERENCED_COLUMN_ID
+               ,G.NAME AS REFERENCED_TABLE_NAME
+               ,F.NAME AS REFERENCED_COLUMN_NAME
+           FROM SYS.FOREIGN_KEYS A
+                INNER JOIN SYS.FOREIGN_KEY_COLUMNS B
+                   ON A.OBJECT_ID = B.CONSTRAINT_OBJECT_ID
+                INNER JOIN SYS.OBJECTS C
+                   ON A.OBJECT_ID = C.OBJECT_ID
+                INNER JOIN SYS.SYSCOLUMNS D
+                   ON B.PARENT_OBJECT_ID = D.ID AND B.PARENT_COLUMN_ID = D.COLID
+                INNER JOIN SYS.SYSOBJECTS E
+                   ON B.PARENT_OBJECT_ID = E.ID
+                INNER JOIN SYS.SYSCOLUMNS F
+                   ON B.REFERENCED_OBJECT_ID = F.ID AND B.REFERENCED_COLUMN_ID = F.COLID
+                INNER JOIN SYS.SYSOBJECTS G
+                   ON B.REFERENCED_OBJECT_ID = G.ID) X
+GROUP BY X.TABLE_NAME, X.CONSTRAINT_NAME, X.REFERENCED_TABLE_NAME
+</select>
+
+<!-- 
+	view 정보
+ -->
+<select id="viewList" resultClass="java.lang.String" parameterClass="java.lang.String">
+	/*
+	SELECT SERVERPROPERTY('productversion')
+	select name from sys.views order by name	
+	*/
+	select name from sysobjects where xtype = 'V' order by name
+</select>
+
+<!-- 
+	index 정보, SHOW INDEX FROM $tableName$
+ -->
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
+SELECT 
+    i.table_schema 
+    , i.table_name
+    , i.constraint_schema as index_owner
+    , i.constraint_name as index_name
+FROM information_schema.CONSTRAINT_TABLE_USAGE i
+WHERE i.constraint_schema = #table_schema#
+  AND i.table_name = #table_name#    
+</select>
+
+<!-- 
+	index의 디테일 정보
+ -->
+ <select id="indexDetailList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
+    	SELECT 
+    	 0 as seq_in_index,
+    	 table_name,
+         constraint_name index_name,
+         column_name,         
+         table_catalog AS table_schema
+    FROM information_schema.CONSTRAINT_COLUMN_USAGE
+    WHERE constraint_name = #index_name#
+</select>
+
+<!--
+ tableConstraintsList 테이블에 정의된 제약조건 목록을 조회한다.
+ 
+ -->
+<select id="tableConstraintsList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO" parameterClass="java.util.Map">
+select *
+from information_schema.table_constraints
+where table_catalog = #table_schema#
+and table_name = #table_name#
+</select>
+
+<!-- 
+	procedure list
+ -->
+<select id="procedureList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+	SELECT s.name,
+		s.type as 'PROCEDURE',
+	   #db_name# as db,
+	   crdate as created
+    FROM     sysobjects s
+	WHERE    s.TYPE = 'P'
+	ORDER BY s.name
+</select>
+
+<!-- 
+	function list
+ -->
+<select id="functionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+	SELECT s.name,
+		s.type as 'FUNCTION',
+	   #db_name# as db,
+	   crdate as created
+    FROM     sysobjects s
+	WHERE    s.TYPE = 'FN'
+	ORDER BY s.name
+</select>
+
+<!-- 
+	show triggers
+ -->
+ <select id="triggerAllList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+	SELECT s.name,
+	 	#db_name# as db,
+	   crdate as created 
+	FROM sysobjects  s
+	WHERE s.type = 'TR'
+</select>
+<!-- 
+	#table_name# 아규먼트가 없으면 해당 스키마의 모든 트리거 목록을 조회하도록 한다.
+ -->
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
+	SELECT s.name,
+	 	#db_name# as db,
+	   crdate as created 
+	FROM sysobjects  s
+	WHERE s.type = 'TR'
+<isNotEmpty property="table_name">
+	  AND s.parent_obj = object_id(#table_name#)
+</isNotEmpty>
+</select>
+
+<!-- 
+	enable 상태의 트리거 목록을 리턴한다.
+ -->
+<select id="triggerListInTable" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+<![CDATA[
+	select
+	     s.name as "table_name"
+	    ,t.name as "trigger_name"
+	    ,'ALTER TABLE ' + s.name + ' DISABLE trigger ' + t.name as "disable_statement"
+	    ,'ALTER TABLE ' + s.name + ' ENABLE  trigger ' + t.name as "enable_statement"
+	from sysobjects t 
+		inner join sysobjects s on t.parent_obj = s.id
+	where 1=1
+	  and t.type = 'TR'
+	  and s.type = 'U'
+	  and t.parent_obj = object_id('$table_name$')
+]]>
+</select>
+
+<!-- 
+	table명을 받아서 pk 컬럼 목록을 리턴한다.
+ -->
+<select id="primarykeyListInTable" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+	select 
+	      b.name as "column_name"
+		, b.colid as "column_order"
+	from sysobjects t
+	   inner join sysobjects a on t.id = a.id 
+	   inner join syscolumns b on a.id = b.id
+	   inner join dbo.sysindexkeys d on b.id =d.id and b.colid = d.colid and indid = 1
+	where 1=1
+	  and t.xtype = 'U'
+	  and d.keyno > 0
+	  and t.id = object_id('$table_name$')
+</select>
+
+<!-- 
+	table row count
+ -->
+<select id="tableRowCount" resultClass="java.lang.Integer" parameterClass="java.lang.String">
+	SELECT count(*) FROM $table$
+</select>
+
+<!-- 
+	table information
+ -->
+<select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+	select o.name, c.value as comment 
+		from sysobjects o
+		    left join sysproperties c on o.id = c.id	     
+	    	and c.type = '3'	
+		where o.xtype = 'U' 
+		order by o.name 
+</select>
+<!-- 
+	RDB Information - Column summary page
+ -->
+<select id="columnInformation" resultClass="com.hangum.tadpole.engine.query.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.lang.String">
+	select 
+	      t.name as table_name
+	      , tc.value as table_comment 
+	      , b.name as column_name
+          , c.name + case when c.xtype in (106,108,62,165,173,231,167,175) then
+            case when c.xprec = 0 then '('+ rtrim(convert(char, b.length))+')' else '('+ rtrim(convert(char, b.xprec)) + ',' + rtrim(convert( char, b.xscale)) + ')' end else '' end as data_type
+	      , case when b.isnullable = 0  then 'NO' else 'YES' end as nullable
+          , case when d.keyno > 0 and f.keyno > 0 then 'MUL'
+		     WHEN d.keyno > 0 and f.keyno is null then 'PK'
+			 when d.keyno is null and f.keyno > 0 then 'FK' else null end as pk
+	      , cc.value as column_comment
+	from sysobjects t
+			    left join sysproperties tc on t.id = tc.id	 and tc.type = '3'	
+	   inner join sysobjects a on t.id = a.id 
+	   INNER JOIN syscolumns b ON (a.id = b.id)
+		INNER JOIN systypes c ON (b.xusertype = c.xusertype)
+		left join dbo.sysindexkeys d on (b.id =d.id and b.colid = d.colid and indid =1)
+		LEFT JOIN dbo.sysforeignkeys f ON a.id = f.fkeyid and b.colid = f.fkey 
+	    left join sysproperties cc on a.id = cc.id and b.colid = cc.smallid and cc.type = '4'
+	        and cc.name in ('ms_description', 'caption', 'comment')    	
+	where 1=1
+	and t.xtype = 'U'
+	ORDER BY t.name, a.id, b.colid
+</select>
+
+
+<!-- 
+	Table DDL Script
+ -->
+<select id="getTableScript" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+	SELECT
+	    t.name AS TABLE_NAME
+	    ,c.name AS COLUMN_NAME
+	    ,d.name AS DATA_TYPE
+		, case when d.system_type_id in (106,108,62,165,173,231,167,175) then c.max_length else '' end as DATA_LENGTH
+		, case when d.system_type_id in (106,108,62,165,173,231,167,175) then c.precision else '' end as DATA_PRECISION
+		, case when d.system_type_id in (106,108,62,165,173,231,167,175) then c.scale else '' end as DATA_SCALE		
+	    ,(CASE WHEN c.isnullable = 0 THEN 'NO' ELSE 'YES' END ) AS NULLABLE
+	    ,USER AS OWNER
+	    ,NULL AS DATA_DEFAULT
+	  FROM sysobjects t 
+	      INNER JOIN syscolumns c ON t.id = c.id 
+	      INNER JOIN systypes d  ON c.xtype = d.xtype
+	    LEFT JOIN  dbo.sysindexkeys v ON (t.id =v.id and c.colid = v.colid and indid =1)     
+	WHERE  1 = 1
+	  AND t.name = #table#
+	ORDER BY c.colorder
+</select>
+
+<!-- 
+	Table DDL Script => Primary key list
+ -->
+ 
+<select id="getTableScript.pk" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+SELECT  CONSTRAINT_CATALOG
+      ,CONSTRAINT_SCHEMA
+      ,CONSTRAINT_NAME
+      ,TABLE_CATALOG
+      ,TABLE_SCHEMA
+      ,TABLE_NAME
+      ,COLUMN_NAME
+      ,ORDINAL_POSITION
+  FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+  where table_name = #table#
+</select>
+
+<!-- 
+	Table DDL Script => Table, Column Comment Script
+ -->
+ 
+<select id="getTableScript.comments" resultClass="java.lang.String" parameterClass="java.lang.String">
+
+	SELECT 
+		'exec sp_addextendedproperty ''Caption'', ''' 
+		+ convert(varchar, c.value) 
+		+ ''', ''user'', dbo, ''table'', ''' 
+		+ convert(varchar, o.name) 
+		+ ''' ;'  as comment 
+	FROM sysobjects o
+	    LEFT JOIN sysproperties c on o.id = c.id	     
+	   	and c.type = '3'	
+	WHERE o.xtype = 'U' 
+	AND c.value &gt; ''
+	AND o.name = #table#
+	UNION ALL		
+	SELECT 	'exec sp_addextendedproperty ''Caption'', ''' 
+		+ convert(varchar, t.value) 
+		+ ''', ''user'', dbo, ''table'', ''' 
+		+ convert(varchar, a.name) 
+		+ ''', ''column'', ''' 
+		+ convert(varchar, b.name) 
+		+ ''' ;'  as comment 
+	FROM sysobjects a 
+	    INNER JOIN syscolumns b ON (a.id = b.id)
+		INNER JOIN systypes c ON (b.xusertype = c.xusertype)
+		LEFT OUTER JOIN dbo.sysindexkeys d ON (b.id =d.id and b.colid = d.colid and indid =1)
+	    LEFT JOIN sysproperties t on a.id = t.id and b.colid = t.smallid and t.type = '4'
+	        and t.name in ('ms_description', 'caption', 'comment')    	
+	WHERE 1=1
+	  AND a.name = #table#
+	  AND T.VALUE &gt; ''
+		
+  
+</select>
+
+
+<!-- 
+	View, Function, Procedure, Trigger Script 
+	
+    select text from syscomments where id = OBJECT_ID('mall_item_UP')
+ -->
+ 
+<select id="getViewScript" resultClass="java.lang.String" parameterClass="java.lang.String">
+sp_helptext '$object_name$'
+</select>
+<select id="getFunctionScript" resultClass="java.lang.String" parameterClass="java.lang.String">
+sp_helptext '$object_name$'
+</select>
+<select id="getProcedureScript" resultClass="java.lang.String" parameterClass="java.lang.String">
+sp_helptext '$object_name$'
+</select>
+<select id="getTriggerScript" resultClass="java.lang.String" parameterClass="java.lang.String">
+sp_helptext '$object_name$'
+</select>
+
+<select id="getProcedureInParamter" resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
+
+select 
+   p.ordinal_position as "order"
+   , p.parameter_name as "name"
+   , p.data_type as rdbtype
+   , p.parameter_mode as "type"
+   , p.numeric_precision as data_length
+   , p.numeric_precision
+   , p.numeric_scale
+   , '' as value
+from information_schema.parameters p
+where 1=1
+and p.specific_name=#object_name#
+and p.parameter_mode in ('IN','INOUT')
+order by ordinal_position 
+  
+</select> 
+   
+<select id="getProcedureOutParamter" resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.lang.String">
+
+select 
+   p.ordinal_position as "order"
+   , p.parameter_name as "name"
+   , p.data_type as rdbtype
+   , p.parameter_mode as "type"
+   , p.numeric_precision as data_length
+   , p.numeric_precision
+   , p.numeric_scale
+   , '' as value
+from information_schema.parameters p
+where 1=1
+and p.specific_name=#object_name#
+and p.parameter_mode in ('OUT','INOUT')
+order by ordinal_position 
+  
+</select>  
+</sqlMap>

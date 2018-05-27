@@ -1,0 +1,24 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: com.hangum.tadpole.ace.editor.core;singleton:=tru
+ e
+Export-Package: com.hangum.tadpole.ace.editor.core.define,com.hangum.t
+ adpole.ace.editor.core.dialogs.help,com.hangum.tadpole.ace.editor.cor
+ e.texteditor,com.hangum.tadpole.ace.editor.core.texteditor.function,c
+ om.hangum.tadpole.ace.editor.core.utils,com.hangum.tadpole.ace.editor
+ .core.widgets
+Bundle-Name: Extend Ace editor Core
+Bundle-Version: 1.0.0.201805242108
+Require-Bundle: org.eclipse.rap.ui;bundle-version="2.1.0",org.eclipse.
+ core.runtime,org.eclipse.equinox.http.registry;bundle-version="1.1.30
+ 0",com.hangum.tadpole.commons.libs;bundle-version="2.0.0",com.hangum.
+ tadpole.commons.utils;bundle-version="2.0.0",com.hangum.tadpole.prefe
+ rence;bundle-version="2.0.0",com.hangum.tadpole.engine;bundle-version
+ ="1.0.0",com.tadpole.common.define.core;bundle-version="1.0.0"
+Bundle-ManifestVersion: 2
+Bundle-Activator: com.hangum.tadpole.ace.editor.core.Activator
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: TadpoleHub Co.Ltd
+Import-Package: javax.servlet;version="2.5.0",javax.servlet.http;versi
+ on="2.5.0"
+

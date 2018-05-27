@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1.0, minimum-scale=1"/>
+
+    <title>tadpolefordb - AXGrid</title>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/axisj/axisj/master/ui/arongi/AXJ.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/1.12.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.rawgit.com/axisj/axisj/master/dist/AXJ.min.js"></script>
+    <style type="text/css">
+        html, body {
+            padding: 0px;
+            font-size: 12px;
+        }
+        .margin-10{
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="doc-root">
+    <div class="margin-10">
+        <h3>AXGrid (with Tadpole DB Hub tools)</h3>
+    </div>
+
+    <div class="margin-10" id="_TDB_TEMPLATE_TITLE_" style="height: 500px;"></div>
+
+    <div class="margin-10 tool-view" style="float:bottom;">
+        <button class="AXButton Blue" data-btn="get-all">그리드 전체 데이터 가져오기</button>
+        <button class="AXButton Blue" data-btn="get-checked">체크된 데이터 가져오기</button>
+        <button class="AXButton Blue" data-btn="get-selected">선택된 데이터 가져오기</button>
+        <button class="AXButton Blue" data-btn="get-excel">엑셀데이터 가져오기</button>
+
+        <button class="AXButton Blue" data-btn="del-checked">체크항목 삭제</button>
+        <button class="AXButton Blue" data-btn="add-item">아이템 추가</button>
+    </div>
+
+    <div id="print-out"></div>
+
+    <div class="margin-10">
+        <ul>
+            <li><a href="https://www.axisj.com">AXISJ.com</a></li>
+            <li><a href="https://github.com/axisj/axisj">https://github.com/axisj/axisj</a></li>
+            <li><a href="https://www.facebook.com/axisj">https://www.facebook.com/axisj</a></li>
+        </ul>
+    </div>
+</div>
+
+<script type="text/javascript">
+_AXISJ_JS_BLOCK_
+</script>
+</body>
+</html>

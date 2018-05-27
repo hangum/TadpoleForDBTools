@@ -1,0 +1,175 @@
+/**
+* 원본소스: http://dev.axisj.com/samples/AXGrid/index.html
+* 모든 옵션정보 : http://jdoc.axisj.com/AXGrid.html#.setConfig 
+* 기본 코드를 테드폴에 맞게 변경하였습니다. 
+* @author Jeong Jaehong, Cho hyunjong(2016.04))
+*/
+/**
+ * Require Files for AXISJ UI Component...
+ * Based        : jQuery
+ * Javascript   : AXJ.js, AXGrid.js, AXInput.js, AXSelect.js
+ * CSS          : AXJ.css, AXGrid.css, AXButton.css, AXInput.css, AXSelecto.css
+ */
+    var fnObj = {
+        pageStart: function () {
+            var root = this;
+
+            this.gridView0.initView();
+            this.toolView.initView();
+            this.dataControl.search({}, function(data){
+                root.gridView0.setData(data);
+            });
+        }
+    };
+    jQuery(document.body).ready(function () {
+        fnObj.pageStart();
+    });
+
+    //====== tool
+    fnObj.toolView = {
+        initView: function(){
+            var root = fnObj;
+			
+			$('#_TDB_TEMPLATE_TITLE_').css('height', _TDB_TEMPLATE_HEIGHT_);
+			
+            $('[data-btn]').bind("click", function(){
+                switch(this.getAttribute("data-btn")){
+                    case "get-all":
+                        toast.push("데이터를 가져왔습니다. 콘솔창을 확인하세요");
+                        trace(root.gridView0.getData());
+                        break;
+                    case "get-checked":
+                        toast.push("데이터를 가져왔습니다. 콘솔창을 확인하세요");
+                        trace(root.gridView0.getCheckedData(0)); // 컬럼 0번째의 체크박스로 부터
+                        break;
+                    case "get-selected":
+                        toast.push("데이터를 가져왔습니다. 콘솔창을 확인하세요");
+                        trace(root.gridView0.getSelectedData());
+                        break;
+                    case "del-checked":
+                        root.gridView0.deleteItem(0); // 컬럼 0번째의 체크박스로 부터
+                        break;
+                    case "add-item":
+                        root.gridView0.append();
+                        break;
+                    case "get-excel":
+                        toast.push("데이터를 가져왔습니다.");
+                        $("#print-out").html(root.gridView0.getExcel("html"));
+                        break;
+
+                }
+
+            });
+        }
+    }
+
+    //=== dataControl
+    fnObj.dataControl = {
+        search: function(param, callBack){
+            var list = [_TDB_TEMPLATE_BODY_];
+            if(callBack) callBack(list);
+        }
+    }
+
+    //=== gridView
+    fnObj.gridView0 = {
+        target: new AXGrid(),
+        targetElementID: "_TDB_TEMPLATE_TITLE_",
+        initView: function () {
+            var getColGroup = function () {
+
+                /*
+                 * {
+                 *  key : "key",
+                 *  label : "label",
+                 *  width : Number,
+                 *  align : "left|center|right",
+                 *  sort : "asc",
+                 *  colHeadTool : false,
+                 *  formatter : function(){return '';},
+                 *  tooltip : function(){return '';},
+                 *  disabled : function(){return false;},
+                 *  checked : function(){return false;}
+                 * },
+                 */
+
+                return [_TDB_TEMPLATE_HEAD_];
+            };
+
+            this.target.setConfig({
+                targetID: this.targetElementID,
+                theme: "_TDB_TEMPLATE_THEME_",
+                fixedColSeq: _TDB_TEMPLATE_FIXEDCOL_,
+                fitToWidth: _TDB_TEMPLATE_FITTOWIDTH_,
+                colHeadAlign: "_TDB_TEMPLATE_HEADALIGN_",
+                mergeCells: _TDB_TEMPLATE_MERGECELL_,
+                height : _TDB_TEMPLATE_HEIGHT_,     
+	    		sort: _TDB_TEMPLATE_SORT_,
+                remoteSort : false,          
+	    		colHeadTool: _TDB_TEMPLATE_HEADTOOL_,
+                viewMode: "_TDB_TEMPLATE_VIEWMODE_",
+                colGroup: getColGroup(),
+                body: {
+                    onclick: function () {
+                        toast.push("클릭되었습니다. 콘솔창을 확인하세요");
+                        trace({"event": "click", "index": this.index, "r": this.r, "c": this.c, "item": this.item});
+                        // this.list, this.page
+                    }
+                    /* ondblclick 선언하면 onclick 이벤트가 0.25 초 지연 발생 됩니다. 주의 하시기 바람니다. */
+                    /*
+                    ,
+                    ondblclick: function () {
+                         toast.push("더블클릭되었습니다. 콘솔창을 확인하세요");
+                         trace({"event": "click", "index": this.index, "r": this.r, "c": this.c, "item": this.item});
+                        // this.list, this.page
+                    },
+                    addClass: function () {
+                        return (this.index % 2 == 0 ? "gray" : "white"); // red, green, blue, yellow, white, gray
+                    }
+                    */
+                },
+                page: {
+                    display: false,
+                    paging: false
+                }
+            });
+
+        },
+        setData: function (data) {
+
+            var gridData = {
+                list: data,
+                page:{
+                    pageNo: 1,
+                    pageSize: 20,
+                    pageCount: 1,
+                    listCount: data.length
+                }
+            };
+            this.target.setData(gridData);
+        },
+        getData: function () {
+            return this.target.getList();
+            // or this.target.list;
+        },
+        getCheckedData: function (colSeq) {
+            return this.target.getCheckedList(colSeq);
+            // or this.target.list;
+        },
+        deleteItem: function(colSeq) {
+            this.target.removeListIndex(this.target.getCheckedListWithIndex(colSeq));
+        },
+        append: function (data) {
+            if(typeof data == "undefined"){
+                data = $.extend({}, this.target.list.last());
+            }
+            this.target.pushList(data);
+            this.target.setFocus(this.target.list.length - 1);
+        },
+        getExcel: function(type){
+            return this.target.getExcelFormat(type);
+        },
+        getSelectedData: function(){
+            return this.target.getSelectedItem();
+        }
+    };

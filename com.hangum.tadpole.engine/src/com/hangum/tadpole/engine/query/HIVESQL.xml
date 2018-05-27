@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright (c) 2013 hangum.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Lesser Public License v2.1
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      hangum - initial API and implementation
+-->
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!--
+	Hadoop 1.2.1 버전
+	hive-0.11.0 으로 초기 작업을 시작했습니다.
+	이전 버전으로는 테스트 못해봤어요.  - 13.08.18
+	
+	https://cwiki.apache.org/Hive/languagemanual-ddl.html#LanguageManualDDL-ShowTableProperties
+	
+	@author hangum	
+ --> 
+<sqlMap namespace="Hive_query">
+
+<!--
+	database connection test 
+ -->
+<select id="connectionCheck" resultClass="java.lang.String" parameterClass="java.lang.String">
+	show databases
+</select>
+
+<!-- 
+	table 오직 테이블 이름만.
+ -->
+<select id="tableListOnlyName" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
+	show tables
+</select>
+
+<!-- 
+	table 이름
+ -->
+<select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
+	show tables
+</select>
+
+<!-- 
+	table, view의 컬럼 정보
+ -->
+<select id="tableColumnList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
+	 describe $table$
+</select>
+
+</sqlMap>

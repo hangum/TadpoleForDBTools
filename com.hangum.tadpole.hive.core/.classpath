@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry exported="true" kind="lib" path="libs/hive/hadoop-core-1.0.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/hive/hive-exec-0.12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/hive/hive-jdbc-2.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/hive/hive-metastore-0.12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/hive/hive-service-0.12.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/hive/libfb303-0.9.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/commons-logging-1.0.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/slf4j/slf4j-api-1.6.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src_test"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

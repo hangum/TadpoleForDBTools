@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (c) 2013 hangum.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Lesser Public License v2.1
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      hangum - initial API and implementation
+-->
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.hangum.tadpole.mongodb.model/src" editDirectory="/com.hangum.tadpole.mongodb.model.edit/src"
+    editorDirectory="/com.hangum.tadpole.mongodb.model.editor/src" modelPluginID="com.hangum.tadpole.mongodb.model"
+    redirection="" modelName="Mongodb" editPluginClass="com.hangum.tadpole.mongodb.provider.MongodbEditPlugin"
+    editorPluginClass="com.hangum.tadpole.mongodb.presentation.MongodbEditorPlugin"
+    testSuiteClass="com.hangum.tadpole.mongodb.tests.MongodbAllTests" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="7.0" copyrightFields="false" editPluginID="com.hangum.tadpole.mongodb.model.edit"
+    editorPluginID="com.hangum.tadpole.mongodb.model.editor">
+  <foreignModel>mongodb.ecore</foreignModel>
+  <genPackages prefix="Mongodb" basePackage="com.hangum.tadpole" disposableProviderFactory="true"
+      interfacePackageSuffix="model" metaDataPackageSuffix="model" classPackageSuffix="model.impl"
+      utilityPackageSuffix="model.util" providerPackageSuffix="model.provider" presentationPackageSuffix="model.presentation"
+      testsPackageSuffix="model.tests" ecorePackage="mongodb.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="mongodb.ecore#//RelationKind">
+      <genEnumLiterals ecoreEnumLiteral="mongodb.ecore#//RelationKind/ONLY_ONE"/>
+      <genEnumLiterals ecoreEnumLiteral="mongodb.ecore#//RelationKind/ZERO_OR_ONE"/>
+      <genEnumLiterals ecoreEnumLiteral="mongodb.ecore#//RelationKind/ZERO_OR_MANY"/>
+      <genEnumLiterals ecoreEnumLiteral="mongodb.ecore#//RelationKind/ONE_OR_MANY"/>
+    </genEnums>
+    <genDataTypes ecoreDataType="mongodb.ecore#//Rectangle"/>
+    <genDataTypes ecoreDataType="mongodb.ecore#//Point"/>
+    <genClasses ecoreClass="mongodb.ecore#//DB">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//DB/dbType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mongodb.ecore#//DB/tables"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//DB/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//DB/url"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//DB/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//DB/sid"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mongodb.ecore#//DB/references"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//DB/comment"/>
+    </genClasses>
+    <genClasses ecoreClass="mongodb.ecore#//Table">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mongodb.ecore#//Table/columns"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference mongodb.ecore#//Table/db"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Table/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Table/constraints"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mongodb.ecore#//Table/incomingLinks"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mongodb.ecore#//Table/outgoingLinks"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Table/logicalName"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Table/comment"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mongodb.ecore#//Table/UserCommentReference"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference mongodb.ecore#//Table/subDoc"/>
+    </genClasses>
+    <genClasses ecoreClass="mongodb.ecore#//Column">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Column/field"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Column/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Column/default"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference mongodb.ecore#//Column/table"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Column/logicalField"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Column/key"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Column/comment"/>
+    </genClasses>
+    <genClasses ecoreClass="mongodb.ecore#//Relation">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mongodb.ecore#//Relation/source"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mongodb.ecore#//Relation/target"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Relation/source_kind"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Relation/target_kind"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Relation/column_name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Relation/referenced_column_name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Relation/bendpoint"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference mongodb.ecore#//Relation/db"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Relation/comment"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//Relation/constraint_name"/>
+    </genClasses>
+    <genClasses ecoreClass="mongodb.ecore#//View">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference mongodb.ecore#//View/tableName"/>
+    </genClasses>
+    <genClasses ecoreClass="mongodb.ecore#//ERDInfo">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//ERDInfo/autoLayout"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//ERDInfo/version"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//ERDInfo/autoLayout_type"/>
+    </genClasses>
+    <genClasses ecoreClass="mongodb.ecore#//UserComment">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//UserComment/comment"/>
+    </genClasses>
+    <genClasses ecoreClass="mongodb.ecore#//test"/>
+    <genClasses ecoreClass="mongodb.ecore#//SubDocument">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute mongodb.ecore#//SubDocument/name"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference mongodb.ecore#//SubDocument/sucDocTable"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

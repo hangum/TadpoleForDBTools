@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="com.hangum.tadpole.rdb.erd.core.extensionpoint.definition.decoration" name="ERD Table Column Decoration" schema="schema/com.hangum.tadpole.rdb.erd.core.extensionpoint.definition.decoration.exsd"/>
+   <!--extension
+         point="org.eclipse.rap.ui.entrypoint">
+      <entrypoint
+            class="com.hangum.tadpole.rdb.erd.stanalone.Application"
+            id="com.hangum.tadpole.rdb.erd.stanalone.Application"
+            path="/rdb-erd">
+      </entrypoint>
+   </extension>
+
+   <extension
+         point="org.eclipse.rap.ui.branding">
+      <branding
+            defaultEntrypointId="com.hangum.tadpole.rdb.erd.stanalone.Application"
+            id="com.hangum.tadpole.rdb.erd.core.branding"
+            servletName="new-erd"
+            title="rdb-erd">
+      </branding>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            name="RDB ERD Perspective"
+            class="com.hangum.tadpole.rdb.erd.stanalone.Perspective"
+            id="com.hangum.tadpole.erd.core.perspective">
+      </perspective>
+   </extension-->
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="com.hangum.tadpole.rdb.erd.core.editor.TadpoleRDBEditor"
+            contributorClass="com.hangum.tadpole.rdb.erd.core.editor.TadpoleERDActionBarContributor"
+            default="false"
+            icon="resources/icons/erd.png"
+            id="com.hangum.tadpole.rdb.erd.core.editor"
+            name="Tadpole RDB ERD">
+      </editor>
+   </extension>
+
+</plugin>

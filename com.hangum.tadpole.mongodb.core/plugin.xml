@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="com.hangum.tadpole.mongodb.core.editors.main.MongoDBTableEditor"
+            default="false"
+            icon="resources/icons/mongodb-add.png"
+            id="com.hangum.tadpole.mongodb.core.main.editor"
+            name="MongoDB Table Editor">
+      </editor>
+      <editor
+            class="com.hangum.tadpole.mongodb.core.editors.dbInfos.MongoDBInfosEditor"
+            default="false"
+            icon="resources/icons/mongodb-add.png"
+            id="com.hangum.tadpole.mongodb.core.editor.dbInfos"
+            name="MongoDB Informations">
+      </editor>
+      <editor
+            class="com.hangum.tadpole.mongodb.core.editors.mapreduce.MapReduceEditor"
+            default="false"
+            icon="resources/icons/mongodb-add.png"
+            id="com.hangum.tadpole.mongodb.core.ext.editor.mapreduce"
+            name="MapReduce">
+      </editor>
+      <editor
+            class="com.hangum.tadpole.mongodb.core.editors.group.MongoDBGroupEditor"
+            default="false"
+            icon="resources/icons/mongodb-add.png"
+            id="com.hangum.tadpole.mongodb.core.editor.group"
+            name="Group">
+      </editor>
+   </extension>
+
+</plugin>

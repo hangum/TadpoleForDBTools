@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright (c) 2016 hangum.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Lesser Public License v2.1
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      hangum - initial API and implementation
+-->
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<!-- 
+	PostgreSQL 의 확장을 정의합니다. 
+	
+	@author hangum	
+ -->
+<sqlMap namespace="POSTGRESQL_EXT_query">
+
+	<!-- 
+		extension lisst
+	 -->
+	<select id="listExtension" resultClass="java.util.HashMap">
+		select x.oid, pg_get_userbyid(extowner) AS owner, 
+		        x.extname, n.nspname, x.extrelocatable, x.extversion, e.comment  
+		FROM pg_extension x
+		  JOIN pg_namespace n on x.extnamespace=n.oid
+		  join pg_available_extensions() e(name, default_version, comment) ON x.extname=e.name
+		ORDER BY x.extname
+	</select>
+</sqlMap>

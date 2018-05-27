@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tadpole DB LDAP lib
+Bundle-SymbolicName: com.tadpolehub.db.ldap.core
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: TadpoleHub Co
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ClassPath: lib/base/commons-cli-1.4.jar,
+ lib/base/slf4j-api-1.7.25.jar,
+ .,
+ lib/jars/ldaptive-1.2.3.jar,
+ lib/jars/ldaptive-apache-1.2.3.jar,
+ lib/jars/ldaptive-beans-1.2.3.jar,
+ lib/jars/ldaptive-jldap-1.2.3.jar,
+ lib/jars/ldaptive-json-1.2.3.jar,
+ lib/jars/ldaptive-ldapi-1.2.3.jar,
+ lib/jars/ldaptive-opendj-1.2.3.jar,
+ lib/jars/ldaptive-templates-1.2.3.jar,
+ lib/jars/ldaptive-unboundid-1.2.3.jar
+Export-Package: com.tadpolehub.db.ldap.core.utils
+Require-Bundle: com.hangum.tadpole.commons.libs;bundle-version="2.0.0"

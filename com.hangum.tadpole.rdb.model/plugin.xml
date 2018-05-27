@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id$
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://tadpole/rdb/1.0"
+            class="tadpole.TadpolePackage"
+            genModel="model/tadpole.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated rdb -->
+      <package
+            uri="http://com.hangum.tadpole.rdb.model.ERDInfo"
+            class="com.hangum.tadpole.rdb.model.RdbPackage"
+            genModel="model/rdb.genmodel"/>
+   </extension>
+
+</plugin>

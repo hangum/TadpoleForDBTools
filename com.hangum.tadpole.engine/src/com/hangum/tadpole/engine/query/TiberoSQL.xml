@@ -1,0 +1,1476 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright (c) 2013 hangum.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Lesser Public License v2.1
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      hangum - initial API and implementation
+-->
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+    
+    
+<!-- 
+		Tadpole DB Hub - Oracle DB Define -> Tibero 		
+		Tibero5-jdbc.jar 로 작업 - @hangum
+		
+		@nilriri
+		@hangum
+ -->
+
+<sqlMap namespace="Tibero_query">
+
+<!--
+	database connection test 
+ -->
+<select id="connectionCheck" resultClass="java.lang.String" parameterClass="java.lang.String">
+	SELECT 1 FROM dual  
+</select>
+
+<!-- 
+	db의 모든 table 이름만.
+	
+	컬럼 설명
+	TNAME 		: 테이블 명
+ -->
+<select id="tableListOnlyName" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
+  SELECT 
+      T.table_name AS "NAME"
+  FROM ALL_TABLES T  
+  WHERE T.OWNER = NVL(#schema#, user)
+  ORDER BY T.table_name
+</select>
+
+<!-- 
+	스키마 목록을 조회한다.
+	ExplorerViewer에 조회된 스키마 목록을 표시하여 다른 스키마의 오브젝트에 접근할 수 있도록 한다.
+ -->
+<select id="getSchemas" resultClass="java.util.HashMap">
+	SELECT * FROM (
+  	SELECT 
+  		USERNAME AS schema 
+	FROM ALL_USERS
+	UNION 
+  	SELECT 
+  		'PUBLIC' AS schema 
+	FROM DUAL )
+	ORDER BY (CASE WHEN schema = USER THEN 0 ELSE ASCII(schema) END)
+</select>
+
+<!--
+	데이터베이스 객체정보 조회. 
+	별칭(시노님)은 시노님이 가르키는 실제 오브젝트 정보를 조회한다.
+ -->
+ 
+<select id="allObjects" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+    Select 
+          O.owner as object_owner
+        , O.object_name as object_name
+        , O.object_type as object_type
+     from sys.all_objects O
+    where 1=1
+<isNotEmpty property="schema_name">
+	  and o.owner in (#schema_name#, upper(#schema_name#))
+</isNotEmpty>    
+      and o.object_type not in ('SYNONYM')
+	  and object_name in (#object_name#, upper(#object_name#))
+	
+	UNION 	  
+	
+	select o.owner as object_owner, o.object_name as object_name, o.object_type as object_type
+	  from sys.all_objects o
+	       inner join sys.all_synonyms s
+	          on     s.synonym_name in (#object_name#, upper(#object_name#))
+	             and o.owner = s.org_object_owner
+	             and o.object_name = s.org_object_name
+	 where     1 = 1
+<isNotEmpty property="schema_name">
+	  and o.owner in (#schema_name#, upper(#schema_name#))
+</isNotEmpty>    
+      and o.object_type in ('TABLE', 'VIEW')
+</select>
+
+<!-- 
+	db의 모든 table 이름, 코멘트.
+	
+	컬럼 설명
+	TNAME 		: 테이블 명
+ -->
+<select id="tableList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.lang.String">
+<![CDATA[
+  SELECT 
+      T.table_name AS "NAME"
+      , S.COMMENTS AS "COMMENT"   
+      , T.OWNER    AS "SCHEMA_NAME"
+      , (CASE WHEN T.PARTITIONED = 'YES' THEN 'PARTITIONED' ELSE NVL(T.IOT_TYPE,' ') END) AS "TABLE_TYPE"
+    FROM ALL_TABLES T  
+      LEFT JOIN all_TAB_COMMENTS S
+            ON T.OWNER = S.OWNER AND S.TABLE_NAME = T.TABLE_NAME
+WHERE T.OWNER = (NVL(#schema_name#, USER))
+  AND (t.iot_type is null or t.iot_type <> 'IOT_OVERFLOW')
+ORDER BY T.table_name
+ ]]>
+</select>
+
+<!-- 
+	db의 table 이름
+ -->
+<select id="table" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableDAO" parameterClass="java.util.HashMap">
+  SELECT 
+  		  NVL (T.TABLE_NAME, S.TABLE_NAME) AS "NAME"
+  		, S.COMMENTS                       AS "COMMENT"
+  		, NVL (T.OWNER, S.OWNER)           AS "SCHEMA_NAME"
+    FROM ALL_TABLES T
+         FULL OUTER JOIN ALL_TAB_COMMENTS S
+            ON     T.OWNER = S.OWNER
+               AND S.TABLE_NAME = T.TABLE_NAME
+   WHERE     1 = 1
+         AND  (#schema#) IN (T.OWNER, S.OWNER)
+         AND  (#name#) IN (T.TABLE_NAME, S.TABLE_NAME)
+  ORDER BY T.TABLE_NAME
+</select>
+
+<!-- 
+	특정 table의 table이나 view 컬럼 정보
+	
+	컬럼 설명
+	Field			: 컬럼 명
+	Type			: 컬럼 타입
+	Null			: Null 유무 (예: YES,NO)
+	Key				: primary key, foreign key(예: PK, FK)
+	Default			: 기본값
+	Extra			: 특수컬럼(예: auto_increment)
+ -->
+<select id="tableColumnList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO" parameterClass="java.util.HashMap">
+  SELECT C.COLUMN_NAME AS "FIELD",
+        C.DATA_TYPE || CASE WHEN C.DATA_TYPE = 'NUMBER' AND C.DATA_PRECISION > 0 AND C.DATA_SCALE > 0 THEN '('||C.DATA_PRECISION || ',' || C.DATA_SCALE||')'
+        WHEN C.DATA_TYPE = 'NUMBER' AND C.DATA_PRECISION > 0 THEN '('||C.DATA_PRECISION ||')'
+        WHEN C.DATA_TYPE = 'DATE' THEN '' ELSE '(' || TO_CHAR(C.DATA_LENGTH) || ')' END AS "TYPE",
+        CASE WHEN C.NULLABLE = 'Y' THEN 'YES' ELSE 'NO' END AS "NULL",
+       (SELECT 
+                   CASE WHEN MAX(P.CONSTRAINT_TYPE) != MIN(P.CONSTRAINT_TYPE) THEN 'MUL' 
+                           WHEN MAX(P.CONSTRAINT_TYPE) = 'P' THEN 'PK' 
+                           WHEN MIN(P.CONSTRAINT_TYPE) = 'R' THEN 'FK' 
+                           WHEN MIN(P.CONSTRAINT_TYPE) = 'U' THEN 'UNI' 
+                           ELSE '' END
+             FROM ALL_CONS_COLUMNS D 
+              JOIN ALL_CONSTRAINTS P ON D.OWNER = P.OWNER AND D.TABLE_NAME = P.TABLE_NAME 
+              AND D.CONSTRAINT_NAME = P.CONSTRAINT_NAME
+             AND  P.CONSTRAINT_TYPE IN ('P', 'R', 'U')
+           WHERE C.TABLE_NAME = D.TABLE_NAME AND C.COLUMN_NAME = D.COLUMN_NAME 
+        ) AS "KEY",
+       C.DATA_DEFAULT AS "DEFAULT", 
+       null AS EXTRA, 
+       S.COMMENTS AS "COMMENT"
+   FROM ALL_TAB_COLUMNS C
+        LEFT JOIN ALL_COL_COMMENTS S ON C.OWNER = S.OWNER AND S.TABLE_NAME = C.TABLE_NAME AND S.COLUMN_NAME = C.COLUMN_NAME 
+    WHERE 1=1
+      AND C.OWNER = (NVL(#schema#, USER))
+      AND C.TABLE_NAME = #table#
+    ORDER BY C.COLUMN_ID    
+</select>
+
+<!-- 
+	erd에서 테이블간의 관계를 표시하기 위한 정보
+	
+	컬럼 설명
+	constraint_name		:	 인덱스 이름
+	table_name			:	 소스 테이블 이름
+	column_name			:	 소스 테이블 컬럼
+	
+	referenced_table_name	:	타켓 테이블 이름
+	referenced_column_name	: 	타켓 테이블 컬럼
+ -->
+<select id="referencedTableList"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" parameterClass="java.util.HashMap">
+ SELECT t.constraint_name ,
+        t.table_name,
+       max(decode(rno,1,t.column_name)) ||','|| max(decode(rno,2,t.column_name)) AS column_name ,
+                                                max(r.table_name) AS referenced_table_name ,
+                                                max(r.columns) AS referenced_column_name
+FROM
+  ( SELECT c.owner, C.table_name ,
+           C.CONSTRAINT_NAME ,
+           S.column_name ,
+           C.R_CONSTRAINT_NAME ,
+           COUNT(*)OVER(PARTITION BY C.CONSTRAINT_NAME) CNT ,
+                                                        ROW_NUMBER()OVER(PARTITION BY C.CONSTRAINT_NAME
+                                                                         ORDER BY S.COLUMN_NAME) RNO
+   FROM all_constraints C
+   LEFT JOIN all_CONS_COLUMNS S ON c.owner = s.owner and C.CONSTRAINT_NAME = S.CONSTRAINT_NAME
+   AND C.TABLE_NAME = S.TABLE_NAME
+   WHERE C.CONSTRAINT_TYPE = 'R' 
+     AND c.owner = (#schema#)
+     AND c.table_name in ( $table$ ) ) t
+LEFT JOIN
+  (SELECT x.owner,
+          x.table_name,
+          x.constraint_name ,
+          max(decode(x.rno,1,COLUMN_NAME))||',' || max(decode(x.rno,2,COLUMN_NAME)) columns
+   FROM
+     (SELECT s.table_name ,
+             s.constraint_name ,
+             s.COLUMN_NAME , ROW_NUMBER()OVER(PARTITION BY s.CONSTRAINT_NAME
+                                              ORDER BY S.COLUMN_NAME) RNO,
+             s.owner
+      FROM all_CONS_COLUMNS S
+      WHERE 1=1
+        AND s.owner = (#schema#)
+        AND s.table_name in ( $table$ ) )x
+   GROUP BY x.owner,
+            x.table_name,
+            x.constraint_name ) R ON t.owner = r.owner and t.r_CONSTRAINT_NAME = R.CONSTRAINT_NAME
+WHERE 1=1
+  AND t.owner = (#schema#)
+  AND t.table_name in ( $table$ )            
+GROUP BY t.table_name,
+         t.constraint_name
+</select>
+
+<!-- 
+	모든 관계 테이블 목록을 가져옵니다.
+	(referencedTableList와 쿼리는 같음, 틀린 점은 모든 테이블의 관계를 가져 옵니다. erd에서 모든 테이블 관계 보여주는 기능 사용 용도)
+	
+	컬럼 설명
+	constraint_name		:	 인덱스 이름
+	table_name			:	 소스 테이블 이름
+	column_name			:	 소스 테이블 컬럼
+	
+	referenced_table_name	:	타켓 테이블 이름
+	referenced_column_name	: 	타켓 테이블 컬럼
+ -->
+<select id="referencedTableListALL"  resultClass="com.hangum.tadpole.engine.query.dao.mysql.ReferencedTableDAO" parameterClass="java.lang.String">
+ SELECT t.table_name,
+       t.constraint_name ,
+       max(decode(rno,1,t.column_name)) ||','|| max(decode(rno,2,t.column_name)) AS column_name ,
+                                                max(r.table_name) AS referenced_table_name ,
+                                                max(r.columns) AS referenced_column_name
+FROM
+  ( SELECT c.owner, C.table_name ,
+           C.CONSTRAINT_NAME ,
+           S.column_name ,
+           C.R_CONSTRAINT_NAME ,
+           COUNT(*)OVER(PARTITION BY C.CONSTRAINT_NAME) CNT ,
+                                                        ROW_NUMBER()OVER(PARTITION BY C.CONSTRAINT_NAME
+                                                                         ORDER BY S.COLUMN_NAME) RNO
+   FROM all_constraints C
+   LEFT JOIN all_CONS_COLUMNS S ON c.owner = s.owner and C.CONSTRAINT_NAME = S.CONSTRAINT_NAME
+   AND C.TABLE_NAME = S.TABLE_NAME
+   WHERE C.CONSTRAINT_TYPE = 'R' 
+     AND c.owner = (#schema#) ) t
+LEFT JOIN
+  (SELECT x.owner,
+          x.table_name,
+          x.constraint_name ,
+          max(decode(x.rno,1,COLUMN_NAME))||',' || max(decode(x.rno,2,COLUMN_NAME)) columns
+   FROM
+     (SELECT s.owner,
+             s.table_name ,
+             s.constraint_name ,
+             s.COLUMN_NAME , ROW_NUMBER()OVER(PARTITION BY s.CONSTRAINT_NAME
+                                              ORDER BY S.COLUMN_NAME) RNO
+      FROM all_CONS_COLUMNS S
+      WHERE 1=1
+        AND s.owner = #schema#)x
+   GROUP BY x.owner,
+            x.table_name,
+            x.constraint_name ) R ON t.owner = r.owner and t.r_CONSTRAINT_NAME = R.CONSTRAINT_NAME
+GROUP BY t.owner,
+         t.table_name,
+         t.constraint_name
+</select>
+	
+<!-- 
+	db의 view 정보
+	
+	컬럼 설명
+	oebjt_name		: view 이름
+ -->
+<select id="viewList" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+SELECT 
+ 	  o.object_name as name
+	, o.owner as schema_name
+	, o.object_name AS "View Name"
+    FROM all_objects o
+   WHERE o.owner = NVL((#schema#), user)
+     AND o.object_type = 'VIEW'
+ORDER BY O.OWNER, O.OBJECT_NAME	
+</select>
+
+<!-- 
+	db의 SYNONYM 정보
+	
+	컬럼 설명
+	oebjt_name		: view 이름
+	
+	o.owner in ( s.org_object_owner, 'PUBLIC', 'SYSCAT') 
+	PUBLIC 시노님을 다시 시노님으로 만들었을 경우 목록이 보이지 않아서 조건 추가.
+ -->
+<select id="synonymList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymDAO" parameterClass="java.lang.String">
+	SELECT s.synonym_name
+	      ,o.owner as table_owner
+	      ,s.org_object_name as table_name
+	      ,null as db_link
+	      ,c.comments
+	      ,o.object_type
+	      ,s.owner as schema_name
+	  FROM all_synonyms s
+	       LEFT JOIN all_tab_comments c
+	          ON s.org_object_owner = c.owner AND s.org_object_name = c.table_name
+	       INNER JOIN all_objects o
+	          ON o.owner in ( s.org_object_owner, 'PUBLIC', 'SYSCAT') AND o.object_name = s.org_object_name
+	  WHERE 1=1
+	    AND s.owner = (#schema#)
+	    AND o.object_type IN ('TABLE', 'VIEW', 'PACKAGE', 'PROCEDURE', 'FUNCTION')
+</select>
+	
+<!-- 
+	Synonym세부정보.
+ -->
+<select id="synonymColumnList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleSynonymColumnDAO" parameterClass="java.util.HashMap">
+    SELECT 
+        C.COLUMN_ID,
+        C.OWNER AS TABLE_OWNER,
+        C.TABLE_NAME,
+        C.COLUMN_NAME,
+        C.DATA_TYPE || 
+        CASE WHEN C.DATA_TYPE = 'NUMBER' AND C.DATA_PRECISION > 0 AND C.DATA_SCALE > 0 THEN '('||C.DATA_PRECISION || ',' || C.DATA_SCALE||')'
+        	 WHEN C.DATA_TYPE = 'NUMBER' AND C.DATA_PRECISION > 0 THEN '('||C.DATA_PRECISION ||')'
+             WHEN C.DATA_TYPE = 'DATE' THEN '' ELSE '(' || TO_CHAR(C.DATA_LENGTH) || ')' END AS "DATA_TYPE",
+        CASE WHEN C.NULLABLE = 'Y' THEN 'YES' ELSE 'NO' END AS "NULLABLE",
+       (SELECT 
+                   CASE WHEN MAX(P.CONSTRAINT_TYPE) != MIN(P.CONSTRAINT_TYPE) THEN 'MUL' 
+                           WHEN MAX(P.CONSTRAINT_TYPE) = 'P' THEN 'PK' 
+                           WHEN MIN(P.CONSTRAINT_TYPE) = 'R' THEN 'FK' 
+                           WHEN MIN(P.CONSTRAINT_TYPE) = 'U' THEN 'UNI' 
+                           ELSE '' END
+             FROM ALL_CONS_COLUMNS D 
+              JOIN ALL_CONSTRAINTS P 
+              		ON D.OWNER = NVL(P.INDEX_OWNER, P.OWNER) 
+              		AND D.TABLE_NAME = P.TABLE_NAME 
+              		AND D.CONSTRAINT_NAME = P.CONSTRAINT_NAME
+             		AND  P.CONSTRAINT_TYPE IN ('P', 'R', 'U')
+           WHERE 1=1
+            AND D.OWNER = C.OWNER
+           	AND C.TABLE_NAME = D.TABLE_NAME 
+           	AND C.COLUMN_NAME = D.COLUMN_NAME  ) AS "KEY",
+       c.data_default AS "DEFAULT_VALUE",
+       '' AS EXTRA, 
+       S.COMMENTS AS "COMMENTS"
+   FROM ALL_TAB_COLUMNS C
+        LEFT JOIN ALL_COL_COMMENTS S ON S.OWNER = C.OWNER AND S.TABLE_NAME = C.TABLE_NAME AND S.COLUMN_NAME = C.COLUMN_NAME 
+    WHERE C.OWNER = (#owner#)
+       AND C.TABLE_NAME = (#table#) 
+   	UNION ALL
+	SELECT POSITION AS SEQUENCE
+	        ,OWNER
+	        ,OBJECT_NAME
+	        ,ARGUMENT_NAME
+	        ,DECODE (DATA_TYPE, 'REF CURSOR', 'SYS_REFCURSOR', DATA_TYPE) DATA_TYPE
+	        ,NULL
+	        ,IN_OUT
+	        ,NULL DEFAULT_VALUE
+	        ,NULL
+	        ,PACKAGE_NAME
+	    FROM ALL_ARGUMENTS
+	   WHERE OBJECT_ID = (SELECT OBJECT_ID
+	                        FROM all_OBJECTS
+	                       WHERE 1=1
+	                       AND OWNER = (#owner#)
+	                       AND OBJECT_NAME = (#table#) 
+	                       AND OBJECT_TYPE IN ('PROCEDURE', 'FUNCTION'))
+  UNION ALL
+    SELECT ROWNUM
+        ,p.owner
+        ,p.object_name
+        ,p.procedure_name
+        ,(case when p.functionable = 'YES' then 'FUNCTION' else 'PROCEDURE' end) as object_type
+        ,NULL
+        ,NULL
+        ,NULL
+        ,NULL
+        ,NULL
+    FROM all_procedures p
+   WHERE     p.owner = (#owner#)
+         AND p.object_name = (#table#)
+         AND p.procedure_name > ' '
+   ORDER BY 1
+</select>
+
+<!-- 
+	시퀀스 목록을 조회한다.
+ -->
+<select id="sequenceList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleSequenceDAO" parameterClass="java.lang.String">
+	select 
+		SEQUENCE_NAME, MIN_VALUE, MAX_VALUE, INCREMENT_BY, CYCLE_FLAG, ORDER_FLAG, CACHE_SIZE, LAST_NUMBER,
+		SEQUENCE_OWNER as schema_name
+	from ALL_SEQUENCES
+	where SEQUENCE_OWNER = #schema_name#
+</select>
+
+<!-- 
+	index 상세 내역
+	아래 내역은 mysql db의 특성에 맟춘것으로 각 디비의 특성에 맟춥니다.
+	
+	컬럼 설명
+	table_name			:  	테이블 명
+    index_name			:	인덱스 명
+    column_name			:	컬럼 명
+    column_position		: 
+    column_length		:
+    char_length			:
+    descend				:	
+    uniqueness			:
+    table_owner			:
+    constraint_type		:
+    status				:
+    #table_schema# AS table_schema
+    //TODO:user_idx_partitions 과 left join 하여 max_trans를 참조할 수 있을까?
+ -->
+ <select id="indexList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
+  SELECT i.table_name
+        ,i.index_name
+        ,i.uniqueness
+        ,i.table_owner
+        ,null as compression
+        ,i.tablespace_name
+        ,i.logging
+        ,i.pct_free as pct_free
+        ,i.ini_trans
+        ,null as max_trans
+        ,i.initial_extent
+        ,i.min_extents
+        ,i.max_extents
+        ,null pct_increase
+        ,i.buffer_pool
+        ,CASE
+            WHEN c.constraint_type = 'P' THEN 'PK'
+            WHEN i.uniqueness = 'UNIQUE' THEN 'UQ'
+            ELSE ''
+         END
+            AS index_type
+        ,c.status
+        ,user AS table_schema
+    FROM    all_indexes i
+         LEFT JOIN
+            all_constraints c
+         ON     i.table_name = c.table_name
+            AND i.index_name = c.constraint_name
+            AND c.status = 'ENABLED'
+   WHERE i.owner = (#table_schema#)
+     AND i.table_name = (#table_name#)
+ORDER BY i.table_name, i.index_name
+</select>
+
+ <select id="indexDetailList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.InformationSchemaDAO" parameterClass="java.util.Map">
+  SELECT m.table_name,
+         m.index_name,
+         m.column_name,
+         m.column_position as seq_in_index,
+         m.column_length,
+         0 as char_length,
+         m.descend as "comment",
+         i.uniqueness,
+         i.table_owner,
+         i.table_owner AS table_schema
+    FROM all_ind_columns m
+         LEFT JOIN all_indexes i
+            ON m.table_owner = i.table_owner and m.table_name = i.table_name AND m.index_name = i.index_name
+   WHERE 1=1
+     AND i.table_owner = (#table_schema#)
+     AND m.index_name = (#index_name#)
+ORDER BY m.column_position        
+</select>
+
+<!--
+ tableConstraintsList 테이블에 정의된 제약조건 목록을 조회한다.
+ 
+ -->
+<select id="tableConstraintsList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TableConstraintsDAO" parameterClass="java.util.Map">
+  SELECT i.table_name
+        ,i.constraint_name
+        ,i.index_name
+        ,(case i.constraint_type when 'P' then 'Pk' when 'R' then 'Fk' when 'C' then 'Ck' else i.constraint_type end) as constraint_type 
+        ,i.status
+        ,I.OWNER as TABLE_SCHEMA
+        ,I.OWNER as INDEX_SCHEMA
+        ,I.SEARCH_CONDITION as comments
+        ,i.R_OWNER
+        ,I.R_CONSTRAINT_NAME 
+        ,nvl(i.index_owner, i.owner) as schema_name       
+    FROM all_constraints i
+         LEFT JOIN all_indexes c
+            ON     i.owner = c.owner
+               AND i.table_name = c.table_name
+               AND c.index_name = i.constraint_name
+               AND c.status = 'ENABLED'
+   WHERE 1=1
+     AND (#table_schema#) IN (i.owner, i.index_owner)
+     AND i.table_name = (#table_name#)
+ORDER BY i.table_name, i.index_name
+</select>
+
+<!-- 
+	procedure 상세 내역
+	아래 내역은 mysql db의 특성에 맟춘것으로 각 디비의 특성에 맟춥니다.
+	
+	컬럼 설명
+	db				:	db 명
+	name			:	procedure 명
+	type			:	procedure type
+	definer			:	procedure 정의 자
+	modified		:	수정일시
+	created			:	생성일시
+	security_type	:	예를 들어 (DEFINER)
+	comment			:
+	character_set_client	:	예를 들어 (utf8)
+	collation_connection	:	에를 들어 (utf8_general_ci)
+	database				:
+	collation				:
+ -->
+<select id="procedureList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+SELECT  
+          s.object_name AS name
+        , s.object_type AS TYPE
+        , #db_name#   AS db
+        , s.created
+        , s.status
+        , s.owner as schema_name
+FROM    all_objects s
+WHERE 1=1
+  and s.owner = (#schema#)
+  and s.object_type = 'PROCEDURE'
+ORDER BY s.object_type DESC, s.object_name 
+</select>
+
+<!-- 
+	Oracle Pakage & PackageBody 내역	
+-->
+
+<select id="packageList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+	SELECT  
+          s.object_name AS packagename
+        , s.object_name AS name
+        , s.object_type AS TYPE
+        , #db_name#   AS db
+        , s.created
+        , (CASE WHEN 'VALID' = NVL (b.status, 'VALID') AND 'VALID' = s.status THEN 'VALID' ELSE 'INVALID' END) AS status
+        , s.owner as schema_name
+    FROM all_objects s 
+    	LEFT JOIN all_objects b ON s.owner = b.owner and s.object_name = b.object_name AND b.object_type = 'PACKAGE BODY'
+	WHERE 1=1
+	  AND s.owner = (#schema_name#)
+	  and s.object_type = 'PACKAGE'
+	ORDER BY s.object_type DESC, s.object_name 
+</select>
+
+<!-- 
+	package arguments list
+	SELECT 
+	       OBJECT_NAME, POSITION, DECODE(DATA_TYPE, 'REF CURSOR', 'SYS_REFCURSOR', DATA_TYPE) DATA_TYPE, OVERLOAD, ARGUMENT_NAME,
+	       DATA_LEVEL, DATA_LENGTH, DATA_PRECISION, DATA_SCALE, TYPE_NAME,
+	       IN_OUT, OBJECT_ID, SEQUENCE
+	FROM   ALL_ARGUMENTS
+	WHERE  OBJECT_ID = (SELECT OBJECT_ID
+	         FROM USER_OBJECTS 
+	         WHERE OBJECT_NAME ='PKG_UTIL'
+	         AND OBJECT_TYPE IN ('PACKAGE', 'PROCEDURE', 'FUNCTION'))
+	ORDER BY OBJECT_NAME, OVERLOAD, SEQUENCE
+
+ -->
+<select id="packageBodyList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.util.Map">
+select 
+	s.object_name as packagename
+	,s.procedure_name as name
+	,(case when s.functionable = 'YES' then 'FUNCTION' else 'PROCEDURE' end) as type
+	,s.member_no as overload
+ from all_procedures s
+ where 1=1
+  and s.owner = (#schema_name#)
+  and s.object_name = (#package_name#)
+ order by 3, 2
+</select>
+
+<!-- 
+	function 상세 내역
+	아래 내역은 mysql db의 특성에 맟춘것으로 각 디비의 특성에 맟춥니다.
+	
+	컬럼 설명
+	db				:	db 명
+	name			:	procedure 명
+	type			:	procedure type
+	definer			:	procedure 정의 자
+	modified		:	수정일시
+	created			:	생성일시
+	security_type	:	예를 들어 (DEFINER)
+	comment			:
+	character_set_client	:	예를 들어 (utf8)
+	collation_connection	:	에를 들어 (utf8_general_ci)
+	database				:
+	collation				:
+ -->
+<select id="functionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ProcedureFunctionDAO" parameterClass="java.lang.String">
+SELECT  
+          s.object_name AS name
+        , s.object_type AS TYPE
+        , #db_name#   AS db
+        , s.created
+        , s.status
+        , s.owner as schema_name
+FROM    all_objects s
+WHERE   1=1
+  and s.owner = (#schema#)
+  and s.object_type = 'FUNCTION'
+ORDER BY s.object_name 
+</select>
+
+<!-- 
+	show 내역
+	아래 내역은 mysql db의 특성에 맟춘것으로 각 디비의 특성에 맟춥니다.
+	
+	컬럼 설명
+	trigger			: trigger name	
+	event			: event
+	table			: table name
+	statement		:
+	timing			:
+	created			:
+	sql_mode		:
+	definer			:
+	character_set_client	:	
+	collation_connection	:
+	database				:
+	collation				:
+ -->
+<select id="triggerAllList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.lang.String">
+  SELECT s.object_name AS name
+        ,t.table_name AS table_name
+        ,t.triggering_event AS event
+        ,t.when_clause AS timing
+        ,s.object_type AS TYPE
+        ,#db_name# AS db
+        ,s.created
+        , (CASE WHEN t.status = 'ENABLED' AND s.status = 'VALID' THEN 'VALID' ELSE 'INVALID' END) AS status
+        , s.owner as schema_name
+    FROM all_objects s 
+    	INNER JOIN all_triggers t ON s.owner = t.owner and S.OBJECT_NAME = t.trigger_name
+   WHERE 1=1
+     AND s.owner = #db_name#
+     AND s.object_type = 'TRIGGER'
+ORDER BY t.table_name, s.object_name
+</select>
+
+<!-- 
+	각 스키마에 속한 특정 테이블의 트리거 목록을 조회한다.
+ -->
+<select id="triggerList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.TriggerDAO" parameterClass="java.util.Map">
+  SELECT s.object_name AS name
+        ,t.table_name AS table_name
+        ,t.triggering_event AS event
+        ,t.when_clause AS timing
+        ,s.object_type AS TYPE
+        ,#db_name# AS db
+        ,s.created
+        , (CASE WHEN t.status = 'ENABLED' AND s.status = 'VALID' THEN 'VALID' ELSE 'INVALID' END) AS status
+        , s.owner as schema_name
+    FROM all_objects s 
+    	INNER JOIN all_triggers t ON s.owner = t.owner and S.OBJECT_NAME = t.trigger_name
+   WHERE 1=1
+     AND s.owner = (#table_schema#)
+     AND s.object_type = 'TRIGGER'
+<isNotEmpty property="table_name">
+     AND t.table_name = #table_name#
+</isNotEmpty>
+ORDER BY t.table_name, s.object_name
+</select>
+
+<!-- 
+	enable 상태의 트리거 목록을 리턴한다.
+ -->
+<select id="triggerListInTable" resultClass="java.util.HashMap" parameterClass="java.util.Map">
+<![CDATA[
+  SELECT t.table_name AS "table_name"
+        ,s.object_name AS "trigger_name"
+        ,'ALTER TRIGGER ' || t.table_owner || '.' || s.object_name || ' DISABLE' AS "disable_statement"
+        ,'ALTER TRIGGER ' || t.table_owner || '.' || s.object_name || ' ENABLE' AS "enable_statement"
+    FROM all_objects s 
+    	INNER JOIN all_triggers t ON s.owner = t.owner and s.object_name = t.trigger_name
+   WHERE     1 = 1
+         AND t.status = 'ENABLED'
+         AND s.status = 'VALID'
+         AND s.object_type = 'TRIGGER'
+         AND s.owner = (#schema_name#)
+         AND t.table_name = (#table_name#)
+ORDER BY t.table_name, s.object_name
+ ]]>
+</select>
+
+<!-- 
+	table명을 받아서 pk 컬럼 목록을 리턴한다.
+ -->
+<select id="primarykeyListInTable" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+  SELECT 
+  		c.column_name AS "column_name"
+  	  , c.column_id AS "column_order"
+    FROM all_tab_columns c
+         INNER JOIN all_constraints b ON c.owner = b.owner and c.table_name = b.table_name
+         INNER JOIN all_cons_columns a
+            ON     c.owner = a.owner
+               AND a.table_name = c.table_name
+               AND a.column_name = c.column_name
+               AND a.constraint_name = b.constraint_name
+   WHERE     1 = 1
+         AND c.owner = (#schema_name#)
+         AND c.table_name =  (#table_name#)
+         AND b.constraint_type = 'P'
+         AND b.status = 'ENABLED'
+ORDER BY a.position
+</select>
+
+<!-- 
+	show function, object
+	
+	컬럼 설명
+	object_name		: object 이름
+	object_id   	: object id
+	create			: 생성일시
+	text			: function text
+ -->
+<select id="functionSource" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+	SELECT O.OBJECT_NAME ,
+		O.OBJECT_ID ,
+		O.CREATED ,
+		S.TEXT
+	FROM ALL_OBJECTS O
+		LEFT JOIN ALL_SOURCE S
+		ON O.OWNER = S.OWNER AND O.OBJECT_NAME = S.NAME
+	WHERE 1 =1
+	  AND O.OWNER = (#schema_name#)
+	  AND O.OBJECT_NAME = #object_name#
+	ORDER BY O.OBJECT_NAME, S.LINE
+</select>
+
+<!-- 
+	지정한 컬럼에 정의된 제약조건 목록을 조회한다.
+	
+ -->
+<select id="constraintList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.ConstraintDAO" parameterClass="java.util.HashMap">
+  SELECT SUBSTR ( a.column_name, 1, 15 ) column_name 
+       , b.constraint_type constraint_type 
+       , DECODE ( b.constraint_type, 'P', 'PRIMARY KEY', 'U', 'UNIQUE KEY', 'C', 'CHECK OR NOT NULL', 'R', 'FOREIGN KEY' ) constraint_type_nm 
+       , a.constraint_name constraint_name 
+       , b.search_condition 
+       , b.status 
+       , r.table_name AS ref_table 
+    FROM ALL_CONS_COLUMNS a 
+         INNER JOIN ALL_CONSTRAINTS b 
+            ON a.owner = b.owner
+           AND a.table_name = b.table_name 
+           AND a.constraint_name = b.constraint_name 
+         LEFT JOIN ALL_CONSTRAINTS r 
+            ON b.owner = r.owner and b.r_CONSTRAINT_NAME = R.CONSTRAINT_NAME 
+   WHERE 1=1 
+   AND a.owner = (#schema#)
+   AND a.table_name =  ( #table# ) 
+   AND a.column_name =  ( #column# ) 
+ORDER BY 1, 2 
+</select>
+
+<!-- 
+	SESSION LIST
+ -->
+<select id="getSessionGrant" resultClass="java.lang.Integer">
+select sum(case when privilege = 'ALTER SYSTEM' then 1 else 0 end) from Session_privs where 1=1
+</select>
+
+<select id="getSessionView" resultClass="java.lang.Integer">
+<![CDATA[
+SELECT count(*) FROM v$$session WHERE 1 = 1
+]]>
+</select>
+
+<select id="getVersion" resultClass="java.lang.Integer">
+<![CDATA[
+SELECT TO_NUMBER(SUBSTR (version, 1, INSTR (version, '.') - 1)) AS version
+  FROM (SELECT TRIM (SUBSTR (banner, INSTR (banner, CHR (9)) + 1, 10)) AS version
+          FROM v$$version
+         WHERE banner LIKE 'CORE%')
+]]>
+</select>
+
+<select id="sessionList" resultClass="com.hangum.tadpole.engine.query.dao.mysql.SessionListDAO">
+<![CDATA[
+	  SELECT S.SID || ',' || S.SERIAL## AS ID
+	        ,s.USERNAME AS "USER"
+	        ,S.OSUSER || ' of ' || s.MACHINE AS HOST
+	        ,S.SCHEMANAME AS DB
+	        ,SUBSTR (Q.SQL_TEXT, 1, 30) || '...' AS COMMAND
+	        ,S.LOGON_TIME AS TIME
+	        ,S.STATE AS STATE
+	        ,S.MODULE || ' - ' || S.STATUS ||' : '||CHR(9)||CHR(13)||CHR(13)||  Q.SQL_TEXT AS INFO
+	    FROM V$$SESSION s
+	         LEFT JOIN v$$PROCESS P
+	            ON P.pid = S.sid
+	         LEFT JOIN V$$SQL Q
+	            ON Q.SQL_ID IN DECODE(S.SQL_ID, NULL, S.PREV_SQL_ID, S.SQL_ID) 
+	   WHERE 1=1
+	   AND s.USERNAME IS NOT NULL 
+	   AND NVL(s.osuser, 'x') <> 'SYSTEM' 
+	   AND s.TYPE <> 'BACKGROUND'
+	ORDER BY S.MODULE, S.USERNAME
+]]>
+</select>
+
+<!-- 
+	ALTER SYSTEM DISCONNECT SESSION '123,9' POST_TRANSACTION IMMEDIATE
+
+ -->
+<select id="killProcess" parameterClass="java.lang.String">
+	ALTER SYSTEM KILL SESSION '$spid$' IMMEDIATE
+</select>
+
+<!-- 
+	table row count
+ -->
+<select id="tableRowCount" resultClass="java.lang.Integer" parameterClass="java.lang.String">
+	SELECT count(*) FROM $table$
+</select>
+
+<!-- 
+	table information
+ -->
+<select id="tableInformation" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+	SELECT TABLE_NAME
+      ,TABLESPACE_NAME
+      ,PCT_FREE
+      ,INI_TRANS
+      ,LOGGING
+      ,NUM_ROWS
+      ,BLOCKS
+      ,AVG_ROW_LEN
+      ,DEGREE
+      ,SAMPLE_SIZE
+      ,LAST_ANALYZED
+      ,PARTITIONED
+      ,BUFFER_POOL
+      ,ROW_MOVEMENT
+      ,DURATION
+      ,COMPRESSION
+      ,DROPPED
+      ,READ_ONLY
+      ,TEMPORARY
+      ,MAX_EXTENTS
+      ,IOT_TYPE
+      ,INITIAL_EXTENT
+      ,NEXT_EXTENT
+      ,MIN_EXTENTS
+  FROM ALL_TABLES T
+  WHERE 1=1
+    AND T.OWNER = (#schema_name#)
+</select>
+
+<!-- 
+	column information
+ -->
+<select id="columnInformation" resultClass="com.hangum.tadpole.engine.query.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.util.HashMap">
+ select cols.table_name as table_name,
+        tbls.comments as table_comment,
+        cols.column_name as column_name,
+        cols.nullable as nullable,
+        cols.data_type || (case when cols.data_type = 'NUMBER' then '(' || cols.data_precision || ',' || cols.data_scale || ')' when cols.data_type = 'DATA' then null when cols.data_type in('CHAR',
+        'VARCHAR',
+        'VARCHAR2',
+        'NCHAR',
+        'NVARCHAR',
+        'NVARCHAR2') then '(' || to_char(cols.char_length) || ')' else '(' || to_char(cols.data_length) || ')' end ) as data_type,
+        cols.data_default as data_default,
+        coms.comments as column_comment,
+        null as data_type_mod,
+        cols.char_used as char_used,
+        decode(st.density, null, 'No', 'Yes') as histogram,
+        st.num_distinct as num_distinct,
+        st.num_nulls as num_nulls,
+        round(st.density,5) as density,
+        st.last_analyzed as last_analyzed
+ from all_tab_columns cols 
+    left join all_col_comments coms on cols.owner = coms.owner and coms.table_name = cols.table_name and coms.column_name = cols.column_name 
+    left join all_tab_comments tbls on tbls_owner = cols.owner and tbls.table_name = cols.table_name
+    left join all_tab_col_statistics st on st.owner = cols.owner and st.table_name = cols.table_name and st.column_name = cols.column_name
+  where 1 = 1
+    and cols.owner = (#schema_name#)
+  order by cols.table_name, cols.column_id
+</select>
+
+<select id="userColumnInformation" resultClass="com.hangum.tadpole.engine.query.dao.rdb.RDBInfomationforColumnDAO" parameterClass="java.util.HashMap">
+ select cols.table_name as table_name,
+        tbls.comments as table_comment,
+        cols.column_name as column_name,
+        cols.nullable as nullable,
+        cols.data_type || (case when cols.data_type = 'NUMBER' then '(' || cols.data_precision || ',' || cols.data_scale || ')' when cols.data_type = 'DATA' then null when cols.data_type in('CHAR',
+        'VARCHAR',
+        'VARCHAR2',
+        'NCHAR',
+        'NVARCHAR',
+        'NVARCHAR2') then '(' || to_char(cols.char_length) || ')' else '(' || to_char(cols.data_length) || ')' end ) as data_type,
+        cols.data_default as data_default,
+        coms.comments as column_comment,
+        null as data_type_mod,
+        cols.char_used as char_used,
+        decode(st.density, null, 'No', 'Yes') as histogram,
+        st.num_distinct as num_distinct,
+        st.num_nulls as num_nulls,
+        round(st.density,5) as density,
+        st.last_analyzed as last_analyzed
+ from user_tab_columns cols 
+    left join user_col_comments coms     on coms.table_name = cols.table_name and coms.column_name = cols.column_name 
+    left join user_tab_comments tbls     on tbls.table_name = cols.table_name
+    left join user_tab_col_statistics st on st.table_name = cols.table_name and st.column_name = cols.column_name
+  where 1 = 1
+  order by cols.table_name, cols.column_id
+</select>
+
+<select id="getDDLScript" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+	select SYS.DBMS_METADATA.GET_DDL(#object_type#,#object_name#,#schema_name#) from dual
+</select>
+
+<!-- 
+	Table DDL Script
+ -->
+<select id="getTableScript" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+
+SELECT C.TABLE_NAME
+     , C.COLUMN_NAME
+     , C.DATA_TYPE
+     , NULL AS DATA_TYPE_MOD
+     , NULL AS DATA_TYPE_OWNER
+     , DECODE(C.DATA_TYPE, 'CHAR', C.CHAR_LENGTH,
+                         'VARCHAR', C.CHAR_LENGTH,
+                         'VARCHAR2', C.CHAR_LENGTH,
+                         'NCHAR', C.CHAR_LENGTH,
+                         'NVARCHAR', C.CHAR_LENGTH,
+                         'NVARCHAR2', C.CHAR_LENGTH,
+                         C.DATA_LENGTH) DATA_LENGTH
+      , C.DATA_PRECISION
+      , C.DATA_SCALE
+      , C.NULLABLE
+      , C.CHAR_USED
+      , USER OWNER
+      , C.DATA_DEFAULT
+FROM ALL_TAB_COLUMNS C
+WHERE 1=1
+AND C.OWNER = (#schema_name#)
+AND C.TABLE_NAME = (#table_name#)
+ORDER BY C.TABLE_NAME, C.COLUMN_ID
+
+
+</select>
+
+<!-- 
+	Table DDL Script => Primary key list
+ -->
+ 
+<select id="getTableScript.pk" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+  SELECT C.CONSTRAINT_NAME, CC.COLUMN_NAME
+    FROM DBA_CONS_COLUMNS CC, DBA_CONSTRAINTS C
+   WHERE     C.OWNER = CC.OWNER
+         AND C.CONSTRAINT_NAME = CC.CONSTRAINT_NAME
+         AND C.TABLE_NAME = CC.TABLE_NAME
+         AND C.OWNER = (#schema_name#)
+         AND C.TABLE_NAME = (#table_name#)
+         AND C.CONSTRAINT_TYPE = 'P'
+ORDER BY CC.POSITION
+
+</select>
+
+<!-- 
+	Table DDL Script => Table, Column Comment Script
+ -->
+ 
+<select id="getTableScript.comments" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+
+SELECT    'COMMENT ON TABLE '
+       || C.OWNER
+       || '.'
+       || C.TABLE_NAME
+       || ' IS '''
+       || C.COMMENTS
+       || ''';'
+          AS COMMENT_TEXT
+  FROM DBA_TAB_COMMENTS C
+ WHERE     C.OWNER = (#schema_name#)
+       AND C.COMMENTS IS NOT NULL
+       AND C.TABLE_NAME = (#table_name#)
+UNION ALL
+SELECT    'COMMENT ON COLUMN '
+       || C.OWNER
+       || '.'
+       || C.TABLE_NAME
+       || '.'
+       || C.COLUMN_NAME
+       || ' IS '''
+       || C.COMMENTS
+       || ''';'
+  FROM DBA_COL_COMMENTS C
+ WHERE     C.OWNER = (#schema_name#)
+       AND C.COMMENTS IS NOT NULL
+       AND C.TABLE_NAME = (#table_name#)
+  
+</select>
+
+<!-- 
+	Table DDL Script => View Header
+ -->
+ 
+<select id="getViewScript.head" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+<![CDATA[
+  SELECT CASE
+            WHEN COLUMN_ID = 0
+            THEN
+               'CREATE OR REPLACE VIEW ' || C.OWNER || '.' || TABLE_NAME || ' ( ' || COLUMN_NAME
+            WHEN COLUMN_ID >= 1 AND COLUMN_ID < COUNT (COLUMN_ID) OVER () - 1
+            THEN
+               ', ' || COLUMN_NAME
+            ELSE
+               ', ' || COLUMN_NAME || ' ) AS '
+         END AS SOURCE_TEXT
+    FROM ALL_TAB_COLUMNS C
+   WHERE 1 = 1
+   AND C.OWNER = (#schema_name#) 
+   AND TABLE_NAME = (#view_name#)
+ORDER BY TABLE_NAME, COLUMN_ID
+]]>
+</select>
+
+<!-- 
+	Table DDL Script => View body 
+ -->
+ 
+<select id="getViewScript.body" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+  SELECT V.TEXT AS SOURCE_TEXT
+    FROM ALL_VIEWS V
+   WHERE 1 = 1
+     AND V.OWNER = (#schema_name#) 
+     AND V.VIEW_NAME = (#view_name#)
+ORDER BY VIEW_NAME
+
+</select>
+
+<!-- 
+	Procedure Script 
+ -->
+ 
+<select id="getProcedureScript" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+SELECT
+    b.text AS source_text
+  FROM all_objects a 
+      INNER JOIN all_source b ON a.owner = b.owner and a.object_name = b.name
+WHERE 1 = 1
+  AND a.owner = (#schema_name#)
+  AND a.object_name = (#object_name#)
+  AND a.object_type = 'PROCEDURE'
+ORDER BY b.line
+</select>
+
+<!-- 
+	Trigger Script 
+ -->
+ 
+<select id="getTriggerScript" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+
+  SELECT B.TEXT AS SOURCE_TEXT
+    FROM all_objects A 
+    	INNER JOIN all_SOURCE B ON a.owner = b.owner and A.object_name = B.NAME AND a.object_type = b.type
+   WHERE     1 = 1
+         AND a.owner = (#schema_name#)
+         AND A.object_name =  (#object_name#)
+         AND B.TYPE = 'TRIGGER'
+ORDER BY B.LINE
+
+</select>
+
+<!-- 
+	Trigger Script 
+ -->
+ 
+<select id="getFunctionScript" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+
+  SELECT 
+  	case when #object_name# = (#object_name#) then
+  		REPLACE(B.TEXT, #object_name#, #schema_name#||'.'||#object_name#)
+  	else 
+  		REPLACE(B.TEXT, '"'||#object_name#||'"', #schema_name#||'."'||#object_name#||'"')
+  	end AS SOURCE_TEXT
+    FROM all_objects A 
+    	INNER JOIN all_SOURCE B ON a.owner = b.owner and A.object_name = B.NAME AND a.object_type = b.type
+   WHERE     1 = 1
+         AND a.owner = (#schema_name#)
+         AND A.object_name = #object_name#
+         AND B.TYPE = 'FUNCTION'
+ORDER BY B.LINE
+
+</select>
+
+
+<!-- 
+	DDL Script object type 
+ -->
+<!-- 현재는 프로시져탭에서 프로시져와 패키지를 함께 다루고 있으므로 오브젝트 타입을 먼저 체크하기 위한 SQL --> 
+<select id="getSourceObjectType" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+  SELECT B.object_type as TYPE 
+    FROM all_objects B
+   WHERE 1 = 1
+      AND b.owner = (#schema_name#) 
+      AND B.object_name =  (#object_name#)
+      AND ROWNUM &lt;= 1
+</select>
+
+<!-- 
+	Package Header Script 
+ -->
+ 
+<select id="getPackageScript.head" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+
+  SELECT B.TEXT AS SOURCE_TEXT
+    FROM all_objects A 
+    	INNER JOIN all_SOURCE B ON a.owner = b.owner and A.object_name = B.NAME AND a.object_type = b.type
+   WHERE     1 = 1
+         and b.owner = (#schema_name#)
+         AND A.object_name =  (#object_name#)
+         AND B.TYPE = 'PACKAGE'
+ORDER BY B.LINE
+
+</select>
+
+<!-- 
+	Package Body Script 
+ -->
+ 
+<select id="getPackageScript.body" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+
+  SELECT B.TEXT AS SOURCE_TEXT
+    FROM all_objects A 
+    	INNER JOIN all_SOURCE B ON a.owner = b.owner and A.object_name = B.NAME AND a.object_type = b.type
+   WHERE     1 = 1
+         AND b.owner = (#schema_name#)
+         AND A.object_name =  (#object_name#)
+         AND B.TYPE = 'PACKAGE BODY'
+ORDER BY B.LINE
+
+</select>
+
+    
+<!-- 
+	Index Script 
+ -->
+ 
+<select id="getIndexScript" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+
+SELECT 
+    IC.COLUMN_POSITION
+  , I.INDEX_NAME
+  , I.TABLE_NAME
+  , I.INDEX_TYPE
+  , I.TABLE_OWNER
+  , I.UNIQUENESS
+  , I.COMPRESSION
+  , I.TABLESPACE_NAME
+  , I.LOGGING
+  , I.PCT_FREE
+  , I.INI_TRANS
+  , I.MAX_TRANS
+  , I.INITIAL_EXTENT
+  , I.MIN_EXTENTS
+  , I.MAX_EXTENTS
+  , NVL(I.PCT_INCREASE,0) AS PCT_INCREASE
+  , I.BUFFER_POOL
+  , IC.DESCEND
+  , IC.COLUMN_NAME
+  , IE.COLUMN_EXPRESSION
+FROM ALL_INDEXES I
+INNER JOIN ALL_IND_COLUMNS IC 
+      ON I.OWNER = IC.OWNER AND I.INDEX_NAME     = IC.INDEX_NAME
+   AND I.TABLE_NAME = IC.TABLE_NAME
+LEFT JOIN USER_IND_EXPRESSIONS IE
+      ON 1 = 1
+   AND IE.OWNER = IC.OWNER
+   AND IE.INDEX_NAME      = IC.INDEX_NAME
+   AND IE.TABLE_NAME      = IC.TABLE_NAME
+   AND IE.COLUMN_POSITION = IC.COLUMN_POSITION
+WHERE 1  = 1
+   AND IC.OWNER = (#schema_name#)
+   AND IC.INDEX_NAME      = ( #object_name# )
+ORDER BY IC.COLUMN_POSITION
+
+</select>
+
+<!-- 
+	프로시져의 아규먼트 목록을 리턴한다.
+	
+ -->
+<select id="getProcedureInParamter" resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.util.HashMap">
+
+  SELECT ua.position AS "order"
+        ,ua.argument_name AS name
+        ,DECODE (ua.data_type, 'REF CURSOR', 'SYS_REFCURSOR', ua.data_type) AS rdbtype
+        ,ua.in_out AS type
+        ,ua.data_length AS length
+        ,null as value
+    FROM all_arguments ua
+   WHERE 1=1
+   AND ua.object_name =  (#object_name#)
+   AND ua.in_out in ('IN','IN/OUT')
+   AND ua.argument_name > ' '
+   AND NVL(ua.package_name,'null') = case when #package_name# is null then 'null' else  (#package_name#) end
+	<isGreaterThan prepend="AND" property="overload" compareValue="0">
+    	overload = #overload#
+	</isGreaterThan>
+ORDER BY ua.object_name, ua.overload, ua.position
+  
+</select>    
+
+<!-- 
+	프로시져의 아규먼트 목록을 리턴한다.
+	
+ -->
+<select id="getProcedureOutParamter" resultClass="com.hangum.tadpole.engine.query.dao.rdb.InOutParameterDAO" parameterClass="java.util.HashMap">
+
+  SELECT ua.position AS "order"
+        ,ua.argument_name AS name
+        ,DECODE (ua.data_type, 'REF CURSOR', 'SYS_REFCURSOR', ua.data_type) AS rdbtype
+        ,ua.in_out AS type
+        ,ua.data_length AS length
+        ,null as value
+    FROM all_arguments ua
+   WHERE 1=1
+   AND ua.owner = (#schema_name#)
+   AND ua.object_name =  (#object_name#)
+   AND ua.in_out in ('OUT', 'IN/OUT')
+   AND ua.argument_name > ' '
+   AND NVL(ua.package_name,'null') = case when #package_name# is null then 'null' else  (#package_name#) end
+	<isGreaterThan prepend="AND" property="overload" compareValue="0">
+    	overload = #overload#
+	</isGreaterThan>
+ORDER BY ua.object_name, ua.overload, ua.position
+  
+</select>    
+
+<!-- 
+	통계정보 및 테이블의 사이즈를 조회한다.
+ -->
+<select id="getTableSizeInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+
+Select 
+	  sum(s.bytes) as bytes
+	, sum(s.extents) as extents
+from  sys.dba_segments s
+Where s.segment_type in ('LOBINDEX', 'INDEX', 'INDEX PARTITION', 'INDEX SUBPARTITION')
+and s.segment_name in (select x.index_name from sys.all_indexes x where s.owner = x.owner and x.table_name = (#table#) )
+and s.owner = (#schema_name#)
+
+
+</select>
+
+<select id="getStatisticsInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+Select *
+from sys.all_tables
+where 1=1
+  and owner = (#schema_name#)
+  and table_name = (#table#)
+</select>
+
+<select id="getViewStatisticsInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+Select *
+from sys.all_views
+where 1=1
+  and owner = (#schema_name#)
+  and view_name = (#table#)
+</select>
+
+<!-- 
+	인덱스에 대한 컬럼 정보 및 통계정보를 조회한다.
+ -->
+<select id="getIndexStatisticsInfo" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+SELECT INDEX_NAME "Index Name"
+      ,INDEX_TYPE "Index Type"
+      ,UNIQUENESS "Uniqueness"
+      ,STATUS "Status"
+      ,TABLE_OWNER || '.' || TABLE_NAME "Table"
+      ,TABLE_TYPE "Table Type"
+      ,TABLESPACE_NAME "Tablespace"
+      ,BUFFER_POOL "Buffer Pool"
+      ,INITCAP (partitioned) "Partitioned"
+      ,DECODE (temporary, 'N', 'No', 'Yes') "Temporary"
+      ,INI_TRANS "Initial Transactions"
+      ,MAX_TRANS "Max Transactions"
+      ,INITIAL_EXTENT "Initial Extent Size"
+      ,NEXT_EXTENT "Next Extent Size"
+      ,MIN_EXTENTS "Minimum Extents"
+      ,MAX_EXTENTS "Maximum Extents"
+      ,PCT_INCREASE "Percent Increase"
+      ,PCT_FREE "Percent Free"
+      ,FREELISTS "Freelists"
+      ,FREELIST_GROUPS "Freelist Groups"
+      ,DEGREE "Degree"
+      ,INSTANCES "Instances"
+      ,LAST_ANALYZED "Last Analyzed"
+      ,BLEVEL "BLevel"
+      ,LEAF_BLOCKS "Leaf Blocks"
+      ,DISTINCT_KEYS "Distinct Keys"
+      ,AVG_LEAF_BLOCKS_PER_KEY "Avg Leaf Blocks Per Key"
+      ,AVG_DATA_BLOCKS_PER_KEY "Avg Data Blocks Per Key"
+      ,CLUSTERING_FACTOR "Clustering Factor"
+      ,NUM_ROWS "Num Rows"
+      ,SAMPLE_SIZE "Sample Size"
+      ,GENERATED "Generated"
+      ,DECODE (JOIN_INDEX, 'NO', 'No', 'Yes') "Join Index"
+      ,Visibility "Visibility"
+  FROM SYS.all_INDEXES
+ WHERE 1=1
+   and owner = (#schema_name#)
+   and INDEX_NAME = (#index_name#)
+</select>
+
+<!-- 
+	데이터베이스 링크 정보를 조회한다.
+ -->
+<select id="dbLinkList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleDBLinkDAO" parameterClass="java.lang.String">
+<![CDATA[
+	SELECT
+	     DB_LINK
+	    ,USERNAME
+	    ,HOST
+	    ,CREATED
+	    ,OWNER AS SCHEMA_NAME
+	FROM ALL_DB_LINKS
+	WHERE OWNER = #schema_name#
+	ORDER BY OWNER, DB_LINK
+]]>
+</select>
+
+<!-- 
+	데이터베이스 링크의 DDL 스크립트를 생성한다.
+ -->
+<select id="getDatabaseLinkScript" resultClass="java.lang.String" parameterClass="java.util.HashMap">
+	<![CDATA[
+		SELECT 'CREATE' || case when OWNER = 'PUBLIC' then ' PUBLIC' else '' end || ' DATABASE LINK "'|| db_link ||'" CONNECT TO ' || nvl(username,user) || ' IDENTIFIED BY "<password>" USING ''' || host || ''';' 
+		FROM all_db_links 
+		WHERE OWNER = #schema_name# 
+		  AND DB_LINK = #object_name#
+		  AND ROWNUM <= 1
+	]]>
+</select>
+
+<!-- 
+	데이터베이스 JOB 목록을 조회한다.
+ -->
+<select id="getJobList" resultClass="com.hangum.tadpole.engine.query.dao.rdb.OracleJobDAO" parameterClass="java.lang.String">
+  SELECT job
+        ,what
+        ,'' as log_user
+        ,schema_user as schema_name
+        ,last_date
+        ,this_date
+        ,'' as this_sec
+        ,next_date 
+        ,'' as next_sec
+        ,0 as total_time
+        ,broken
+        ,interval
+        ,failures
+        ,'' as nls_env
+        ,instance
+    FROM all_jobs
+   WHERE 1 = 1
+and schema_user = #schema_name#
+ORDER BY job
+</select>
+
+<!-- Lock정보 조회 -->
+<select id="getLockList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+SELECT l.sess_id as sid
+      ,s.username
+      ,s.osuser
+      ,s.machine
+      ,DECODE (l.TYPE,  'TX', 'Transaction',  'TM', 'DML',  'UL', 'PL/SQL User Lock',  l.TYPE) lock_type
+      ,DECODE (l.lmode,  0, 'None',  1, 'Null',  2, 'Row-S (SS)',  3, 'Row-X (SX)',  4, 'Share',  5, 'S/Row-X (SSX)',  6, 'Exclusive',  TO_CHAR (l.lmode)) mode_held
+      ,null as mode_requested
+      ,TO_CHAR (l.id1) lock_id1
+      ,TO_CHAR (l.id2) lock_id2
+      ,NULL as owner
+      ,NULL as object_type
+      ,NULL as object_name
+      ,null as block
+      ,null as lockwait
+  FROM v$$lock l INNER JOIN v$$session s ON l.sess_id = s.sid
+ WHERE l.TYPE = 'TX'
+<isNotEmpty property="sid">
+   AND l.sess_id = to_number(#sid#)
+</isNotEmpty> 
+UNION ALL
+SELECT l.sess_id as sid
+      ,s.username
+      ,s.osuser
+      ,s.machine
+      ,DECODE (l.TYPE,  'TX', 'Transaction',  'TM', 'DML',  'UL', 'PL/SQL User Lock',  l.TYPE) lock_type
+      ,DECODE (l.lmode,  0, 'None',  1, 'Null',  2, 'Row-S (SS)',  3, 'Row-X (SX)',  4, 'Share',  5, 'S/Row-X (SSX)',  6, 'Exclusive',  TO_CHAR (l.lmode)) mode_held
+      ,null as mode_requested
+      ,TO_CHAR (l.id1) lock_id1
+      ,TO_CHAR (l.id2) lock_id2
+      ,o.owner
+      ,o.object_type
+      ,o.object_name
+      ,null as block
+      ,null as lockwait
+  FROM v$$lock l
+       INNER JOIN v$$session s ON l.sess_id = s.sid
+       LEFT JOIN dba_objects o ON l.id1 = o.object_id
+ WHERE l.TYPE IN ('TM', 'UL')
+<isNotEmpty property="sid">
+   AND l.sess_id = to_number(#sid#)
+</isNotEmpty> 
+</select>
+
+<!-- Lock정보 조회 -->
+<select id="getLockBlockList" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
+SELECT s.sid
+      ,'Blocking' as block_type
+      ,s.username
+      ,s.osuser
+      ,s.machine
+      ,s.status
+      , null as sql_text
+      ,DECODE (l.TYPE,  'TX', 'Transaction',  'TM', 'DML',  'UL', 'PL/SQL User Lock',  l.TYPE) lock_type
+      ,DECODE (l.lmode,  0, 'None',  1, 'Null',  2, 'Row-S (SS)',  3, 'Row-X (SX)',  4, 'Share',  5, 'S/Row-X (SSX)',  6, 'Exclusive',  TO_CHAR (l.lmode)) mode_held
+      ,DECODE (l.request,  0, 'None',  1, 'Null',  2, 'Row-S (SS)',  3, 'Row-X (SX)',  4, 'Share',  5, 'S/Row-X (SSX)',  6, 'Exclusive',  TO_CHAR (l.request)) mode_requested
+  FROM v$$lock l, v$$session s
+ WHERE     l.block = 1
+       AND l.sess_id = s.sid
+       AND l.id1 = #lock_id1#
+       AND l.id2 = #lock_id2#
+
+union all
+
+SELECT s.sid
+	  ,'Blocked' as block_type
+      ,s.username
+      ,s.osuser
+      ,s.machine
+      ,s.status
+      ,sql_text
+      ,DECODE (l.TYPE,  'TX', 'Transaction',  'TM', 'DML',  'UL', 'PL/SQL User Lock',  l.TYPE) lock_type
+      ,DECODE (l.lmode,  0, 'None',  1, 'Null',  2, 'Row-S (SS)',  3, 'Row-X (SX)',  4, 'Share',  5, 'S/Row-X (SSX)',  6, 'Exclusive',  TO_CHAR (l.lmode)) mode_held
+      ,DECODE (l.request,  0, 'None',  1, 'Null',  2, 'Row-S (SS)',  3, 'Row-X (SX)',  4, 'Share',  5, 'S/Row-X (SSX)',  6, 'Exclusive',  TO_CHAR (l.request)) mode_requested
+  FROM v$$lock l, v$$session s, v$$sql q
+ WHERE     s.lockwait IS NOT NULL
+       AND s.lockwait = l.kaddr
+       AND l.sess_id = s.sid
+       AND l.id1 = #lock_id1#
+       AND l.id2 = #lock_id2#
+       AND s.sql_address = q.address
+       AND s.sql_hash_value = q.hash_value
+</select>
+
+</sqlMap>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.rap.addons.chart.feature"
+      label="%featureName"
+      version="0.1.0.20160622-0732"
+      provider-name="%providerName">
+
+   <description url="http://eclipse.org/rap/incubator">
+      %description
+   </description>
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <license url="%licenseURL">
+      %license
+   </license>
+
+   <plugin
+         id="org.eclipse.rap.addons.chart"
+         download-size="71"
+         install-size="167"
+         version="0.1.0.20160622-0732"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.rap.addons.chart.source"
+         download-size="68"
+         install-size="183"
+         version="0.1.0.20160622-0732"
+         unpack="false"/>
+
+</feature>

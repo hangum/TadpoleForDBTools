@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright (c) 2016 hangum.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Lesser Public License v2.1
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      hangum - initial API and implementation
+-->
+<!-- 
+
+ -->
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Tadpole-System-SQL-Template">
+
+<!-- 
+	list private sql template
+ -->
+<select id="listPrivateSQLTemplate" resultClass="com.hangum.tadpole.engine.query.dao.system.SQLTemplateDAO" parameterClass="java.lang.Integer">
+	SELECT seq, user_seq, category, group_name, name, content, description, create_time, delyn 
+	FROM tadpole_sql_template
+	WHERE 
+			user_seq = #user_sq#
+		AND category = 'PRI'
+		AND delyn = 'NO'
+	ORDER by group_name, name
+</select>
+
+<!-- 
+	list public sql template
+ -->
+<select id="listPublicSQLTemplate" resultClass="com.hangum.tadpole.engine.query.dao.system.SQLTemplateDAO">
+	SELECT seq, user_seq, category, group_name, name, content, description, create_time, delyn 
+	FROM tadpole_sql_template
+	WHERE 
+			category = 'PUB'
+		AND delyn = 'NO'
+	ORDER by group_name, name
+</select>
+
+
+<!-- 
+	template insert
+ -->
+<insert id="insertSQLTemplate" parameterClass="com.hangum.tadpole.engine.query.dao.system.SQLTemplateDAO">
+	INSERT INTO tadpole_sql_template
+		(user_seq, category, group_name, name, content, description) 
+	VALUES 
+		( #user_seq#, #category#, #group_name#, #name#, #content#, #description# );
+</insert>
+
+<!-- 
+	template update
+ -->
+<update id="updataeSQLTemplate" parameterClass="com.hangum.tadpole.engine.query.dao.system.SQLTemplateDAO">
+	UPDATE tadpole_sql_template 
+	SET
+		group_name = #group_name# , name = #name#, content = #content#, description = #description# 
+	WHERE 
+		seq = #seq#
+</update>
+
+<!-- 
+	template delete
+ -->
+<delete id="deleteSQLTemplate" parameterClass="com.hangum.tadpole.engine.query.dao.system.SQLTemplateDAO">
+	DELETE FROM tadpole_sql_template
+	WHERE 
+		seq = #seq# 
+</delete>
+
+</sqlMap>

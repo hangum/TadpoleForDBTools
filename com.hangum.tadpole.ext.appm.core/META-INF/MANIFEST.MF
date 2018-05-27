@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: APPM interface
+Bundle-SymbolicName: com.hangum.tadpole.ext.appm.core
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: com.hangum.tadpole.ext.appm.Activator
+Bundle-Vendor: TadpoleHUB
+Require-Bundle: org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Export-Package: com.hangum.tadpole.ext.appm.core

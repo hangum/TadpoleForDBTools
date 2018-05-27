@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright (c) 2013 hangum.
+  All rights reserved. This program and the accompanying materials
+  are made available under the terms of the GNU Lesser Public License v2.1
+  which accompanies this distribution, and is available at
+  http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+  
+  Contributors:
+      hangum - initial API and implementation
+-->
+<!DOCTYPE sqlMapConfig      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<!--  set setting options -->
+	<properties resource="com/hangum/tadpole/engine/config/commons/setting.propertis"/>
+	
+	<transactionManager type="JDBC">
+		<dataSource type="DBCP">
+			<property name="JDBC.Driver" 			value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+			<property name="JDBC.ConnectionURL" 	value="${JDBC.ConnectionURL}" />
+			<property name="JDBC.Username" 			value="${JDBC.Username}" />
+			<property name="JDBC.Password" 			value="${JDBC.Password}" />
+			
+			<property name="Pool.TimeToWait" 		value="500"/>
+
+			<!--OPTIONAL PROPERTIES BELOW -->
+			<property name="Pool.MaximumActiveConnections" value="50" />
+			<property name="Pool.MaximumIdleConnections" value="5" />
+			<property name="Pool.MaximumWait" value="1000" />
+			<!--
+				Use of the validation query can be problematic. If you have
+				difficulty, try without it.
+			-->
+			<property name="Pool.ValidationQuery" 	value="SELECT 'TadpoleHub'" />
+			<!-- 
+				TadpoleHub define value start
+			 -->
+			<property name="initialSize" value="1" />
+			<!--  커넥션 풀에서 커넥션 가져올때 유효성 검사 -->
+			<property name="testOnBorrow" value="false" />
+			<!--  커넥션풀에 커넥션 돌려줄때 유효성 검사 -->
+			<property name="testOnReturn" value="false" />
+			<!--  idle  상태의 커넥션 유효성 검사 -->
+			<property name="testWhileIdle" value="true" />
+			<!--  testWhileIdle가 true일때 idle 상태 유효성 채크 (3분에 한번씩 테스트 쿼리를 날린다.) -->
+			<property name="timeBetweenEvictionRunsMillis" value="180000" />
+			<!--  testWhileIdle가 true일때 idle 상태 유효성 채크해서 사용하지 않는 커넥션 제거한다. (10분 동안 연결이 없으면 커넥션을 삭제한다.) -->
+			<property name="minEvictableIdleTimeMillis" value="600000" />
+			<!-- 사용하지 않는 커넥션 테스트 여부 -->
+			<property name="numTestsPerEvictionRun" value="5" />
+			<!--사용하지 않는 커넥션 삭제여부  -->
+			<property name="removeAbandonedTimeout" value="300" />
+			<property name="removeAbandoned" value="false" />
+			<!--  유효하지 않는 커넥션을 생성한 코드 위치 로그 생성 -->
+			<property name="logAbandoned" value="false" />
+			<!--  idel 한 상태에서 최소 커넥션유지 수 -->
+			<property name="minIdle" value="0" />
+
+		</dataSource>
+	</transactionManager>
+
+	<!--
+		List the SQL Map XML files. They can be loaded from the classpath, as
+		they are here (com.domain.data...)
+	-->
+	<sqlMap resource="com/hangum/tadpole/engine/query/MSSQLSQL.xml" />
+
+</sqlMapConfig>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="com.hangum.tadpole.help.core.views.HelpViewPart"
+            icon="resources/icons/help.gif"
+            id="com.hamgum.tadpole.help.core.view.main"
+            name="%view.name"
+            restorable="true">
+      </view>
+   </extension>
+
+</plugin>

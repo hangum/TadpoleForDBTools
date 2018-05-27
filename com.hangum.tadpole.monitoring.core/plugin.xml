@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="com.hangum.tadpole.monitoring.core.editors.schedule.ScheduleEditor"
+            default="false"
+            icon="resources/icons/schedule.png"
+            id="com.hangum.tadpole.monitoring.core.editor.schedule"
+            name="Schedule">
+      </editor>
+      <editor
+            class="com.hangum.tadpole.monitoring.core.editors.monitoring.realtime.MonitoringMainEditor"
+            default="false"
+            icon="resources/icons/monitoring.png"
+            id="com.hangum.tadpole.monitoring.core.editor.main"
+            name="Monitoring Dashboard">
+      </editor>
+      <editor
+            class="com.hangum.tadpole.monitoring.core.editors.monitoring.manage.MonitoringManagerEditor"
+            default="false"
+            icon="resources/icons/preferences.png"
+            id="com.hangum.tadpole.monitoring.core.editor.manage"
+            name="Monitoring Manage">
+      </editor>
+   </extension>
+
+</plugin>
