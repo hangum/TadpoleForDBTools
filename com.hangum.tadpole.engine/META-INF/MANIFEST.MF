@@ -22,7 +22,7 @@ Require-Bundle: org.eclipse.rap.ui;bundle-version="1.5.0";resolution:=optional,
  com.hangum.tadpole.hive.core;bundle-version="1.0.0",
  com.hangum.tadpole.commons.sql.core;bundle-version="1.0.0";resolution:=optional,
  com.hangum.tadpole.commons.csv.core;bundle-version="1.0.0",
- com.tadpolehub.db.ldap.core;bundle-version="1.0.0"
+ com.tadpolehub.db.ldap.core;bundle-version="1.0.0";resolution:=optional
 Bundle-ClassPath: libs/ibatis-2.3.4.726-patched-tadpole.jar,
  libs/dbutils/commons-dbutils-1.6.jar,
  .,
