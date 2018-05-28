@@ -1,3 +1,0 @@
-requires.1.namespace=A.PDE.Target.Platform
-requires.1.name=Cannot be installed into the IDE
-requires.1.range=0.0.0
