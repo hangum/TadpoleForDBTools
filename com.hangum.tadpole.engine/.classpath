@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="libs/driver/oracle/ojdbc6.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/driver/oracle/orai18n.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/mysql/mysql-connector-java-5.1.41-bin.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/pgsql/postgresql-9.4-1204.jdbc41.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/mongo/bson-3.4.2.jar"/>
