@@ -2,7 +2,7 @@ Tadpole DB Hub
 ==
 [![Join the chat at https://gitter.im/TadpoleDBHub](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TadpoleDBHub?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>Altibase, Apache Hive, Apache Tajo, Amzaon DynamoDB, Amazon RDS, Amazon Redshift, MySQL, MariaDB, Oracle, SQLite, Tibero, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases.
+Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>Altibase, Apache Hive, Apache Tajo, Amzaon DynamoDB, Amazon RDS, Amazon Redshift, Elasticsearch, MySQL, MariaDB, Oracle, SQLite, Tibero, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases.
 It enables you to handle typical DB over the World Wide Web
 ![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1460305744502/home/TDB_main.jpg?height=309&width=400)
 
@@ -49,9 +49,9 @@ It enables you to handle typical DB over the World Wide Web
 
 Environment
 -
-* more than Java 1.7.x
+* more than Java 1.8.x
 * support system standalone : linux.gtk.x86, linux.gtk.x86_64, acosx.cocoa.x86, macosx.cocoa.x86_64, win32.x86, win32.x86_64
-* support system server : Apache Tomcat 7.1 ~ 8.0
+* support system server : Apache Tomcat 8.x
 
 Demo Video
 -
@@ -84,7 +84,7 @@ Extension
 * Tadpole Spatial Data Manager (https://github.com/Gaia3D/SpatialDataManager)
 
 Download
-* package : https://sourceforge.net/projects/tadpoledbhub/files/1.7.x/1.7.5/
+* package : https://sourceforge.net/projects/tadpoledbhub/files/1.8.x/1.8.4/ROOT.war/download
 * docker hub : https://hub.docker.com/r/hyunjongcho/tadpoledbhub/
 
 License
@@ -115,3 +115,4 @@ Customer
 * LOEN ENTERTAINMENT(http://www.melon.com/)
 * 동아닷컴(http://www.donga.com/)
 * 두레시닝(주)(http://www.doore.co.kr/)
+* 그 이외의 10개 이상의 사이트 
