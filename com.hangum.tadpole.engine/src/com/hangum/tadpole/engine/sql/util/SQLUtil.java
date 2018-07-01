@@ -433,6 +433,27 @@ public class SQLUtil {
 	/**
 	 * make quote mark
 	 * 
+	 * @param userDB
+	 * @param value
+	 * @return
+	 */
+	public static String makeSpecQuote(UserDBDAO userDB, Object value) {
+		
+		if (null == value){
+			return null;
+		}else{
+			TadpoleMetaData tmd = TadpoleSQLManager.getDbMetadata(userDB);
+			if(tmd == null) {
+				return String.format("%s", StringEscapeUtils.escapeSql(value.toString()));
+			} else {
+				return String.format("%s%s%s", tmd.getIdentifierQuoteString(), StringEscapeUtils.escapeSql(value.toString()), tmd.getIdentifierQuoteString());
+			}
+		}
+	}
+	
+	/**
+	 * make quote mark
+	 * 
 	 * @param value
 	 * @return
 	 */

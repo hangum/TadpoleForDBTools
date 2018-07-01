@@ -103,10 +103,11 @@ public class TableCommentEditorSupport extends EditingSupport {
 			if (!(comment.equals(dao.getComment()))) {
 				dao.setComment(comment);
 				updateComment(dao);
+				
+				viewer.update(element, null);
+				viewer.refresh();
 			}
 
-			viewer.update(element, null);
-			viewer.refresh();
 		} catch (Exception e) {
 			logger.error("setValue error ", e);
 		}

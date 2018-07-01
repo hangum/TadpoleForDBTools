@@ -13,12 +13,10 @@ package com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.table;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.mysql.TableColumnDAO;
-import com.hangum.tadpole.engine.query.dao.mysql.TableDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.utils.TableColumnObjectQuery;
 import com.tadpole.common.define.core.define.PublicTadpoleDefine;
@@ -32,7 +30,6 @@ import com.tadpole.common.define.core.define.PublicTadpoleDefine;
 public class ColumnCommentEditorSupport extends EditingSupport {
 	private static final Logger logger = Logger.getLogger(ColumnCommentEditorSupport.class);
 
-	private final TableViewer tableviewer;
 	private final TableViewer viewer;
 	private UserDBDAO userDB;
 	private int column;
@@ -42,10 +39,9 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 	 * @param viewer
 	 * @param explorer
 	 */
-	public ColumnCommentEditorSupport(TableViewer tableviewer, TableViewer viewer, UserDBDAO userDB, int column) {
+	public ColumnCommentEditorSupport(TableViewer viewer, UserDBDAO userDB, int column) {
 		super(viewer);
 		
-		this.tableviewer = tableviewer;
 		this.viewer = viewer;
 		this.userDB = userDB;
 		this.column = column;
@@ -89,9 +85,6 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 
 	@Override
 	protected void setValue(Object element, Object value) {
-		IStructuredSelection is = (IStructuredSelection) tableviewer.getSelection();
-		final TableDAO tableDAO = (TableDAO)is.getFirstElement();
-		
 		String comment = "";
 		try {
 			TableColumnDAO columnDAO = (TableColumnDAO) element;
@@ -101,10 +94,11 @@ public class ColumnCommentEditorSupport extends EditingSupport {
 			// 기존 코멘트와 다를때만 db에 반영한다.
 			if (!(comment.equals(columnDAO.getComment()))) {
 				columnDAO.setComment(comment);
-				TableColumnObjectQuery.updateComment(userDB, tableDAO, columnDAO);
+				TableColumnObjectQuery.updateComment(userDB, columnDAO.getTableDao(), columnDAO);
+				
+				viewer.update(element, null);
 			}
 
-			viewer.update(element, null);
 		} catch (Exception e) {
 			logger.error("setValue error ", e);
 		}

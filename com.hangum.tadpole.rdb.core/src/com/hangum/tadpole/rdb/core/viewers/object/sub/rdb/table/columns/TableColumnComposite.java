@@ -146,7 +146,7 @@ public class TableColumnComposite extends AbstractTableComposite {
 			tableColumn.getColumn().setWidth(size[i]);
 			tableColumn.getColumn().addSelectionListener(getSelectionAdapter(tableColumn, i));
 			tableColumn.getColumn().setMoveable(true);
-			tableColumn.setEditingSupport(new ColumnCommentEditorSupport(getTableComposite().getTableListViewer(), tableColumnViewer, getUserDB(), i));
+			tableColumn.setEditingSupport(new ColumnCommentEditorSupport(tableColumnViewer, getUserDB(), i));
 		}
 	}
 	

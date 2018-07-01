@@ -255,25 +255,28 @@ public class TableColumnObjectQuery {
 
 		} else if (DBGroupDefine.MYSQL_GROUP == userDB.getDBGroup()) {
 
-			String strQuery = String.format("ALTER TABLE %s CHANGE %s %s %s %s COMMENT %s", 
-											tableDAO.getFullName(),
-											SQLUtil.makeIdentifierName(userDB, columnDAO.getField()), 
-											SQLUtil.makeIdentifierName(userDB, columnDAO.getField()), 
-											columnDAO.getType(), ("NO".equals(columnDAO.getNull())?"NOT NULL":"NULL"), 
-											SQLUtil.makeQuote(columnDAO.getComment()));
-			ExecuteDDLCommand.executSQL(RequestQueryUtil.simpleRequestQuery(userDB, strQuery));
-			
-			if (null != columnDAO.getDefault()){
-				if (RDBTypeToJavaTypeUtils.isNumberType(columnDAO.getType())) {
-					strQuery = String.format("ALTER TABLE %s ALTER %s SET DEFAULT %s", tableDAO.getFullName(), SQLUtil.makeIdentifierName(userDB, columnDAO.getField()), columnDAO.getDefault());
-					ExecuteDDLCommand.executSQL(RequestQueryUtil.simpleRequestQuery(userDB, strQuery));
-				} else if(RDBTypeToJavaTypeUtils.isDateType(columnDAO.getType())) {
-					// nothing
-				}else{
-					strQuery = String.format("ALTER TABLE %s ALTER %s SET DEFAULT %s", tableDAO.getFullName(), SQLUtil.makeIdentifierName(userDB, columnDAO.getField()), SQLUtil.makeQuote(columnDAO.getDefault()));
-					ExecuteDDLCommand.executSQL(RequestQueryUtil.simpleRequestQuery(userDB, strQuery));
+			// number type 아닐 경우 default의 값에 '' 를 붙여야한다.
+			String strDefaultValue = "";
+			if("".equals(columnDAO.getDefault()) || null == columnDAO.getDefault()) {
+				strDefaultValue = "";
+			} else {
+				if(RDBTypeToJavaTypeUtils.isNumberType(columnDAO.getType()) || RDBTypeToJavaTypeUtils.isDateType(columnDAO.getType())) {
+					strDefaultValue = "DEFAULT "+ columnDAO.getDefault();
+				} else {
+					strDefaultValue = "DEFAULT "+ SQLUtil.makeQuote(columnDAO.getDefault());
 				}
 			}
+
+			String strQuery = String.format("ALTER TABLE %s CHANGE %s %s %s %s %s %s COMMENT %s", 
+											tableDAO.getFullName(),
+											SQLUtil.makeSpecQuote(userDB, SQLUtil.makeIdentifierName(userDB, columnDAO.getField())), 
+											SQLUtil.makeSpecQuote(userDB, SQLUtil.makeIdentifierName(userDB, columnDAO.getField())), 
+											columnDAO.getType(), 
+											("NO".equals(columnDAO.getNull())?"NOT NULL":"NULL"),
+											strDefaultValue,
+											columnDAO.getExtra(),
+											SQLUtil.makeQuote(columnDAO.getComment()));
+			ExecuteDDLCommand.executSQL(RequestQueryUtil.simpleRequestQuery(userDB, strQuery));
 		}
 	}
 
