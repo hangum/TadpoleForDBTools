@@ -325,8 +325,10 @@ public class ResultSetComposite extends Composite {
 	private boolean ifIsParameterQuery(final RequestQuery reqQuery) {
 		if(reqQuery.getExecuteType() == EditorDefine.EXECUTE_TYPE.ALL) return true;
 		final DBGroupDefine dbGroup = getUserDB().getDBGroup();
-		if(DBGroupDefine.HIVE_GROUP == dbGroup 
-				|| DBGroupDefine.CUBRID_GROUP == dbGroup) return true; 
+		if(DBGroupDefine.HIVE_GROUP == dbGroup || DBGroupDefine.CUBRID_GROUP == dbGroup) return true; 
+		
+		// create 문이면 실행하지 않도록 합니다.  fix https://github.com/hangum/TadpoleForDBTools/issues/1124
+		if(reqQuery.getSqlType() == SQL_TYPE.DDL) return true;
 		
 		final Shell runShell = btnStopQuery.getShell();
 		
