@@ -84,7 +84,7 @@ Extension
 * Tadpole Spatial Data Manager (https://github.com/Gaia3D/SpatialDataManager)
 
 Download
-* package : https://sourceforge.net/projects/tadpoledbhub/files/1.8.x/1.8.4/ROOT.war/download
+* package : https://sourceforge.net/projects/tadpoledbhub/files/1.8.x/1.8.4r6/
 * docker hub : https://hub.docker.com/r/hyunjongcho/tadpoledbhub/
 
 License
