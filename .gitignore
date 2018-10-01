@@ -1,0 +1,7 @@
+*.class
+*.log
+*.pmd
+.DS_Store
+/bin
+
+
