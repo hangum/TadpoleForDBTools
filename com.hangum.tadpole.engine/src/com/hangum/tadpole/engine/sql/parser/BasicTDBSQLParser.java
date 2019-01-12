@@ -18,7 +18,16 @@ import com.hangum.tadpole.engine.sql.parser.ddl.ParserDDL;
 import com.hangum.tadpole.engine.sql.parser.define.ParserDefine;
 import com.hangum.tadpole.engine.sql.parser.dto.QueryInfoDTO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
+import com.tadpole.common.define.core.define.PublicTadpoleDefine;
+import com.tadpole.common.define.core.define.PublicTadpoleDefine.QUERY_DML_TYPE;
 import com.tadpole.common.define.core.define.PublicTadpoleDefine.SQL_TYPE;
+
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.delete.Delete;
+import net.sf.jsqlparser.statement.insert.Insert;
+import net.sf.jsqlparser.statement.select.Select;
+import net.sf.jsqlparser.statement.update.Update;
 
 /**
  * 
@@ -51,22 +60,46 @@ public class BasicTDBSQLParser implements TDBSQLParser {
 	@Override
 	public QueryInfoDTO parser(String sql) {
 		String strCheckSQL = SQLUtil.makeSQLTestString(sql);
+		Statement jsqlStmt = parseSQL(strCheckSQL);
 		
 		QueryInfoDTO queryInfoDTO = new QueryInfoDTO();
 		if(PATTERN_DML_BASIC.matcher(strCheckSQL).matches()) {
 			queryInfoDTO.setStatement(true);
 			queryInfoDTO.setSqlType(SQL_TYPE.DML);
 			
-			queryInfoDTO.setQueryType(SQLUtil.sqlQueryType(sql));
+			queryInfoDTO.setQueryType(parseDML(jsqlStmt));
 		} else {
 			queryInfoDTO.setStatement(false);
-			queryInfoDTO.setSqlType(SQL_TYPE.DDL);
-			queryInfoDTO.setQueryType(SQLUtil.sqlQueryType(sql));
+			QUERY_DML_TYPE dmlType = parseDML(jsqlStmt);
+			if(dmlType == QUERY_DML_TYPE.INSERT | dmlType == QUERY_DML_TYPE.UPDATE | dmlType == QUERY_DML_TYPE.DELETE ) {
+				queryInfoDTO.setSqlType(SQL_TYPE.DML);	
+			} else {
+				queryInfoDTO.setSqlType(SQL_TYPE.DDL);
+			}
+			queryInfoDTO.setQueryType(dmlType);
 			
 			parseDDL(sql, queryInfoDTO);
 		}
 
 		return queryInfoDTO;
+	}
+	
+	/**
+	 * paser dml
+	 * 
+	 * @param sql
+	 */
+	protected Statement parseSQL(String sql) {
+		Statement statement = null;
+		try {
+			statement = CCJSqlParserUtil.parse(sql);
+			
+		} catch (Throwable e) {
+			logger.error(e);
+			logger.error(String.format("sql parse exception. [ %s ]", sql));
+		}
+		
+		return statement;
 	}
 
 	/**
@@ -80,4 +113,29 @@ public class BasicTDBSQLParser implements TDBSQLParser {
 		parseDDL.parseQuery(sql, queryInfoDTO);
 	}
 	
+	/**
+	 * paser dml
+	 * 
+	 * @param jsqlStmt
+	 */
+	protected QUERY_DML_TYPE parseDML(Statement jsqlStmt) {
+		PublicTadpoleDefine.QUERY_DML_TYPE queryType = PublicTadpoleDefine.QUERY_DML_TYPE.UNKNOWN;
+		
+		if(jsqlStmt != null) {
+			if(jsqlStmt instanceof Select) {
+				queryType = PublicTadpoleDefine.QUERY_DML_TYPE.SELECT;
+			} else if(jsqlStmt instanceof Insert) {
+				queryType = PublicTadpoleDefine.QUERY_DML_TYPE.INSERT;
+			} else if(jsqlStmt instanceof Update) {
+				queryType = PublicTadpoleDefine.QUERY_DML_TYPE.UPDATE;
+			} else if(jsqlStmt instanceof Delete) {
+				queryType = PublicTadpoleDefine.QUERY_DML_TYPE.DELETE;
+			}
+		// jsql statement 문이 null이 아닐경우 
+		} else {
+			queryType = PublicTadpoleDefine.QUERY_DML_TYPE.SELECT;
+		}
+
+		return queryType;
+	}
 }
