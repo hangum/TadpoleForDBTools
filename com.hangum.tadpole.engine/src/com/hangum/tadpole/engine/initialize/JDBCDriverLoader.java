@@ -49,12 +49,17 @@ public class JDBCDriverLoader {
 				if(logger.isInfoEnabled()) logger.info("##### TDB JDBC URI: " + filePath);
 				
 				FileUtils.copyDirectory(new File(filePath), new File(strJDBCDir));
-				
-				// driver loading
-				JDBCDriverLoader.addJARDir(strJDBCDir);
+
 			} catch(Exception e) {
 				logger.error("Initialize JDBC driver file", e);
 			}
+		}
+		
+		try {
+			// driver loading
+			JDBCDriverLoader.addJARDir(strJDBCDir);
+		} catch(Exception e) {
+			logger.error("Initialize JDBC load error", e);
 		}
 		
 	}
