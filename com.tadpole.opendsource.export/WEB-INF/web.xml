@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN" "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
+<web-app id="WebApp">
+  <servlet id="bridge">  
+    <servlet-name>equinoxbridgeservlet</servlet-name>
+    <display-name>Equinox Bridge Servlet</display-name>
+    <description>Equinox Bridge Servlet</description>
+    <servlet-class>org.eclipse.equinox.servletbridge.BridgeServlet</servlet-class>
+
+    <!-- Framework Controls could be useful for testing purpose, but
+         we disable it per default -->
+    <init-param>
+      <param-name>enableFrameworkControls</param-name>
+      <param-value>false</param-value>      
+    </init-param>
+    
+    <!-- Enable multi-language support for the extension registry -->
+    <!-- the OSGi console is useful for trouble shooting but will fill up your 
+         appserver log quickly, so deactivate on production use. Uncomment
+         the -console parameter to enabled OSGi console access.  -->
+    <init-param>
+      <param-name>commandline</param-name>
+      <param-value>-registryMultiLanguage <!-- -console --></param-value>     
+    </init-param>
+
+    <load-on-startup>1</load-on-startup>    
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>equinoxbridgeservlet</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+
+</web-app>
