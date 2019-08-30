@@ -103,7 +103,7 @@ public class AdminPreferenceDefine {
 	 * Define Tadpole Support DB
 	 */
 	public static final String TADPOLE_SUPPORT_DB = _PREFIX + "TADPOLE_SUPPORT_DB";
-	public static final String TADPOLE_SUPPORT_DB_VALUE = "MariaDB,MongoDB,MSSQL,MySQL,Oracle,PostgreSQL,Elasticsearch";
+	public static final String TADPOLE_SUPPORT_DB_VALUE = "MariaDB,MongoDB,MSSQL,MySQL,Oracle,PostgreSQL,Tibero,Elasticsearch";
 	
 	/**
 	 * 디비연결시 사용자에게 묻기.
