@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/driver/altibase/Altibase.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/driver/altibase/Altibase6_5.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/driver/oracle/ojdbc6.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/driver/oracle/orai18n.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/driver/mssql/mssql-jdbc-7.2.2.jre8.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/mysql/mysql-connector-java-5.1.46.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/mariadb/mariadb-java-client-2.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/pgsql/postgresql-9.4-1204.jdbc41.jar"/>

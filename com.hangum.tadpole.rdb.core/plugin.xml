@@ -139,9 +139,33 @@
             id="com.hangum.tadpole.rdb.core.objectContribution.connection"
             objectClass="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
          <action
-               class="com.hangum.tadpole.rdb.core.actions.connections.DisconnectDBAction"
-               icon="resources/icons/delete_database.png"
+               class="com.hangum.tadpole.rdb.core.actions.connections.DeleteDBAction"
+               icon="resources/icons/delete-database.png"
                id="com.hangum.tadpole.rdb.core.action2"
+               label="데이터베이스 연결 삭제"
+               menubarPath="menu.admin/groupAdminSeparator2">
+            <enablement>
+               <objectClass
+                     name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>
+         <action
+               class="com.hangum.tadpole.rdb.core.actions.connections.ModifyDBConnectionInfoAction"
+               icon="resources/icons/modify_database.png"
+               id="com.hangum.tadpole.rdb.core.action1"
+               label="데이터베이스 연결 수정"
+               menubarPath="menu.admin/groupAdminSeparator2">
+            <enablement>
+               <objectClass
+                     name="com.hangum.tadpole.engine.query.dao.system.UserDBDAO">
+               </objectClass>
+            </enablement>
+         </action>
+         <action
+               class="com.hangum.tadpole.rdb.core.actions.connections.DisconnectDBAction"
+               icon="resources/icons/session_delete_database.png"
+               id="com.hangum.tadpole.rdb.core.action.sessionDisconnect"
                label="%action.label.23"
                menubarPath="menu.admin/groupAdminSeparator2">
             <enablement>
