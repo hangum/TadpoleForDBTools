@@ -4,7 +4,8 @@ Tadpole DB Hub
 
 Tadpole DB Hub is Unified infrastructure tool, various environment based interface for managing <b>Altibase, Apache Hive, Apache Tajo, Amzaon DynamoDB, Amazon RDS, Amazon Redshift, Elasticsearch, MySQL, MariaDB, Oracle, SQLite, Tibero, MSSQL, PostgreSQL, CUBRID and MongoDB</b> databases.
 It enables you to handle typical DB over the World Wide Web
-![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1460305744502/home/TDB_main.jpg?height=309&width=400)
+
+![screenshot](https://tadpoledbhub.atlassian.net/wiki/download/thumbnails/570851331/%E3%85%81%E3%85%88%E3%84%B4.jpg?version=1&modificationDate=1550031415649&cacheVersion=1&api=v2&height=440&width=500)
 
 1.RDB Feature
 -
@@ -25,27 +26,7 @@ It enables you to handle typical DB over the World Wide Web
 * Generate ER Diagram (Auto Layout)
 * Schema Compare
 
-![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1359544319131/home/RDB-ERD-EDITOR.png?height=339&width=400)![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1359544341191/home/RDB-SQL-EDITOR.png?height=339&width=400)![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1449463441535/home/schemacompare.png?height=308&width=400)
-
-2.MongoDB Feature
--
-* Intuitive web interface (Safari, Chrome, Edge, Firefox)
-* User Management (Admin, Manager, User)
-* MongoDB User Management
-* Query View(Tree, Table, Text)
-* Show query plan and console
-* Download query result
-* GridFS(Insert, Delete, Download)
-* Server Status
-* Top
-* Web Console
-* Current, Kill Operation
-* Query Profiling
-* ServerSide JavaScript
-* MapReduce
-* Generate ER Diagram (Auto Layout)
-
-![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1359544395340/home/mongodb-erd.png?height=339&width=400)![screenshot](https://sites.google.com/site/tadpolefordb/_/rsrc/1359544427527/home/MONGODB-INSTANCE.png?height=339&width=400)
+![screenshot](https://github.com/hangum/TadpoleForDBTools/blob/master/targetProject/images/RDB_Image.png)![screenshot](https://github.com/hangum/TadpoleForDBTools/blob/master/targetProject/images/RDB_ERD.png?height=308&width=400)
 
 Environment
 -
@@ -89,13 +70,14 @@ Download
 
 License
 -
-* LGPL(Lesser General Public License)
+* Commercial Version and LGPL(Lesser General Public License) dual license
+* (If you wnat to know the commercial version, please contact us.)
+
 
 Contacts
 -
 * Home : https://www.tadpolehub.com/
 * Email: hangum@tadpolehub.com
-* google talk : hangum@gmail.com
 
 Contributor
 -
