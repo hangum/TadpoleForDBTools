@@ -2,6 +2,6 @@
 *.log
 *.pmd
 .DS_Store
-/bin
+/bin/
 
 
