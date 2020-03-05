@@ -253,14 +253,30 @@ public class MongoDBLoginComposite extends AbstractLoginComposite {
 	public boolean makeUserDBDao(boolean isTest) {
 		if(!isValidateInput(isTest)) return false;
 		
-		String dbUrl = String.format(
-								getSelectDB().getDB_URL_INFO(), 
-								StringUtils.trimToEmpty(textHost.getText()), 
-								StringUtils.trimToEmpty(textPort.getText()), 
-								StringUtils.trimToEmpty(textDatabase.getText())
-							);
+		String dbUrl = "";
+		/*
+			mongodb://[username:password@]host1[:port1][,...hostN[:portN]][/[database][?options]]
+		 */
+		
+		// textReplicaSet
+		if(!"".equals(textUser.getText())) {
+			dbUrl = String.format(
+						getSelectDB().getDB_URL_INFO(),
+						textUser.getText() + ":" + textPassword.getText() + "@" +
+						String.format("%s:%s", StringUtils.trimToEmpty(textHost.getText()), StringUtils.trimToEmpty(textPort.getText())), 
+						StringUtils.trimToEmpty(textDatabase.getText())
+					);
+		} else {
+			dbUrl = String.format(
+					getSelectDB().getDB_URL_INFO(), 
+					String.format("%s:%s", StringUtils.trimToEmpty(textHost.getText()), StringUtils.trimToEmpty(textPort.getText())), 
+					StringUtils.trimToEmpty(textDatabase.getText())
+				);
+		}
+		
+		// 옵션을 추가 합니다. 
 		if(!"".equals(textJDBCOptions.getText())) {
-			dbUrl += "/?" + textJDBCOptions.getText();
+			dbUrl += "?" + textJDBCOptions.getText();
 		}
 
 		userDB = new UserDBDAO();

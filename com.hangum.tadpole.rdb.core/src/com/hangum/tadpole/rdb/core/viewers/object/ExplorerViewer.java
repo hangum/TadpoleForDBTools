@@ -54,13 +54,13 @@ import com.hangum.tadpole.engine.query.dao.system.userdb.ResourcesDAO;
 import com.hangum.tadpole.engine.query.sql.DBSystemSchema;
 import com.hangum.tadpole.engine.security.TadpoleSecurityManager;
 import com.hangum.tadpole.engine.utils.RequestQuery;
+import com.hangum.tadpole.mongodb.core.query.MongoDBQuery;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.viewers.connections.ManagerViewer;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.AbstractObjectComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.elasticsearch.ElasticsearchIndexComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.collections.TadpoleMongoDBCollectionComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.index.TadpoleMongoDBIndexesComposite;
-import com.hangum.tadpole.rdb.core.viewers.object.sub.mongodb.serversidescript.TadpoleMongoDBJavaScriptComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.dblink.TadpoleDBLinkComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.function.TadpoleFunctionComposite;
 import com.hangum.tadpole.rdb.core.viewers.object.sub.rdb.java.TadpoleJavaComposite;
@@ -122,7 +122,7 @@ public class ExplorerViewer extends ViewPart {
 	// mongodb
 	private TadpoleMongoDBCollectionComposite mongoCollectionComposite 	= null;
 	private TadpoleMongoDBIndexesComposite mongoIndexComposite 			= null;
-	private TadpoleMongoDBJavaScriptComposite mongoJavaScriptComposite 	= null;
+//	private TadpoleMongoDBJavaScriptComposite mongoJavaScriptComposite 	= null;
 	
 	// elasticsearch
 	private ElasticsearchIndexComposite elasticComposite = null;
@@ -281,8 +281,6 @@ public class ExplorerViewer extends ViewPart {
 		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.TRIGGERS.name())) {
 			triggerComposite.filter(strSearchText);
 		
-		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.JAVASCRIPT.name())) {
-			mongoJavaScriptComposite.filter(strSearchText);
 		} else if (strSelectTab.equalsIgnoreCase(OBJECT_TYPE.ELASTICSEARCH_INDEX.name())) {
 			elasticComposite.filter(strSearchText);
 		}
@@ -293,7 +291,7 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	public void changeSchema(String strSchemaName) {
 		comboSchema.setText(strSchemaName);
-		userDB.setSchema(strSchemaName);
+		userDB.setDefaultSchemanName(strSchemaName);
 		if(logger.isDebugEnabled()) logger.debug("*** Change schema name is " + strSchemaName);
 		
 		// 기존 스키마에 대해 조회되어 있던 내용을 초기화 한다.
@@ -311,7 +309,15 @@ public class ExplorerViewer extends ViewPart {
 		if(null != javaComposite) javaComposite.clearList();
 		if(null != elasticComposite) elasticComposite.clearList();
 		
-		if(null != tableComposite) tableComposite.refreshTable(userDB, true, "");
+		// mongo db
+		if(null != mongoCollectionComposite) mongoCollectionComposite.clearList();
+		if(null != mongoIndexComposite) 	mongoIndexComposite.clearList();
+		
+		if(userDB.getDBGroup() == DBGroupDefine.MONGODB_GROUP) {
+			if(null != mongoCollectionComposite) mongoCollectionComposite.refreshTable(userDB, true);
+		} else {
+			if(null != tableComposite) tableComposite.refreshTable(userDB, true, "");
+		}
 	}
 
 	/**
@@ -358,7 +364,6 @@ public class ExplorerViewer extends ViewPart {
 		if(null != mongoCollectionComposite) { 
 			mongoCollectionComposite.dispose();
 			mongoIndexComposite.dispose();
-			mongoJavaScriptComposite.dispose();
 		}
 		
 		// elaticsearch
@@ -454,6 +459,19 @@ public class ExplorerViewer extends ViewPart {
 				logger.error("get system schemas " + e.getMessage());
 				throw e;
 			}
+		} else if(userDB.getDBGroup() == DBGroupDefine.SQLITE_GROUP || 
+				userDB.getDBGroup() == DBGroupDefine.DYNAMODB_GROUP 
+		) {
+			comboSchema.add(userDB.getDb());
+			comboSchema.setText(userDB.getDb());
+			
+		// schema 목록을 얻어온다.
+		} else if(userDB.getDBGroup() == DBGroupDefine.MONGODB_GROUP) {
+			
+			for(String strSchema : MongoDBQuery.getSchema(userDB)) {
+				comboSchema.add(strSchema);
+			}
+			comboSchema.setText(userDB.getDb());
 		} else if(userDB.getDBGroup() == DBGroupDefine.SQLITE_GROUP || 
 				userDB.getDBGroup() == DBGroupDefine.DYNAMODB_GROUP || 
 				userDB.getDBGroup() == DBGroupDefine.MONGODB_GROUP
@@ -574,12 +592,10 @@ public class ExplorerViewer extends ViewPart {
 		} else if (DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup()) {
 			createMongoCollection();
 			createMongoIndex();
-			createMongoJavaScript();
 			
 			arrayStructuredViewer = new StructuredViewer[] { 
 				mongoCollectionComposite.getCollectionListViewer(),
 				mongoIndexComposite.getTableViewer(),
-				mongoJavaScriptComposite.getTableViewer()
 			};
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, mongoCollectionComposite.getCollectionListViewer()));
 
@@ -752,8 +768,6 @@ public class ExplorerViewer extends ViewPart {
 			refreshPackage(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.FUNCTIONS.name())) {
 			refreshFunction(isRefresh, strObjectName);
-		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JAVASCRIPT.name())) {
-			refreshJS(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.LINK.name())) {
 			refreshDBLink(isRefresh, strObjectName);
 		} else if (strSelectItemText.equalsIgnoreCase(OBJECT_TYPE.JOBS.name())) {
@@ -774,14 +788,6 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	private void refreshSelectTab() {
 		refershSelectObject(tabFolderObject.getSelection().getText(), false, "");
-	}
-	
-	/**
-	 * mongo server side javascript define
-	 */
-	private void createMongoJavaScript() {
-		mongoJavaScriptComposite = new TadpoleMongoDBJavaScriptComposite(getSite(), tabFolderObject, userDB);
-		mongoJavaScriptComposite.initAction();
 	}
 	
 	/**
@@ -1030,13 +1036,6 @@ public class ExplorerViewer extends ViewPart {
 	 */
 	public void refreshTableColumn() {
 		tableComposite.refreshTableColumn();		
-	}
-	
-	/**
-	 * mongodb server side javascript define
-	 */
-	public void refreshJS(boolean boolRefresh, String strObjectName) {
-		mongoJavaScriptComposite.refreshJavaScript(userDB, boolRefresh);
 	}
 
 	public UserDBDAO getUserDB() {

@@ -111,6 +111,13 @@
             id="com.hangum.tadpole.rdb.core.editor.elasticsearch.main"
             name="ElasticSearch Editor">
       </editor>
+      <editor
+            class="com.hangum.tadpole.mongodb.core.ext.editors.query.MongoDBQueryEditor"
+            default="false"
+            icon="resources/icons/dbs/mongodb-add.png"
+            id="com.hangum.tadpole.rdb.core.editor.mongodb.query"
+            name="MongoDB Query editor">
+      </editor>
    </extension>
    <extension
          point="org.eclipse.ui.popupMenus">

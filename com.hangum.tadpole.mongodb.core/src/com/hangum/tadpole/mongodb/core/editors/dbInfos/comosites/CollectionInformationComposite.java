@@ -307,7 +307,11 @@ public class CollectionInformationComposite extends Composite {
 					} catch(NullPointerException npe) {
 						info.setAvgObj(0);				 //$NON-NLS-1$
 					}
-					info.setPadding(commandResult.getInt("paddingFactor"));				 //$NON-NLS-1$
+					try {
+						info.setPadding(commandResult.getInt("paddingFactor"));				 //$NON-NLS-1$
+					} catch(NullPointerException npe) {
+						info.setPadding(0);
+					}
 					
 					try { 
 						info.setLastExtentSize(commandResult.getDouble("lastExtentSize"));				 //$NON-NLS-1$					

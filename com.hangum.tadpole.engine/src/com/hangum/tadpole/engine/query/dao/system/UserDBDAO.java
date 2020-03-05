@@ -14,10 +14,13 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.hangum.tadpole.cipher.core.manager.CipherManager;
 import com.hangum.tadpole.commons.util.DateUtil;
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.define.DBGroupDefine;
+import com.hangum.tadpole.engine.manager.TadpoleSQLManager;
 import com.hangum.tadpole.engine.permission.PermissionChecker;
 import com.hangum.tadpole.engine.query.dao.system.accesscontrol.DBAccessControlDAO;
 import com.hangum.tadpole.engine.query.dao.system.userdb.TDBDBDAO;
@@ -666,6 +669,27 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 			return getSchema();
 		} else {
 			return getDb();
+		}
+	}
+	
+	/**
+	 * set default schema name
+	 * 
+	 * @param strName
+	 */
+	public void setDefaultSchemanName(String strName) {
+		final DBGroupDefine dbGroup = getDBGroup();
+		if(dbGroup == DBGroupDefine.ORACLE_GROUP || dbGroup == DBGroupDefine.MYSQL_GROUP || dbGroup == DBGroupDefine.POSTGRE_GROUP) {
+			setSchema(strName);
+		} else if(dbGroup == DBGroupDefine.MSSQL_GROUP) {
+			setUrl(StringUtils.replaceOnce(getUrl(), getDb(), strName));
+			setDb(strName);
+			setSchema(strName);
+			TadpoleSQLManager.removeInstance(this);
+			
+		} else if(dbGroup == DBGroupDefine.MONGODB_GROUP) {
+			setSchema(strName);
+			setDb(strName);
 		}
 	}
 

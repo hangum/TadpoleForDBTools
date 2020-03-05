@@ -161,7 +161,7 @@ public class NewIndexDialog extends Dialog {
 		tabFolder.setSelection(0);
 		
 		try {
-			List<TableDAO> listCollFields = MongoDBQuery.listCollection(userDB);
+			List<TableDAO> listCollFields = MongoDBQuery.listCollection(userDB, false);
 			for (TableDAO tableDao : listCollFields) comboColName.add(tableDao.getName());
 			
 			if(null != initCollectionName) {

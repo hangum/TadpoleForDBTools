@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/driver/mongodb/mongo-jdbc-standalone-1.7.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/driver/altibase/Altibase_t.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/altibase/Altibase.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/driver/altibase/Altibase6_5.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/driver/altibase/Altibase7_1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/oracle/ojdbc6.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/oracle/orai18n.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/mssql/mssql-jdbc-7.2.2.jre8.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/mysql/mysql-connector-java-5.1.46.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/mariadb/mariadb-java-client-2.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/pgsql/postgresql-9.4-1204.jdbc41.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/driver/mongo/bson-3.4.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/driver/mongo/mongodb-driver-async-3.4.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/driver/mongo/mongodb-driver-core-3.4.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="libs/driver/mongo/mongodb-driver-3.4.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/ibatis-2.3.4.726-patched-tadpole.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/dbcp/commons-dbcp-1.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/apache/dbcp/commons-pool-1.6.jar"/>

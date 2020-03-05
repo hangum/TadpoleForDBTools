@@ -376,17 +376,6 @@ public class ObjectDropAction extends AbstractObjectSelectAction {
 					exeMessage(Messages.get().ObjectDeleteAction_18, e);
 				}
 			}
-		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT) {
-			MongoDBServerSideJavaScriptDAO jsDAO = (MongoDBServerSideJavaScriptDAO)selection.getFirstElement();
-			if(MessageDialog.openConfirm(getWindow().getShell(), CommonMessages.get().Confirm, Messages.get().ObjectDeleteAction_42)) {
-				try {
-					MongoDBQuery.deleteJavaScirpt(userDB, jsDAO.getName());					
-					refreshJS();
-				} catch(Exception e) {
-					logger.error("MongoDB ServerSide JavaScript delelte", e); //$NON-NLS-1$
-					exeMessage("JavaScript", e); //$NON-NLS-1$
-				}
-			}
 		}
 		
 	}	// end method

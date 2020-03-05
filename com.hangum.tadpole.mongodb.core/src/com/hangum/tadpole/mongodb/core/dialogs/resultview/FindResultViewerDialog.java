@@ -96,7 +96,7 @@ public class FindResultViewerDialog extends Dialog {
 		composite.setLayout(gl_composite);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		compositeResult = new MongodbResultComposite(composite, SWT.NONE, userDB, initColName, false);
+		compositeResult = new MongodbResultComposite(composite, SWT.NONE, userDB, false);
 		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeResult = new GridLayout(1, false);
 		gl_compositeResult.verticalSpacing = 2;

@@ -79,6 +79,18 @@ public class MongoDBQuery {
 	}
 	
 	/**
+	 * database name list
+	 * 
+	 * @param userDB
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<String> getSchema(UserDBDAO userDB) throws Exception {
+		DB mongoDB = MongoConnectionManager.getInstance(userDB);
+		return mongoDB.getMongoClient().getDatabaseNames();
+	}
+	
+	/**
 	 * get admin mongodb
 	 * 
 	 * @param userDB
@@ -97,21 +109,27 @@ public class MongoDBQuery {
 	 * 
 	 * 
 	 * @param userDB
+	 * @param isShowDetail 
 	 * @return
 	 * @throws Exception
 	 */
-	public static List<TableDAO> listCollection(UserDBDAO userDB) throws Exception {
+	public static List<TableDAO> listCollection(UserDBDAO userDB, boolean isShowDetail) throws Exception {
 		List<TableDAO> listReturn = new ArrayList<TableDAO>();
 		
 		DB mongoDB = MongoConnectionManager.getInstance(userDB);
+//		int intSize = mongoDB.getCollectionNames().size();
 		for (String col : mongoDB.getCollectionNames()) {
 			if(!isSystemCollection(col)) {
 				TableDAO dao = new TableDAO();
+				dao.setSysName(col);
 				dao.setName(col);
-				
-				CommandResult commandResult = mongoDB.getCollection(col).getStats();
-				dao.setRows(commandResult.getLong("count"));
-				dao.setSize(commandResult.getInt("size"));
+
+//				collection 수가 많을 경우 속도가 너무 느려서 보이지 않도록 합니다. - 20.02.20 hangum
+				if(isShowDetail) {
+					CommandResult commandResult = mongoDB.getCollection(col).getStats();
+					dao.setRows(commandResult.getLong("count"));
+					dao.setSize(commandResult.getInt("size"));
+				}
 				
 				listReturn.add(dao);
 			}

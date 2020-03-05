@@ -296,4 +296,8 @@ public class TadpoleMongoDBIndexesComposite extends AbstractObjectComposite {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void clearList() {
+		if(listIndexes != null) listIndexes.clear();
+	}
 }

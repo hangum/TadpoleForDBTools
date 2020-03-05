@@ -30,8 +30,8 @@ import com.hangum.tadpole.elasticsearch.core.editos.main.ElasticsearchEditorInpu
 import com.hangum.tadpole.engine.define.DBDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.query.dao.system.UserDBResourceDAO;
-import com.hangum.tadpole.mongodb.core.editors.dbInfos.MongoDBInfosEditor;
-import com.hangum.tadpole.mongodb.core.editors.dbInfos.MongoDBInfosInput;
+import com.hangum.tadpole.mongodb.core.ext.editors.query.MongoDBQueryEditor;
+import com.hangum.tadpole.mongodb.core.ext.editors.query.MongoDBQueryEditorInput;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
@@ -105,8 +105,8 @@ public abstract class AbstractQueryAction implements IViewActionDelegate {
 		if(userDB.getDBDefine() == DBDefine.MONGODB_DEFAULT) {
 			try {
 				return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(
-						new MongoDBInfosInput(userDB, MongoDBInfosEditor.PAGES.COLLECTION_SUMMERY), 
-						MongoDBInfosEditor.ID);
+						new MongoDBQueryEditorInput("", userDB), MongoDBQueryEditor.ID);
+				
 			} catch (PartInitException e) {
 				logger.error("open editor", e); //$NON-NLS-1$
 				

@@ -237,6 +237,24 @@ public class ResultMainComposite extends Composite {
 	 * @param requestQuery
 	 * @param msg
 	 */
+	public void refreshInfoMessageView(String msg) {
+		refreshInfoMessageView(msg, "");
+	}
+	
+	/**
+	 * 
+	 * @param requestQuery
+	 * @param msg
+	 */
+	public void refreshInfoMessageView(String msg, String errMsg) {
+		compositeMessage.addInfoAfterRefresh(msg, errMsg);
+	}
+	
+	/**
+	 * 
+	 * @param requestQuery
+	 * @param msg
+	 */
 	public void refreshInfoMessageView(RequestQuery requestQuery, String msg) {
 		compositeMessage.addInfoAfterRefresh(getUserDB(), requestQuery, msg);
 	}

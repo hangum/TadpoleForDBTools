@@ -156,7 +156,7 @@ public class TableColumnLIstComposite extends Composite {
 
 		try {
 			if(userDB != null && userDB.getDBGroup() == DBGroupDefine.MONGODB_GROUP) {
-				List<TableDAO> listCollection = MongoDBQuery.listCollection(userDB);
+				List<TableDAO> listCollection = MongoDBQuery.listCollection(userDB, false);
 				for (TableDAO tableDao : listCollection) {
 					listTables.add( new ModTableDAO(tableDao.getName()) );
 				}

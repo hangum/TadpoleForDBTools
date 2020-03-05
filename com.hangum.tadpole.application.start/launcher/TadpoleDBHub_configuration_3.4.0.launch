@@ -19,9 +19,9 @@
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch}  -nl en -GAON -consoleLog -console  -registryMultiLanguage -test -tdest DB -defaultDB MySQ -debugLog -O nlineServer -db Path /Users/hangum/Music"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch}  -nl en -GAON -consoleLog -console  -registryMultiLanguage -test -tdest DB -defaultDB MySQ -debugLog -O nlineServer -dbPath /Users/hangum/tadpole"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Declipse.ignoreApp=true -Dosgi.noShutdown=true&#13;&#10;-Dorg.eclipse.equinox.http.jetty.log.stderr.threshold=info -Xverify:none -Xverify:none -XX:+UseParallelGC -XX:-UseConcMarkSweepGC -XX:PermSize=256M -XX:MaxPermSize=2014M -XX:MaxNewSize=4096M -XX:NewSize=128M -Xmx8292M -Dorg.eclipse.equinox.http.jetty.customizer.class=org.eclipse.rap.jettycustomizer.internal.SessionCookieCustomizer"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Declipse.ignoreApp=true -Dosgi.noShutdown=true&#13;&#10;-Dorg.eclipse.equinox.http.jetty.log.stderr.threshold=info -Xverify:none -Xverify:none -XX:+UseParallelGC -XX:-UseConcMarkSweepGC -XX:PermSize=256M -XX:MaxPermSize=2014M -XX:MaxNewSize=4096M -XX:NewSize=128M -Xmx8292M -Dorg.eclipse.equinox.http.jetty.customizer.class=org.eclipse.rap.jettycustomizer.internal.SessionCookieCustomizer -Dorg.osgi.framework.bundle.parent=ext"/>
 <stringAttribute key="org.eclipse.rap.launch.browserMode" value="EXTERNAL"/>
 <stringAttribute key="org.eclipse.rap.launch.contextpath" value="/"/>
 <stringAttribute key="org.eclipse.rap.launch.dataLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.rap.tools.launch/TadpoleDBHub_configuration_3.4.0"/>

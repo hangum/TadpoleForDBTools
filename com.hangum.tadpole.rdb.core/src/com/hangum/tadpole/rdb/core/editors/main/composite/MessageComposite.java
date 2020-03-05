@@ -29,6 +29,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.utils.RequestQuery;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.swtdesigner.SWTResourceManager;
+import com.tadpole.common.define.core.define.PublicTadpoleDefine;
 
 /**
  * Result Message Composite
@@ -85,6 +86,23 @@ public class MessageComposite extends Composite {
 //		btnClear.setText(Messages.get().MessageComposite_1);
 		lblGoogleSearch = new Label(compositeTail, SWT.NONE);
 		lblGoogleSearch.setData( RWT.MARKUP_ENABLED, Boolean.TRUE );
+	}
+	
+	/**
+	 * refresh info message
+	 * 
+	 * @param msg
+	 * @param errMsg
+	 */
+	public void addInfoAfterRefresh(String msg, String errMsg) {
+		if(errMsg.isEmpty()) {
+			textMessage.setBackground(SWTResourceManager.getColor(248, 248, 255));		
+		} else {
+			textMessage.setBackground(SWTResourceManager.getColor(255, 228, 225));
+		}
+	
+		textMessage.setText(errMsg + PublicTadpoleDefine.LINE_SEPARATOR + StringUtils.abbreviate(msg, MAX_LENGTH));
+		lblGoogleSearch.setText("");
 	}
 	
 	/**

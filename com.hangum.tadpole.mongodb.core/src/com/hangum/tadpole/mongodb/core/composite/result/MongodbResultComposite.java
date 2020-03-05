@@ -11,7 +11,6 @@
 package com.hangum.tadpole.mongodb.core.composite.result;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -55,7 +53,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 
 import com.hangum.tadpole.ace.editor.core.widgets.TadpoleEditorWidget;
-import com.hangum.tadpole.commons.dialogs.message.dao.TadpoleMessageDAO;
 import com.hangum.tadpole.commons.exception.dialog.ExceptionDetailsErrorDialog;
 import com.hangum.tadpole.commons.libs.core.message.CommonMessages;
 import com.hangum.tadpole.commons.util.JSONUtil;
@@ -63,9 +60,8 @@ import com.hangum.tadpole.commons.util.TadpoleWidgetUtils;
 import com.hangum.tadpole.commons.util.download.DownloadServiceHandler;
 import com.hangum.tadpole.commons.util.download.DownloadUtils;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
+import com.hangum.tadpole.engine.sql.util.resultset.QueryExecuteResultDTO;
 import com.hangum.tadpole.engine.sql.util.tables.DefaultViewerSorter;
-import com.hangum.tadpole.engine.sql.util.tables.SQLHistoryLabelProvider;
-import com.hangum.tadpole.engine.sql.util.tables.SQLHistorySorter;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultContentProvider;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultFilter;
 import com.hangum.tadpole.engine.sql.util.tables.SQLResultLabelProvider;
@@ -73,12 +69,13 @@ import com.hangum.tadpole.engine.sql.util.tables.SQLResultSorter;
 import com.hangum.tadpole.engine.sql.util.tables.TableUtil;
 import com.hangum.tadpole.engine.sql.util.tables.TreeUtil;
 import com.hangum.tadpole.engine.utils.EditorDefine;
+import com.hangum.tadpole.engine.utils.RequestQuery;
+import com.hangum.tadpole.mongodb.MongodbExecuteCommand;
 import com.hangum.tadpole.mongodb.core.Activator;
 import com.hangum.tadpole.mongodb.core.Messages;
 import com.hangum.tadpole.mongodb.core.define.MongoDBDefine;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.NewDocumentDialog;
 import com.hangum.tadpole.mongodb.core.dialogs.collection.index.NewIndexDialog;
-import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleMessageDialog;
 import com.hangum.tadpole.mongodb.core.dialogs.msg.TadpoleSimpleMessageDialog;
 import com.hangum.tadpole.mongodb.core.dialogs.resultview.FindOneDetailDialog;
 import com.hangum.tadpole.mongodb.core.dto.MongodbTreeViewDTO;
@@ -93,6 +90,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
+import com.swtdesigner.SWTResourceManager;
 import com.tadpole.common.define.core.define.PublicTadpoleDefine;
 
 /**
@@ -122,6 +120,8 @@ public class MongodbResultComposite extends Composite {
 	private String collectionName;
 	/** 사용자가 action을 할수 있는지 */
 	private boolean isUserAction;
+	/** request query */
+	protected RequestQuery reqQuery;
 	
 	/** 기본 검색 조건 */
 	String strBasicField 	= ""; //$NON-NLS-1$
@@ -153,8 +153,8 @@ public class MongodbResultComposite extends Composite {
 	private SQLResultSorter sqlSorter;
 	private Table tableTadpoleMsg;
 	
-	private TableViewer tableViewerMessage;
-	private List<TadpoleMessageDAO> listMessage = new ArrayList<TadpoleMessageDAO>();
+	// mongodb error message
+	private Text textMessage;
 	
 	/** browser */
 	private Composite compositeExternal;
@@ -179,7 +179,7 @@ public class MongodbResultComposite extends Composite {
 	 * @param userDB
 	 * @param collectionName
 	 */
-	public MongodbResultComposite(Composite parent, int style, final UserDBDAO userDB, final String collectionName, final boolean isUserAction) {
+	public MongodbResultComposite(Composite parent, int style, final UserDBDAO userDB, final boolean isUserAction) {
 		super(parent, style);
 		GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.verticalSpacing = 1;
@@ -250,37 +250,37 @@ public class MongodbResultComposite extends Composite {
 		compositeTreeViewTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		compositeTreeViewTail.setLayout(new GridLayout(6, false));
 		
-		if(isUserAction) {
-			Button btnTreeInsertDocument = new Button(compositeTreeViewTail, SWT.NONE);
-			btnTreeInsertDocument.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					newDocument();
-				}
-			});
-			btnTreeInsertDocument.setText(Messages.get().MongodbResultComposite_4);
-			
-			Button btnTreeDeleteDocument = new Button(compositeTreeViewTail, SWT.NONE);
-			btnTreeDeleteDocument.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					deleteDocumentTree();
-				}
-			});
-			btnTreeDeleteDocument.setText(Messages.get().MongodbResultComposite_5);
-			
-			Button btnTreeCreateIndex = new Button(compositeTreeViewTail, SWT.NONE);
-			btnTreeCreateIndex.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					createIndex();
-				}
-			});
-			btnTreeCreateIndex.setText(Messages.get().MongodbResultComposite_6);
-		
-			Label labelTreeViewDumy = new Label(compositeTreeViewTail, SWT.NONE);
-			labelTreeViewDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		}
+//		if(isUserAction) {
+//			Button btnTreeInsertDocument = new Button(compositeTreeViewTail, SWT.NONE);
+//			btnTreeInsertDocument.addSelectionListener(new SelectionAdapter() {
+//				@Override
+//				public void widgetSelected(SelectionEvent e) {
+//					newDocument();
+//				}
+//			});
+//			btnTreeInsertDocument.setText(Messages.get().MongodbResultComposite_4);
+//			
+//			Button btnTreeDeleteDocument = new Button(compositeTreeViewTail, SWT.NONE);
+//			btnTreeDeleteDocument.addSelectionListener(new SelectionAdapter() {
+//				@Override
+//				public void widgetSelected(SelectionEvent e) {
+//					deleteDocumentTree();
+//				}
+//			});
+//			btnTreeDeleteDocument.setText(Messages.get().MongodbResultComposite_5);
+//			
+//			Button btnTreeCreateIndex = new Button(compositeTreeViewTail, SWT.NONE);
+//			btnTreeCreateIndex.addSelectionListener(new SelectionAdapter() {
+//				@Override
+//				public void widgetSelected(SelectionEvent e) {
+//					createIndex();
+//				}
+//			});
+//			btnTreeCreateIndex.setText(Messages.get().MongodbResultComposite_6);
+//		
+//			Label labelTreeViewDumy = new Label(compositeTreeViewTail, SWT.NONE);
+//			labelTreeViewDumy.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+//		}
 		
 		lblTreeViewCount = new Label(compositeTreeViewTail, SWT.NONE);
 		lblTreeViewCount.setText(Messages.get().MongodbResultComposite_7);
@@ -313,20 +313,20 @@ public class MongodbResultComposite extends Composite {
 		textFilter.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		resultTableViewer = new TableViewer(compositeBodyTable, SWT.BORDER /* | SWT.VIRTUAL */ | SWT.FULL_SELECTION);
-		resultTableViewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				IStructuredSelection iss = (IStructuredSelection)resultTableViewer.getSelection();
-				if(!iss.isEmpty()) {
-					HashMap<Integer, Object> rsResult = (HashMap<Integer, Object>)iss.getFirstElement();
-//					String jsonString = rsResult.get(MongoDBDefine.PRIMARY_ID_KEY).toString();
-					
-					DBObject dbObject = (DBObject)rsResult.get(MongoDBDefine.PRIMARY_ID_KEY);
-					
-					FindOneDetailDialog dlg = new FindOneDetailDialog(null, userDB, collectionName, dbObject);
-					dlg.open();
-				}
-			}
-		});
+//		resultTableViewer.addDoubleClickListener(new IDoubleClickListener() {
+//			public void doubleClick(DoubleClickEvent event) {
+//				IStructuredSelection iss = (IStructuredSelection)resultTableViewer.getSelection();
+//				if(!iss.isEmpty()) {
+//					HashMap<Integer, Object> rsResult = (HashMap<Integer, Object>)iss.getFirstElement();
+////					String jsonString = rsResult.get(MongoDBDefine.PRIMARY_ID_KEY).toString();
+//					
+//					DBObject dbObject = (DBObject)rsResult.get(MongoDBDefine.PRIMARY_ID_KEY);
+//					
+//					FindOneDetailDialog dlg = new FindOneDetailDialog(null, userDB, collectionName, dbObject);
+//					dlg.open();
+//				}
+//			}
+//		});
 		Table table = resultTableViewer.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
@@ -338,39 +338,39 @@ public class MongodbResultComposite extends Composite {
 		compositeTail.setLayout(new GridLayout(10, false));
 		compositeTail.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		
-		if(isUserAction) {
-			Button btnInsertDocument = new Button(compositeTail, SWT.NONE);
-			btnInsertDocument.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					newDocument();
-				}
-			});
-			btnInsertDocument.setText(Messages.get().MongodbResultComposite_13);
-			
-			Button btnDeleteDocument = new Button(compositeTail, SWT.NONE);
-			btnDeleteDocument.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					deleteDocumentTable();
-				}
-			});
-			btnDeleteDocument.setText(Messages.get().MongodbResultComposite_14);
-			
-			Button btnCreateIndex = new Button(compositeTail, SWT.NONE);
-			btnCreateIndex.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					 createIndex();
-				}
-			});
-			btnCreateIndex.setText(Messages.get().MongodbResultComposite_15);
-		
-			Label labelTableDumy = new Label(compositeTail, SWT.NONE);
-			GridData gd_labelTableDumy = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-			gd_labelTableDumy.widthHint = 5;
-			labelTableDumy.setLayoutData(gd_labelTableDumy);
-		}
+//		if(isUserAction) {
+//			Button btnInsertDocument = new Button(compositeTail, SWT.NONE);
+//			btnInsertDocument.addSelectionListener(new SelectionAdapter() {
+//				@Override
+//				public void widgetSelected(SelectionEvent e) {
+//					newDocument();
+//				}
+//			});
+//			btnInsertDocument.setText(Messages.get().MongodbResultComposite_13);
+//			
+//			Button btnDeleteDocument = new Button(compositeTail, SWT.NONE);
+//			btnDeleteDocument.addSelectionListener(new SelectionAdapter() {
+//				@Override
+//				public void widgetSelected(SelectionEvent e) {
+//					deleteDocumentTable();
+//				}
+//			});
+//			btnDeleteDocument.setText(Messages.get().MongodbResultComposite_14);
+//			
+//			Button btnCreateIndex = new Button(compositeTail, SWT.NONE);
+//			btnCreateIndex.addSelectionListener(new SelectionAdapter() {
+//				@Override
+//				public void widgetSelected(SelectionEvent e) {
+//					 createIndex();
+//				}
+//			});
+//			btnCreateIndex.setText(Messages.get().MongodbResultComposite_15);
+//		
+//			Label labelTableDumy = new Label(compositeTail, SWT.NONE);
+//			GridData gd_labelTableDumy = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+//			gd_labelTableDumy.widthHint = 5;
+//			labelTableDumy.setLayoutData(gd_labelTableDumy);
+//		}
 		
 		Button btnExportCSV = new Button(compositeTail, SWT.NONE);
 		btnExportCSV.addSelectionListener(new SelectionAdapter() {
@@ -428,7 +428,6 @@ public class MongodbResultComposite extends Composite {
 		tadpoleEditor = new TadpoleEditorWidget(compositeJSONView, SWT.BORDER, EditorDefine.EXT_JSON, "", "");
 		tadpoleEditor.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		
 		// tabpole message
 		CTabItem tbtmTadpoleMessage = new CTabItem(tabFolderMongoDB, SWT.NONE);
 		tbtmTadpoleMessage.setText(Messages.get().MongodbResultComposite_17);
@@ -437,75 +436,9 @@ public class MongodbResultComposite extends Composite {
 		tbtmTadpoleMessage.setControl(compositeTadpoleMsg);
 		compositeTadpoleMsg.setLayout(new GridLayout(1, false));
 		
-		tableViewerMessage = new TableViewer(compositeTadpoleMsg, SWT.BORDER | SWT.FULL_SELECTION);
-		tableViewerMessage.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				IStructuredSelection is = (IStructuredSelection)event.getSelection();
-				Object selElement = is.getFirstElement();
-				if(selElement instanceof TadpoleMessageDAO) {
-					TadpoleMessageDAO tmd = (TadpoleMessageDAO)selElement;
-					TadpoleMessageDialog dlg = new TadpoleMessageDialog(null, "Message", SQLHistoryLabelProvider.dateToStr(tmd.getDateExecute()), tmd.getStrMessage() ); //$NON-NLS-1$
-					dlg.open();
-				}
-			}
-		});
-		tableTadpoleMsg = tableViewerMessage.getTable();
-		tableTadpoleMsg.setHeaderVisible(true);
-		tableTadpoleMsg.setLinesVisible(true);
-		tableTadpoleMsg.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		tableTadpoleMsg.setSortDirection(SWT.DOWN);
-		SQLHistorySorter sorterMessage = new SQLHistorySorter();
-		
-		TableViewerColumn tableViewerColumn = new TableViewerColumn(tableViewerMessage, SWT.NONE);
-		TableColumn tblclmnDate = tableViewerColumn.getColumn();
-		tblclmnDate.setWidth(140);
-		tblclmnDate.setText(CommonMessages.get().Date);
-		tblclmnDate.addSelectionListener(getSelectionAdapter(tableViewerMessage, sorterMessage, tblclmnDate, 0));
-		
-		TableViewerColumn tableViewerColumn_1 = new TableViewerColumn(tableViewerMessage, SWT.NONE);
-		TableColumn tblclmnSql = tableViewerColumn_1.getColumn();
-		tblclmnSql.setWidth(500);
-		tblclmnSql.setText(Messages.get().MongodbResultComposite_19);
-		tblclmnSql.addSelectionListener(getSelectionAdapter(tableViewerMessage, sorterMessage, tblclmnSql, 1));
-		
-		tableViewerMessage.setLabelProvider(new SQLHistoryLabelProvider());
-		tableViewerMessage.setContentProvider(ArrayContentProvider.getInstance());
-		tableViewerMessage.setInput(listMessage);
-		tableViewerMessage.setComparator(sorterMessage);
-		
-		Composite composite = new Composite(compositeTadpoleMsg, SWT.NONE);		
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		composite.setLayout(new GridLayout(3, false));
-		
-		Button btnExportTadpoleMessage = new Button(composite, SWT.NONE);
-		btnExportTadpoleMessage.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				StringBuffer sbExportData = new StringBuffer();
-				
-				for(TadpoleMessageDAO dao : listMessage) {
-					sbExportData.append( dao.getStrMessage() ).append(PublicTadpoleDefine.LINE_SEPARATOR); //$NON-NLS-1$
-				}
-				
-				downloadServiceHandler.setName(userDB.getDisplay_name() + "_Message.txt"); //$NON-NLS-1$
-				downloadServiceHandler.setByteContent(sbExportData.toString().getBytes());
-				DownloadUtils.provideDownload(compositeExternal, downloadServiceHandler.getId());
-			}
-		});
-		btnExportTadpoleMessage.setText(Messages.get().MongodbResultComposite_20);
-		
-		Label label = new Label(composite, SWT.NONE);
-		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		
-		Button btnClear = new Button(composite, SWT.NONE);
-		btnClear.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				listMessage.clear();
-				tableViewerMessage.refresh();
-			}
-		});
-		btnClear.setText(Messages.get().MongodbResultComposite_21);
+		textMessage = new Text(compositeTadpoleMsg, SWT.BORDER | SWT.WRAP | SWT.H_SCROLL | SWT.V_SCROLL | SWT.CANCEL | SWT.MULTI);
+		textMessage.setFont(SWTResourceManager.getFont("Courier", 12, SWT.NONE));
+		textMessage.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		registerServiceHandler();		
 		firstTabInit();
@@ -610,6 +543,80 @@ public class MongodbResultComposite extends Composite {
 		job.setName(userDB.getDisplay_name());
 		job.setUser(true);
 		job.schedule();
+	}
+	
+	/**
+	 * query editor에서 검색할때 사용하는 메소드 
+	 * 
+	 * @param userDBDAO
+	 * @param userDB2 
+	 * @param mapCollections
+	 * @param reqQuery
+	 * @param _intPreferenceQueryTimeout
+	 * @param intSelectLimitCnt
+	 */
+	public QueryExecuteResultDTO executeCommand(UserDBDAO userDBDAO, Map<String, String> mapCollections, RequestQuery reqQuery, int _intPreferenceQueryTimeout, int intSelectLimitCnt) throws Exception {
+		if(logger.isDebugEnabled()) {
+			logger.debug("\t [execute mongodb command] ==> " + reqQuery.getOriginalSql());
+		}
+		this.reqQuery = reqQuery;
+		
+//		// find 명령의 경우 limit 를 준다. 
+//		//	limit에는 어드민이 지정해 준 값 만큼 limit를 설정할 수 있도록 한다.
+//		//		만약에, limit를 설정했다면 사용자가 설정한 limit가 설정의 limit보다 작다면 설정의 limit를 무시해야
+//		//
+//		String _sql = reqQuery.getSql();
+//		if(StringUtils.startsWith(_sql, "db.") && StringUtils.indexOf(_sql, "find(") != -1) {
+//			// maxTimeMS 옵션도 걸어야겠다. 
+//			_sql += String.format(".limit(%s).maxTimeMS(%s)", intSelectLimitCnt,  _intPreferenceQueryTimeout * 1000);
+//			if(logger.isDebugEnabled()) logger.debug("\t find query is " + _sql);
+//		}
+		
+		QueryExecuteResultDTO queryResultDAO = null;
+		int intTotCount = 0;
+		
+		// console 초기화
+		sbConsoleErrorMsg.setLength(0);
+		sbConsoleExecuteMsg.setLength(0);
+		
+		List<DBObject> listDBObject = null;
+		try {
+			listDBObject = MongodbExecuteCommand.executeCommand(userDBDAO, reqQuery, _intPreferenceQueryTimeout, intSelectLimitCnt);
+	        
+			if(listDBObject != null) {
+				intTotCount = listDBObject.size();
+				
+				// 컬렉션이 없거나 데이터가 없는 경우.. 
+				if(intTotCount == 0) {
+					// 해당 스키마에 컬렉션이 없으면 컬렉션이 없다는 에러 메시지를 보여준다.
+					
+					appendMessage(CommonMessages.get().WorkingSuccess + PublicTadpoleDefine.LINE_SEPARATOR + Messages.get().TheSchemaDoesNotCollection);//"해당 스키마에 Collection이 없거나 데이터가 없습니다." );
+				} else {
+					refreshDBView(listDBObject, intTotCount);
+					setResult();	
+				}
+				
+			} else {
+				if(logger.isDebugEnabled()) logger.debug("\t ");
+
+				appendMessage(CommonMessages.get().WorkingSuccess + PublicTadpoleDefine.LINE_SEPARATOR + reqQuery.getOriginalSql() );
+			}
+			
+			queryResultDAO = new QueryExecuteResultDTO(userDBDAO, reqQuery.getSql(), true, "", 0, intTotCount);
+		} catch(Exception e) {
+			logger.error(String.format("find query string %s", reqQuery.getOriginalSql()), e);
+			if(listDBObject == null) listDBObject = new ArrayList<DBObject>();
+			
+			refreshDBView(listDBObject, intTotCount);
+			setResult();
+			
+			sbConsoleErrorMsg.append(e.getMessage());
+			appendMessage(e, e.getMessage());
+			
+			throw new Exception(e.getMessage());
+		}
+		
+		return queryResultDAO;
 	}
 	
 	/**
@@ -990,9 +997,9 @@ public class MongodbResultComposite extends Composite {
 				treeColumn.getColumn().setWidth( columnSize[i] );
 				treeColumn.getColumn().setResizable(true);
 				treeColumn.getColumn().setMoveable(false);
-				if(isUserAction) {
-					if(i == 1) treeColumn.setEditingSupport(new TreeViewerEditingSupport(userDB, collectionName, treeViewerMongo));
-				}
+//				if(isUserAction) {
+//					if(i == 1) treeColumn.setEditingSupport(new TreeViewerEditingSupport(userDB, collectionName, treeViewerMongo));
+//				}
 			}	// end for
 			
 		} catch(Exception e) { 
@@ -1082,6 +1089,24 @@ public class MongodbResultComposite extends Composite {
 	}
 	
 	/**
+	 * message console에 메시지를 출력한다.
+	 * 
+	 * @param msg
+	 */
+	public void appendMessage(String msg) {
+		tabFolderMongoDB.setSelection(3);
+		
+//		if(errMsg.isEmpty()) {
+//			textMessage.setBackground(SWTResourceManager.getColor(248, 248, 255));		
+//		} else {
+//			textMessage.setBackground(SWTResourceManager.getColor(255, 228, 225));
+//		}
+		
+		textMessage.setBackground(SWTResourceManager.getColor(248, 248, 255));
+		textMessage.setText(StringUtils.abbreviate(msg, 50000));
+	}
+	
+	/**
 	 * append tadpole message 
 	 * 
 	 * @param throwable
@@ -1089,8 +1114,14 @@ public class MongodbResultComposite extends Composite {
 	 */
 	public void appendMessage(Throwable throwable, String msg) {
 		tabFolderMongoDB.setSelection(3);
-		listMessage.add(new TadpoleMessageDAO(new Date(), msg, throwable));
-		tableViewerMessage.refresh();
+		
+		if (throwable == null) {
+			textMessage.setBackground(SWTResourceManager.getColor(248, 228, 225));
+		} else {
+			textMessage.setBackground(SWTResourceManager.getColor(255, 228, 225));
+		}
+
+		textMessage.setText(StringUtils.abbreviate(throwable.getMessage(), 50000));
 	}
 
 	@Override

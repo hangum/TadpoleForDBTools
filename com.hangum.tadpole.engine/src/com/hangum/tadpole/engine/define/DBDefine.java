@@ -209,7 +209,7 @@ public enum DBDefine {
 			 *  
 			 * mongodb://[dbuser:dbpassword@]host:port/dbname
 			 */
-			case MONGODB_DEFAULT:	return "mongodb://%s:%s";//@%s:%s:%s";
+			case MONGODB_DEFAULT:	return "mongodb://%s/%s";//@%s:%s:%s";
 			
 			case HIVE_DEFAULT:		return "jdbc:hive://%s:%s/%s";
 			case HIVE2_DEFAULT:		return "jdbc:hive2://%s:%s/%s";

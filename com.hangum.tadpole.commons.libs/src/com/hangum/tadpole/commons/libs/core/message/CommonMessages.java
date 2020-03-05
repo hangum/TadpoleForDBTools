@@ -235,6 +235,8 @@ public class CommonMessages {
 	public String PleaseOpenEditor;
 	
 	public String ElasticSearch;
+
+	public String WorkingSuccess;
 	
 	public static CommonMessages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, CommonMessages.class);

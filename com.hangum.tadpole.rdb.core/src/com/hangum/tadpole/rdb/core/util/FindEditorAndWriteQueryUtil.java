@@ -26,8 +26,8 @@ import com.hangum.tadpole.elasticsearch.core.editos.main.ElasticsearchEditorInpu
 import com.hangum.tadpole.engine.define.DBGroupDefine;
 import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.engine.sql.util.SQLUtil;
-import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditor;
-import com.hangum.tadpole.mongodb.core.ext.editors.javascript.ServerSideJavaScriptEditorInput;
+import com.hangum.tadpole.mongodb.core.ext.editors.query.MongoDBQueryEditor;
+import com.hangum.tadpole.mongodb.core.ext.editors.query.MongoDBQueryEditorInput;
 import com.hangum.tadpole.rdb.core.Activator;
 import com.hangum.tadpole.rdb.core.Messages;
 import com.hangum.tadpole.rdb.core.editors.main.MainEditor;
@@ -69,7 +69,16 @@ public class FindEditorAndWriteQueryUtil {
 	public static void run(UserDBDAO userDB, String strObjectName, String strScript, boolean isNewEditor, PublicTadpoleDefine.OBJECT_TYPE initAction) {
 		
 		if(userDB != null && DBGroupDefine.MONGODB_GROUP == userDB.getDBGroup()) {
-			newMongoDBEditorOpen(userDB, strScript);
+			if(PublicTadpoleDefine.OBJECT_TYPE.TABLES == initAction) {
+				IEditorPart editor = EditorUtils.findSQLEditor(userDB);
+				if(editor == null || isNewEditor) {				
+					newMongodbQueryEditorOpen(userDB, strScript);		
+				} else {
+					appendMongodbQueryEditorOpen(editor, strScript);				
+				}
+//			} else {
+//				newMongoDBServerSideJavascirptEditorOpen(userDB, strScript);
+			}
 		} else if(userDB != null && DBGroupDefine.ELASTICSEARCH_GROUP == userDB.getDBGroup()) {
 			IEditorPart editor = EditorUtils.findSQLEditor(userDB);
 			if(editor == null || isNewEditor) {				
@@ -152,18 +161,17 @@ public class FindEditorAndWriteQueryUtil {
 			ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
 		}
 	}
-	
 	/**
-	 * Open mongodB editor
+	 * open mongodb query editor open
 	 * 
 	 * @param userDB
 	 * @param lowSQL
 	 */
-	private static void newMongoDBEditorOpen(UserDBDAO userDB, String lowSQL) { 
+	private static void newMongodbQueryEditorOpen(UserDBDAO userDB, String lowSQL) {
 		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
 		try {
-			ServerSideJavaScriptEditorInput input = new ServerSideJavaScriptEditorInput(userDB);
-			page.openEditor(input, ServerSideJavaScriptEditor.ID, false);
+			MongoDBQueryEditorInput input = new MongoDBQueryEditorInput(userDB, lowSQL);
+			page.openEditor(input, MongoDBQueryEditor.ID, false);
 			
 		} catch (PartInitException e) {
 			logger.error("Mongodb javascirpt", e);
@@ -172,6 +180,46 @@ public class FindEditorAndWriteQueryUtil {
 			ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "GridFS Open Exception", errStatus); //$NON-NLS-1$
 		}
 	}
+	
+	/**
+	 * 같은 디비의 에디터가 열려 있을 경우, 기존 에디터에 더한다.
+	 * 
+	 * @param reference
+	 * @param lowSQL
+	 */
+	private static void appendMongodbQueryEditorOpen(IEditorPart editorPart, String lowSQL) {
+		try {
+			MongoDBQueryEditor editor = (MongoDBQueryEditor)editorPart;
+			PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(editor.getEditorInput(), MongoDBQueryEditor.ID, false);
+			
+			editor.appendText(lowSQL);
+		} catch (Exception e) {
+			logger.error("find editor open", e); //$NON-NLS-1$
+			
+			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+			ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, Messages.get().AbstractQueryAction_1, errStatus); //$NON-NLS-1$
+		}
+	}
+	
+//	/**
+//	 * Open mongodB editor
+//	 * 
+//	 * @param userDB
+//	 * @param lowSQL
+//	 */
+//	private static void newMongoDBEditorOpen(UserDBDAO userDB, String lowSQL) { 
+//		IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();		
+//		try {
+//			ServerSideJavaScriptEditorInput input = new ServerSideJavaScriptEditorInput(userDB);
+//			page.openEditor(input, ServerSideJavaScriptEditor.ID, false);
+//			
+//		} catch (PartInitException e) {
+//			logger.error("Mongodb javascirpt", e);
+//			
+//			Status errStatus = new Status(IStatus.ERROR, Activator.PLUGIN_ID, e.getMessage(), e); //$NON-NLS-1$
+//			ExceptionDetailsErrorDialog.openError(null,CommonMessages.get().Error, "GridFS Open Exception", errStatus); //$NON-NLS-1$
+//		}
+//	}
 	
 	/**
 	 * new window open

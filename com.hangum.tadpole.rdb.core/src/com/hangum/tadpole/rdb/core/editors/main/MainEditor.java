@@ -836,6 +836,16 @@ public class MainEditor extends EditorExtension {
 	}
 	
 	/**
+	 * 메시지를 쿼리 결과 메시지로 보여준다.
+	 * 
+	 * @param msg
+	 */
+	public void showInfoMessage(String msg) {
+		resultMainComposite.refreshInfoMessageView(msg);
+		resultMainComposite.resultFolderSel(EditorDefine.RESULT_TAB.TADPOLE_MESSAGE);
+	}
+	
+	/**
 	 * execute query
 	 * 
 	 * @param reqQuery

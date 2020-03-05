@@ -71,6 +71,7 @@ public class Messages {
 	public String Input;
 	public String ViewSource;
 	public String DeleteMsg;
+	public String TheSchemaDoesNotCollection;
 
 	public static Messages get() {
 		return RWT.NLS.getISO8859_1Encoded(BUNDLE_NAME, Messages.class);

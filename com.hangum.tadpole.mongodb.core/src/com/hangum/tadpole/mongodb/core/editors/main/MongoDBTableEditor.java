@@ -234,7 +234,7 @@ public class MongoDBTableEditor extends EditorPart {
 		});
 		btnBasicSearch.setText(CommonMessages.get().Search);
 		
-		compositeResult = new MongodbResultComposite(sashForm, SWT.NONE, userDB, initColName, true);
+		compositeResult = new MongodbResultComposite(sashForm, SWT.NONE, userDB, true);
 		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeResult = new GridLayout(1, false);
 		gl_compositeResult.verticalSpacing = 0;

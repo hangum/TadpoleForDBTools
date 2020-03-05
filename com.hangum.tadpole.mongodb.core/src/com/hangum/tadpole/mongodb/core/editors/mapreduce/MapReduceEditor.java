@@ -261,7 +261,7 @@ public class MapReduceEditor extends EditorPart {
 		
 		sashForm.setWeights(new int[] {1, 1});
 		
-		compositeResult = new MongodbResultComposite(sashFormMain, SWT.NONE, userDB, initColName, false);
+		compositeResult = new MongodbResultComposite(sashFormMain, SWT.NONE, userDB, false);
 		compositeResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		GridLayout gl_compositeResult = new GridLayout(1, false);
 		gl_compositeResult.verticalSpacing = 0;
