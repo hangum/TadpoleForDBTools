@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: TadpoleHub Apache cassandra connector
+Bundle-SymbolicName: com.tadpolehub.db.cassandra.core
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: TadpoleHub Co,.LTD
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.rap.ui;bundle-version="3.7.0",
+ com.hangum.tadpole.engine;bundle-version="1.0.0",
+ com.hangum.tadpole.commons.utils;bundle-version="2.0.0",
+ com.hangum.tadpole.commons.libs;bundle-version="2.0.0"
+Export-Package: com.tadpolehub.db.cassandra.core.db
