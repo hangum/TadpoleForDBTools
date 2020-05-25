@@ -21,7 +21,7 @@
     <init-param>
       <param-name>commandline</param-name>
       <!-- -dbPath /Users/tadpoledbhub/ -->
-      <param-value>-registryMultiLanguage </param-value>     
+      <param-value>-registryMultiLanguage -nl en</param-value>     
     </init-param>
 
     <load-on-startup>1</load-on-startup>    
