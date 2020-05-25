@@ -374,10 +374,14 @@ public class MainEditor extends EditorExtension {
 					userDB.setSchema(StringUtils.upperCase(userDB.getUsers()));
 				} else if(userDB.getDBGroup() == DBGroupDefine.MYSQL_GROUP) {
 					userDB.setSchema(userDB.getDb());
+				} else if(userDB.getDBGroup() == DBGroupDefine.MSSQL_GROUP) {
+					userDB.setSchema(userDB.getDb());
 				}
 			}
 			
-			comboSchema.setText(userDB.getSchema());
+			if("".equals(comboSchema.getText())) {
+				comboSchema.setText(userDB.getSchema());				
+			}
 			comboSchema.pack();
 			new ToolItem(toolBar, SWT.SEPARATOR);
 			
