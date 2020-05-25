@@ -42,6 +42,7 @@
       <plugin id="com.hangum.tadpole.sql.parser"/>
       <plugin id="com.ibm.icu"/>
       <plugin id="com.tadpole.common.define.core"/>
+      <plugin id="com.tadpolehub.db.cassandra.core"/>
       <plugin id="com.tadpolehub.db.ldap.core"/>
       <plugin id="org.apache.commons.fileupload"/>
       <plugin id="org.apache.commons.io"/>
@@ -132,6 +133,7 @@
       <plugin id="com.hangum.tadpole.sql.parser" autoStart="true" startLevel="0" />
       <plugin id="com.ibm.icu" autoStart="true" startLevel="0" />
       <plugin id="com.tadpole.common.define.core" autoStart="true" startLevel="0" />
+      <plugin id="com.tadpolehub.db.cassandra.core" autoStart="true" startLevel="0" />
       <plugin id="com.tadpolehub.db.ldap.core" autoStart="true" startLevel="0" />
       <plugin id="org.apache.commons.fileupload" autoStart="true" startLevel="0" />
       <plugin id="org.apache.commons.io" autoStart="true" startLevel="0" />
