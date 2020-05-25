@@ -665,7 +665,12 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 	 * get default schemaname
 	 */
 	public String getDefaultSchemanName() {
-		if(getDBGroup() == DBGroupDefine.ORACLE_GROUP || getDBGroup() == DBGroupDefine.MYSQL_GROUP || getDBGroup() == DBGroupDefine.POSTGRE_GROUP ) {
+		final DBGroupDefine dbGroup = getDBGroup();
+		if(dbGroup == DBGroupDefine.ORACLE_GROUP || 
+				dbGroup == DBGroupDefine.MYSQL_GROUP || 
+				dbGroup == DBGroupDefine.POSTGRE_GROUP | 
+				dbGroup == DBGroupDefine.ApacheCassandra_GROUP
+		) {
 			return getSchema();
 		} else {
 			return getDb();
@@ -679,7 +684,10 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 	 */
 	public void setDefaultSchemanName(String strName) {
 		final DBGroupDefine dbGroup = getDBGroup();
-		if(dbGroup == DBGroupDefine.ORACLE_GROUP || dbGroup == DBGroupDefine.MYSQL_GROUP || dbGroup == DBGroupDefine.POSTGRE_GROUP) {
+		if(dbGroup == DBGroupDefine.ORACLE_GROUP ||
+			dbGroup == DBGroupDefine.MYSQL_GROUP || 
+			dbGroup == DBGroupDefine.POSTGRE_GROUP
+		) {
 			setSchema(strName);
 		} else if(dbGroup == DBGroupDefine.MSSQL_GROUP) {
 			setUrl(StringUtils.replaceOnce(getUrl(), getDb(), strName));
@@ -687,7 +695,8 @@ public class UserDBDAO extends TDBDBDAO implements Cloneable {
 			setSchema(strName);
 			TadpoleSQLManager.removeInstance(this);
 			
-		} else if(dbGroup == DBGroupDefine.MONGODB_GROUP) {
+		} else if(dbGroup == DBGroupDefine.MONGODB_GROUP ||
+				dbGroup == DBGroupDefine.ApacheCassandra_GROUP) {
 			setSchema(strName);
 			setDb(strName);
 		}

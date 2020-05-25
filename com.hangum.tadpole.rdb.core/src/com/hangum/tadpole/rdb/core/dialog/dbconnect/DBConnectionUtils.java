@@ -20,6 +20,7 @@ import com.hangum.tadpole.engine.query.dao.system.UserDBDAO;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AWSDynamoLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AbstractLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.AltibaseLoginComposite;
+import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.ApacheCassandraLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.CubridLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.ElasticSEarchLoginComposite;
 import com.hangum.tadpole.rdb.core.dialog.dbconnect.composite.HiveLoginComposite;
@@ -104,6 +105,8 @@ public class DBConnectionUtils {
 			loginComposite = new NetezzaLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		} else if(dbDefine == DBDefine.ELASTICSEARCH_DEFAULT) {
 			loginComposite = new ElasticSEarchLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
+		} else if(dbDefine == DBDefine.APACHE_CASSANDRA_DEFAULT) {
+			loginComposite = new ApacheCassandraLoginComposite(compositeBody, SWT.NONE, listGroupName, selGroupName, userDB, isReadOnly);
 		}
 		
 		loginComposite.setDataActionStatus(dataStatus);

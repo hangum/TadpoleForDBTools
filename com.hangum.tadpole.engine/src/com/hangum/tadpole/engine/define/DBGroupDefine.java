@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
  *
  */
 public enum DBGroupDefine {
+	ApacheCassandra_GROUP,
 	/* oracle, tibero */
 	ORACLE_GROUP,
 	/* mssql 8le, mssql */
@@ -67,6 +68,8 @@ public enum DBGroupDefine {
 			return DYNAMODB_GROUP;
 		} else if(dbDefine == DBDefine.ELASTICSEARCH_DEFAULT) {
 			return ELASTICSEARCH_GROUP;
+		} else if(dbDefine == DBDefine.APACHE_CASSANDRA_DEFAULT) {
+			return ApacheCassandra_GROUP;
 		} else {
 			return MONGODB_GROUP;
 		}

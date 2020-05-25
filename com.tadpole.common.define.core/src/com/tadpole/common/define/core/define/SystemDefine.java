@@ -22,9 +22,9 @@ public class SystemDefine {
 	
 	// DB HUB
 	public static final String DBHUB_NAME = "Tadpole DB Hub";
-	public static final String DBHUB_MAJOR_VERSION = "2.0.0";
-	public static final String DBHUB_SUB_VERSION = "Build (A4)";
-	public static final String DBHUB_RELEASE_DATE = "2020.03.04";
+	public static final String DBHUB_MAJOR_VERSION = "2.1.0";
+	public static final String DBHUB_SUB_VERSION = "Build (R0)";
+	public static final String DBHUB_RELEASE_DATE = "2020.05.27";
 	
 	// History Hub
 	public static final String HISTORYHUB_NAME = "Tadpole History Hub";

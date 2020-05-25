@@ -472,6 +472,9 @@ public class SQLUtil {
 	 * @return
 	 */
 	public static String getTableName(UserDBDAO userDB, TableDAO tableDAO) {
+		if(userDB.getDBGroup() == DBGroupDefine.ApacheCassandra_GROUP) {
+			return String.format("%s.%s", userDB.getSchema(), tableDAO.getName());
+		}
 		return tableDAO.getFullName();
 	}
 	

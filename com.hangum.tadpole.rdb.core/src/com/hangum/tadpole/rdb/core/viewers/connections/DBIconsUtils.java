@@ -53,6 +53,7 @@ public class DBIconsUtils {
 		else if(DBDefine.AMAZON_REDSHIFT_DEFAULT == dbType) 	strBaseImage = "redshift_add.png";
 		else if(DBDefine.DYNAMODB_DEFAULT == dbType) 			strBaseImage = "DynamoDB_add.png";
 		else if(DBDefine.NETEZZA_DEFAULT == dbType) 			strBaseImage = "netezza-add.png";
+		else if(DBDefine.APACHE_CASSANDRA_DEFAULT == dbType)	strBaseImage = "ApacheCassandra_logo.png";
 		else  strBaseImage = "database-add.png";
 		
 		return "resources/icons/dbs/" + strBaseImage;

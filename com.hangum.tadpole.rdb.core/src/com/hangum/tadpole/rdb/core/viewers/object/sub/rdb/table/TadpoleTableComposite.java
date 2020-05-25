@@ -439,7 +439,8 @@ public class TadpoleTableComposite extends AbstractObjectComposite {
 				createIndexes();
 				createTrigger();
 			} else if(DBGroupDefine.HIVE_GROUP == userDB.getDBGroup() ||
-					DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup()
+					DBGroupDefine.DYNAMODB_GROUP == userDB.getDBGroup() ||
+					DBGroupDefine.ApacheCassandra_GROUP == userDB.getDBGroup()
 			) {
 				// do not show them
 			} else {

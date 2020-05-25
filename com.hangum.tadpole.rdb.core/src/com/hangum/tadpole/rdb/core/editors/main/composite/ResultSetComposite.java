@@ -350,7 +350,10 @@ public class ResultSetComposite extends Composite {
 			logger.error("Oracle sytle parameter parse", e); //$NON-NLS-1$
 		}
 		
-		if(DBGroupDefine.DYNAMODB_GROUP != getUserDB().getDBGroup()) {
+		if(!(DBGroupDefine.DYNAMODB_GROUP == getUserDB().getDBGroup() |
+				DBGroupDefine.ApacheCassandra_GROUP == getUserDB().getDBGroup()
+			)
+		) {
 			// java named parameter (오라클 디비의 경우는 :parameter도 변수 취급합니다.)
 			try {
 				JavaNamedParameterUtil javaNamedParameterUtil = new JavaNamedParameterUtil();
@@ -832,13 +835,19 @@ public class ResultSetComposite extends Composite {
 //			if(javaConn == null) {
 //				throw new Exception("Cann't create session. Please check system.");
 //			}
+			if(DBGroupDefine.ApacheCassandra_GROUP == getUserDB().getDBGroup()) {
+				reqQuery.setSqlStatementType(SQL_STATEMENT_TYPE.NONE);
+			}
 			
 			// if statement type is prepared statement?
 			if(reqQuery.getSqlStatementType() == SQL_STATEMENT_TYPE.NONE) {
 				statement = javaConn.createStatement();
 				
 				statement.setFetchSize(intSelectLimitCnt);
-				if(DBGroupDefine.HIVE_GROUP != getUserDB().getDBGroup()) {
+				if(!(DBGroupDefine.HIVE_GROUP == getUserDB().getDBGroup() ||
+						DBGroupDefine.ApacheCassandra_GROUP == getUserDB().getDBGroup()
+					)
+				) {
 					statement.setQueryTimeout(queryTimeOut);
 					statement.setMaxRows(intSelectLimitCnt);	
 				}

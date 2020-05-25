@@ -297,7 +297,12 @@ public class MainEditor extends EditorExtension {
 		}
 		
 		// mysql group 이면 스키마 목록이 보이도록 합니다.
-		if(getUserDB().getDBGroup() == DBGroupDefine.MYSQL_GROUP | userDB.getDBGroup() == DBGroupDefine.ORACLE_GROUP | userDB.getDBGroup() == DBGroupDefine.POSTGRE_GROUP ) {
+		if(getUserDB().getDBGroup() == DBGroupDefine.MYSQL_GROUP | 
+				userDB.getDBGroup() == DBGroupDefine.ORACLE_GROUP | 
+				userDB.getDBGroup() == DBGroupDefine.POSTGRE_GROUP |
+				userDB.getDBGroup() == DBGroupDefine.MSSQL_GROUP |
+				userDB.getDBGroup() == DBGroupDefine.ApacheCassandra_GROUP
+				) {
 			ToolItem sep = new ToolItem(toolBar, SWT.SEPARATOR);
 			
 			comboSchema = new Combo(toolBar, SWT.READ_ONLY);
@@ -305,7 +310,8 @@ public class MainEditor extends EditorExtension {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					final String strSchema = comboSchema.getText();
-					userDB.setSchema(strSchema);
+//					userDB.setSchema(strSchema);
+					userDB.setDefaultSchemanName(strSchema);
 					
 					// 기존에 설정되어 있는 테이블 목록등을 삭제한다.
 					userDB.setTableListSeparator(null);

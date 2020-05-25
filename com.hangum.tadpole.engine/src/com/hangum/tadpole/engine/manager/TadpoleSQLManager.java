@@ -205,6 +205,9 @@ public class TadpoleSQLManager extends AbstractTadpoleManager {
 				
 				statement = javaConn.createStatement();
 				statement.executeUpdate(String.format("set schema '%s'", userDB.getSchema()));
+			} else if(userDB.getDBGroup() == DBGroupDefine.ApacheCassandra_GROUP) {
+				statement = javaConn.createStatement();
+				statement.executeUpdate(String.format("use %s", userDB.getSchema()));
 			}
 		} catch(Exception e) {
 			logger.error("get connection" +  e.getMessage());

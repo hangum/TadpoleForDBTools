@@ -37,6 +37,7 @@ import com.hangum.tadpole.engine.utils.RequestQueryUtil;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.tadpole.common.define.core.define.PublicTadpoleDefine;
 import com.tadpole.common.define.core.define.PublicTadpoleDefine.OBJECT_TYPE;
+import com.tadpolehub.db.cassandra.core.db.ApacheCassandraUtils;
 
 /**
  * DB Object 관련 쿼리를 뫃아 놓습니다.
@@ -141,6 +142,9 @@ public class TadpoleObjectQuery {
 				
 				showTables.add(tableDao);
 			}
+		} else if(DBGroupDefine.ApacheCassandra_GROUP == userDB.getDBGroup()) {
+			
+			showTables = ApacheCassandraUtils.getTables(userDB);
 
 		} else {
 			
@@ -224,6 +228,8 @@ public class TadpoleObjectQuery {
 	 */
 	public static List<TableColumnDAO> getTableColumns(UserDBDAO userDB, TableDAO tableDao) throws Exception {
 		List<TableColumnDAO> returnColumns = new ArrayList<TableColumnDAO>();
+		String strSchema = tableDao.getSchema_name();
+		if("".equals(strSchema)) strSchema = userDB.getDb();
 		
 		Map<String, String> mapParam = new HashMap<String, String>();
 		mapParam.put("db", userDB.getDb());
@@ -264,6 +270,8 @@ public class TadpoleObjectQuery {
 		    		returnColumns.add(tcDAO);
 		    	}
 			}
+		} else if(DBGroupDefine.ApacheCassandra_GROUP == userDB.getDBGroup()) {
+			returnColumns = ApacheCassandraUtils.getTableColumns(userDB, strSchema, strTableName);
 			
 		} else {
 			SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);

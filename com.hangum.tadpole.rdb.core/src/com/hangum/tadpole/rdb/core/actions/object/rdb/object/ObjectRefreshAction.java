@@ -60,8 +60,6 @@ public class ObjectRefreshAction extends AbstractObjectAction {
 			refreshPackage();
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.FUNCTIONS) {
 			refreshFunction();		
-		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.JAVASCRIPT) {
-			refreshJS();
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.LINK) {
 			refreshDBLink();
 		} else if(actionType == PublicTadpoleDefine.OBJECT_TYPE.JOBS) {

@@ -20,7 +20,8 @@
          the -console parameter to enabled OSGi console access.  -->
     <init-param>
       <param-name>commandline</param-name>
-      <param-value>-registryMultiLanguage <!-- -dbPath /Users/tadpoledbhub/ -></param-value>     
+      <!-- -dbPath /Users/tadpoledbhub/ -->
+      <param-value>-registryMultiLanguage </param-value>     
     </init-param>
 
     <load-on-startup>1</load-on-startup>    

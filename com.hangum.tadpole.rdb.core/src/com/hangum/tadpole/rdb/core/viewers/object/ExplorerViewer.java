@@ -76,6 +76,7 @@ import com.ibatis.sqlmap.client.SqlMapClient;
 import com.tadpole.common.define.core.define.PublicTadpoleDefine;
 import com.tadpole.common.define.core.define.PublicTadpoleDefine.OBJECT_TYPE;
 import com.tadpole.common.define.core.define.PublicTadpoleDefine.QUERY_DDL_TYPE;
+import com.tadpolehub.db.cassandra.core.db.ApacheCassandraUtils;
 
 /**
  * object explorer viewer
@@ -459,6 +460,19 @@ public class ExplorerViewer extends ViewPart {
 				logger.error("get system schemas " + e.getMessage());
 				throw e;
 			}
+		} else if(userDB.getDBGroup() == DBGroupDefine.MSSQL_GROUP) {
+			
+			try {
+				for (Object object : DBSystemSchema.getSchemas(userDB)) {
+					HashMap<String, String> mapData = (HashMap)object;
+					comboSchema.add(mapData.get("SCHEMA"));
+				}
+
+				comboSchema.setText(userDB.getDb());
+			} catch (Exception e) {
+				comboSchema.setItems( new String[]{userDB.getSchema()} );
+				throw e;
+			}
 		} else if(userDB.getDBGroup() == DBGroupDefine.SQLITE_GROUP || 
 				userDB.getDBGroup() == DBGroupDefine.DYNAMODB_GROUP 
 		) {
@@ -472,6 +486,20 @@ public class ExplorerViewer extends ViewPart {
 				comboSchema.add(strSchema);
 			}
 			comboSchema.setText(userDB.getDb());
+		} else if(userDB.getDBGroup() == DBGroupDefine.ApacheCassandra_GROUP) {
+			try {
+				for (String strSchema : ApacheCassandraUtils.getSchemas(userDB)) {
+					comboSchema.add(strSchema);
+				}
+
+				comboSchema.select(0);
+				userDB.setDefaultSchemanName(comboSchema.getText());
+				userDB.setSchema(comboSchema.getText());
+			} catch (Exception e) {
+				comboSchema.setItems( new String[]{userDB.getSchema()} );
+				throw e;
+			}
+			
 		} else if(userDB.getDBGroup() == DBGroupDefine.SQLITE_GROUP || 
 				userDB.getDBGroup() == DBGroupDefine.DYNAMODB_GROUP || 
 				userDB.getDBGroup() == DBGroupDefine.MONGODB_GROUP
@@ -704,6 +732,14 @@ public class ExplorerViewer extends ViewPart {
 			};
 									
 			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, elasticComposite.getTableviewer()));
+		} else if(DBDefine.APACHE_CASSANDRA_DEFAULT == userDB.getDBDefine()) {
+			createTable();
+			arrayStructuredViewer = new StructuredViewer[] { 
+					tableComposite.getTableListViewer(), 
+					tableComposite.getTableColumnViewer(),
+			};
+									
+			getViewSite().setSelectionProvider(new SelectionProviderMediator(arrayStructuredViewer, tableComposite.getTableListViewer()));
 		// mysql, mssql
 		} else {
 			createTable();

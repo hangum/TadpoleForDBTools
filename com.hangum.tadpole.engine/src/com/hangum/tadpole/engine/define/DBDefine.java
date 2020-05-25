@@ -32,6 +32,7 @@ public enum DBDefine {
 	TADPOLE_SYSTEM_DEFAULT,
 	TADPOLE_SYSTEM_MYSQL_DEFAULT,
 	
+	APACHE_CASSANDRA_DEFAULT,
 	/** USER DB */
 	DYNAMODB_DEFAULT,
 	ORACLE_DEFAULT,
@@ -77,6 +78,7 @@ public enum DBDefine {
 			case TADPOLE_SYSTEM_DEFAULT: return prefix_system + "TadpoleSystem-SQLite-Config.xml";
 			case TADPOLE_SYSTEM_MYSQL_DEFAULT: return prefix_system + "TadpoleSystem-MYSQL-Config.xml";
 			
+			case APACHE_CASSANDRA_DEFAULT:		return prefix + "ApacheCassandraConfig.xml";
 			case DYNAMODB_DEFAULT:		return prefix + "DynamoConfig.xml";
 			case ORACLE_DEFAULT:		return prefix + "OracleConfig.xml";
 			case TIBERO_DEFAULT:		return prefix + "TiberoConfig.xml";
@@ -111,6 +113,7 @@ public enum DBDefine {
 		if(type.equalsIgnoreCase("TadpoleSystem")) 		return TADPOLE_SYSTEM_DEFAULT;
 		if(type.equalsIgnoreCase("TadpoleSystem_MYSQL")) 	return TADPOLE_SYSTEM_MYSQL_DEFAULT;
 		
+		else if(type.equalsIgnoreCase("Apache Cassandra")) return APACHE_CASSANDRA_DEFAULT;
 		else if(type.equalsIgnoreCase("DynamoDB")) 		return DYNAMODB_DEFAULT;
 		else if(type.equalsIgnoreCase("Oracle")) 		return ORACLE_DEFAULT;
 		else if(type.equalsIgnoreCase("Tibero")) 		return TIBERO_DEFAULT;
@@ -188,6 +191,7 @@ public enum DBDefine {
 			case TADPOLE_SYSTEM_DEFAULT:		return "jdbc:sqlite:/%s";
 			case TADPOLE_SYSTEM_MYSQL_DEFAULT:	return "jdbc:mysql://%s:%s/%s";
 			
+			case APACHE_CASSANDRA_DEFAULT: return "jdbc:cassandra://%s:%s/%s";
 			case DYNAMODB_DEFAULT:	return DynamoDBManager.CONNECTION_URL;//
 			case ORACLE_DEFAULT:	return "jdbc:oracle:thin:@%s:%s:%s";
 			case TIBERO_DEFAULT:	return "jdbc:tibero:thin:@%s:%s:%s";
@@ -231,6 +235,7 @@ public enum DBDefine {
 			case TADPOLE_SYSTEM_DEFAULT:		return "TadpoleSystem";
 			case TADPOLE_SYSTEM_MYSQL_DEFAULT: 	return "TadpoleSystem_MYSQL";
 		
+			case APACHE_CASSANDRA_DEFAULT: return "Apache Cassandra";
 			case DYNAMODB_DEFAULT: 		return "DynamoDB";
 			case ORACLE_DEFAULT:		return "Oracle";
 			case TIBERO_DEFAULT:		return "Tibero";
@@ -287,6 +292,8 @@ public enum DBDefine {
 			return String.format("SELECT '%s'", strConnection);
 		} else if(this == NETEZZA_DEFAULT) {
 			return "SELECT version()";
+		} else if(this == APACHE_CASSANDRA_DEFAULT) {
+			return "SELECT table_name FROM system_schema.tables limit 1";
 		} else {
 			return "SELECT 1";
 		}
@@ -327,6 +334,8 @@ public enum DBDefine {
 			extension += "Netezza";
 		} else if(this == ELASTICSEARCH_DEFAULT) {
 			extension += EditorDefine.EXT_JSON;
+		} else if(this == APACHE_CASSANDRA_DEFAULT) {
+			extension += "cql";
 		} else {
 			extension += "sql"; //$NON-NLS-1$
 		}
@@ -374,32 +383,32 @@ public enum DBDefine {
 	public static List<DBDefine> userDBValues() {
 		List<DBDefine> listSupportDb = new ArrayList<DBDefine>();
 		
-		if(!"".equals(GetAdminPreference.getTadpoleSupportDBList())) {
-			
-			try {
-				String strUserDB = GetAdminPreference.getTadpoleSupportDBList();
-				if("all".equalsIgnoreCase(strUserDB)) listSupportDb = allUserUseDB();
-				else {
-					String[] arryUseDBTypes = StringUtils.split(strUserDB, ",");
-					
-					for (String strDBTyps : arryUseDBTypes) {
-						DBDefine tmpDBDefine = getDBDefine(strDBTyps);
-						if(tmpDBDefine != null) {
-							listSupportDb.add(tmpDBDefine); 
-						} else {
-							logger.error("*** Error : Not support DB. " + strDBTyps);
-						}
-					}
-				}
-				
-			} catch (Exception e) {
-				logger.error("System initialize exception", e);
-				System.exit(0);
-			}
-			
-		} else {
+//		if(!"".equals(GetAdminPreference.getTadpoleSupportDBList())) {
+//			
+//			try {
+//				String strUserDB = GetAdminPreference.getTadpoleSupportDBList();
+//				if("all".equalsIgnoreCase(strUserDB)) listSupportDb = allUserUseDB();
+//				else {
+//					String[] arryUseDBTypes = StringUtils.split(strUserDB, ",");
+//					
+//					for (String strDBTyps : arryUseDBTypes) {
+//						DBDefine tmpDBDefine = getDBDefine(strDBTyps);
+//						if(tmpDBDefine != null) {
+//							listSupportDb.add(tmpDBDefine); 
+//						} else {
+//							logger.error("*** Error : Not support DB. " + strDBTyps);
+//						}
+//					}
+//				}
+//				
+//			} catch (Exception e) {
+//				logger.error("System initialize exception", e);
+//				System.exit(0);
+//			}
+//			
+//		} else {
 			listSupportDb = allUserUseDB();
-		}
+//		}/
 		
 		return listSupportDb;
 	}
@@ -427,15 +436,16 @@ public enum DBDefine {
 		supportDb.add(ALTIBASE_DEFAULT);
 		supportDb.add(HIVE_DEFAULT);
 //		supportDb.add(AMAZONRDS_DEFAULT);
+		supportDb.add(APACHE_CASSANDRA_DEFAULT);
 		
 		supportDb.add(CUBRID_DEFAULT);
 		supportDb.add(DYNAMODB_DEFAULT);
-		supportDb.add(ELASTICSEARCH_DEFAULT);
+//		supportDb.add(ELASTICSEARCH_DEFAULT);
 		supportDb.add(MARIADB_DEFAULT);
 		supportDb.add(MONGODB_DEFAULT);
 		supportDb.add(MSSQL_DEFAULT);
 		supportDb.add(MYSQL_DEFAULT);
-		supportDb.add(NETEZZA_DEFAULT);
+//		supportDb.add(NETEZZA_DEFAULT);
 		
 		supportDb.add(ORACLE_DEFAULT);
 		supportDb.add(TIBERO_DEFAULT);

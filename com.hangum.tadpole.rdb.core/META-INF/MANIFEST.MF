@@ -32,7 +32,8 @@ Require-Bundle: org.eclipse.rap.ui;bundle-version="1.3.2",
  com.hangum.tadpole.sql.parser;bundle-version="1.0.0";resolution:=optional,
  com.hangum.tadpole.sql.prase.ext.core;bundle-version="1.0.0";resolution:=optional,
  com.tadpole.db.elasticsearch.core;bundle-version="1.0.0";resolution:=optional,
- com.tadpole.common.define.core;bundle-version="1.0.0"
+ com.tadpole.common.define.core;bundle-version="1.0.0",
+ com.tadpolehub.db.cassandra.core;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: com.hangum.tadpole.rdb.core,

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="libs/driver/mongodb/mongo-jdbc-standalone-1.7.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/driver/mongodb/mongo-jdbc-standalone-1.7.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/driver/cassandra/cassandra-jdbc-driver-1.3.5.01.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/altibase/Altibase_t.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/altibase/Altibase.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/driver/altibase/Altibase7_1.jar"/>

@@ -48,6 +48,7 @@ import com.hangum.tadpole.session.manager.SessionManager;
 import com.ibatis.sqlmap.client.SqlMapClient;
 import com.tadpole.common.define.core.define.PublicTadpoleDefine;
 import com.tadpole.common.define.core.define.PublicTadpoleDefine.DATA_STATUS;
+import com.tadpolehub.db.cassandra.core.db.ApacheCassandraUtils;
 
 /**
  * 로그인시에 사용하게될 디비의 abstract composite
@@ -353,6 +354,8 @@ public abstract class AbstractLoginComposite extends Composite {
 				}
 //			} else if(userDB.getDBDefine() == DBDefine.ELASTICSEARCH_DEFAULT) {
 //				ElasticSearchQuery.connectionCheck(userDB);
+			} else if(userDB.getDBDefine() == DBDefine.APACHE_CASSANDRA_DEFAULT) {
+				ApacheCassandraUtils.connectionCheck(userDB);
 				
 			} else {
 				SqlMapClient sqlClient = TadpoleSQLManager.getInstance(userDB);

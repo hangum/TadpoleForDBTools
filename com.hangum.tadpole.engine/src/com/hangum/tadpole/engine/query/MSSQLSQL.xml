@@ -54,6 +54,15 @@ SELECT
   ORDER BY s.name, tbl.name 
 </select>
 
+<!-- 
+	스키마 목록을 조회한다.
+	ExplorerViewer에 조회된 스키마 목록을 표시하여 다른 스키마의 오브젝트에 접근할 수 있도록 한다.
+ -->
+<select id="getSchemas" resultClass="java.util.HashMap">
+	SELECT name as "SCHEMA"  
+	FROM sys.databases  
+</select>
+
 <select id="allObjects" resultClass="java.util.HashMap" parameterClass="java.util.HashMap">
     Select 
           user as "OBJECT_OWNER"
